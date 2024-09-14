@@ -22,11 +22,35 @@ const Login = () => {
             } else if (response.access_token) {
                 // Si l'authentification réussit, stocke le token dans le localStorage
                 localStorage.setItem('token', response.access_token);
-                
-                // Redirection vers une page protégée (par exemple : tableau de bord)
-                router.push('/dashboard'); // Remplace '/dashboard' par la route protégée de ton application
+
+                // Appel de l'API pour récupérer le rôle de l'utilisateur
+                const roleResponse = await api('user/role', 'GET', null, response.access_token);
+
+                if (roleResponse.role) {
+                    // Redirection en fonction du rôle de l'utilisateur
+                    switch (roleResponse.role) {
+                        case 'Formateur':
+                            router.push('/formateur');
+                            break;
+                        case 'Apprenant':
+                            router.push('/apprenant');
+                            break;
+                        case 'Vigile':
+                            router.push('/vigile');
+                            break;
+                        case 'Chef de projet':
+                            router.push('/chef-de-projet');
+                            break;
+                        case 'Administrateur':
+                            router.push('/admins');
+                            break;
+                        default:
+                            setError('Rôle non reconnu. Veuillez contacter l\'administrateur.');
+                    }
+                } else {
+                    setError('Impossible de récupérer le rôle utilisateur.');
+                }
             } else {
-                // Si une erreur inattendue survient
                 setError('Une erreur inattendue s\'est produite. Veuillez réessayer.');
             }
         } catch (err) {
