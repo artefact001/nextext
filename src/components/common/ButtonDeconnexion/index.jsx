@@ -3,26 +3,21 @@ import { useRouter } from 'next/router';
 import { api } from '@utils/api';
 
 const ButtonDeconnexion = () => {
-    const router = useRouter();
+  const router = useRouter();
 
-    const handleLogout = async () => {
-        if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
-            try {
-                await api('logout', 'POST');
-                localStorage.removeItem('token');
-                router.push('/connexion');
-            } catch (error) {
-                console.error('Erreur lors de la déconnexion', error);
-            }
-        }
-    };
-    
+  const handleLogout = async () => {
+    if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
+      try {
+        await api('logout', 'POST');
+        localStorage.removeItem('token');
+        router.push('/connexion');
+      } catch (error) {
+        console.error('Erreur lors de la déconnexion', error);
+      }
+    }
+  };
 
-    return (
-        <button onClick={handleLogout}>
-            Déconnexion
-        </button>
-    );
+  return <button onClick={handleLogout}>Déconnexion</button>;
 };
 
 export default ButtonDeconnexion;

@@ -1,9 +1,5 @@
 import { Layout } from '../components/layout';
 
 export default function Home() {
-  return (
-    <Layout active={'home'}>
-   
-    </Layout>
-  );
+  return <Layout active={'home'}></Layout>;
 }

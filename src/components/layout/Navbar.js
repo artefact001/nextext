@@ -1,4 +1,4 @@
-import { Link } from "@chakra-ui/react";
+import { Link } from '@chakra-ui/react';
 
 const Navbar = () => {
   return (
@@ -8,7 +8,7 @@ const Navbar = () => {
           <div className="text-white font-bold">Home</div>
         </Link>
         <Link href="/qr/[matricule]">
-        {/* <Link href="/qr/[matricule]" as="/qr/P7"> */}
+          {/* <Link href="/qr/[matricule]" as="/qr/P7"> */}
           <div className="text-white">QR Code</div>
         </Link>
         <Link href="/profile">

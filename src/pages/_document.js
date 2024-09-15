@@ -10,7 +10,7 @@ export default function Document() {
       <Head>
         <style
           type="text/css"
-          dangerouslySetInnerHTML={{ __html: mediaStyles}}
+          dangerouslySetInnerHTML={{ __html: mediaStyles }}
         />
       </Head>
       <body>

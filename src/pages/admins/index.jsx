@@ -11,7 +11,7 @@ const DashboardAdmin = () => {
       <h1>Tableau de Bord admin</h1>
       <p>Bienvenue sur la page protégée du tableau de bord.</p>
       {/* Bouton de déconnexion */}
-      <ButtonDeconnexion></ButtonDeconnexion>
+      {/* <ButtonDeconnexion></ButtonDeconnexion> */}
     </div>
   );
 };
