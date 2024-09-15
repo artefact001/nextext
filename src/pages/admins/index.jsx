@@ -1,6 +1,5 @@
 // pages/admins/index.jsx
 
-import ButtonDeconnexion from '@components/common/ButtonDeconnexion';
 import { useAuthToken } from '@utils/token';
 
 const DashboardAdmin = () => {
