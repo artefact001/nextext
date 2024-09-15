@@ -1,45 +1,27 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { api } from '@utils/api';
+import React from 'react';
+import { useUserWithRoles } from '@utils/hooks/useUserWithRoles'; // Assurez-vous que le chemin est correct
+import { getUserWithRoles } from '@utils/checkRole'; // Assurez-vous que le chemin est correct
 
-const Dashboard = () => {
-    const router = useRouter();
-    const logout = async () => {
-    
-        try {
-            // Appel à l'API Laravel pour invalider le token JWT
-            await api('logout', 'POST');
-    
-            // Supprime le token du localStorage
-            localStorage.removeItem('token');
-    
-            // Redirige vers la page de connexion après la déconnexion
-            router.push('/login');
-        } catch (error) {
-            console.error('Erreur lors de la déconnexion', error);
-        }
-    };
-    const handleLogout = async () => {
-        await logout(); // Déclenche la déconnexion
-    };
+const ApprenantPage = () => {
+    const { user, roles } = useUserWithRoles(['Apprenant']); // Spécifie ici les rôles requis
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        
-        // Si le token n'est pas trouvé, rediriger vers la page de login
-        if (!token) {
-            router.push('/login');
-        }
-    }, []);
+    if (!user) {
+        return <p>Chargement...</p>;
+    }
 
     return (
         <div>
-            <h1>Tableau de Bord</h1>
-            <p>Bienvenue sur la page protégée du tableau de bord.</p>
-            <button onClick={handleLogout}>Déconnexion</button>
-
+            <h1>Bienvenue, {user.nom}</h1>
+            <p>Votre adresse e-mail est : {user.email}</p>
+            {roles.length > 0 && (
+                <p>Vos rôles : {roles.join(', ')}</p>
+            )}
         </div>
     );
 };
 
-export default Dashboard;
+export async function getServerSideProps(context) {
+    return await getUserWithRoles(context, ['Apprenant']); // Spécifie ici les rôles requis
+}
+
+export default ApprenantPage;

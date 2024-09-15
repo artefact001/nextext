@@ -1,20 +1,28 @@
-// pages/admins/index.jsx
+import React from 'react';
+import { useUserWithRoles } from '@utils/hooks/useUserWithRoles'; // Assurez-vous que le chemin est correct
+import { getUserWithRoles } from '@utils/checkRole'; // Assurez-vous que le chemin est correct
 
-import ButtonDeconnexion from '@components/common/ButtonDeconnexion';
-import { useAuthToken } from '@utils/token';
+const ApprenantPage = () => {
+    
+    const { user, roles } = useUserWithRoles(['Apprenant']); // Spécifie ici les rôles requis
 
-const DashboardApprenant = () => {
-  // Vérifie si l'utilisateur est connecté
-  useAuthToken();
+    if (!user) {
+        return <p>Chargement...</p>;
+    }
 
-  return (
-    <div>
-      <h1>Tableau de Bord Apprenant</h1>
-      <p>Bienvenue sur la page protégée du tableau de bord.</p>
-      {/* Bouton de déconnexion */}
-      <ButtonDeconnexion></ButtonDeconnexion>
-    </div>
-  );
+    return (
+        <div>
+            <h1>Bienvenue, {user.nom}</h1>
+            <p>Votre adresse e-mail est : {user.email}</p>
+            {roles.length > 0 && (
+                <p>Vos rôles : {roles.join(', ')}</p>
+            )}
+        </div>
+    );
 };
 
-export default DashboardApprenant;
+export async function getServerSideProps(context) {
+    return await getUserWithRoles(context, ['Apprenant']); // Spécifie ici les rôles requis
+}
+
+export default ApprenantPage;
