@@ -1,15 +1,12 @@
-import { Box, Container, Stack } from '@chakra-ui/react';
-import { Header } from './Header';
+import Navbar from './Navbar';
+import Footer from './Footer';
 
-export const Layout = ({ active, children }) => {
+export const Layout = ({active,  children }) => {
   return (
-    <Stack>
-      <Header active={active} />
-      <Box>
-        <Container variant={'fluid'} minW={'container.xl'} h={'100%'}>
-          {children}
-        </Container>
-      </Box>
-    </Stack>
+    <div className="flex flex-col min-h-screen">
+      <Navbar active={active} />
+      <main className="flex-grow container mx-auto p-4">{children}</main>
+      <Footer />
+    </div>
   );
 };
