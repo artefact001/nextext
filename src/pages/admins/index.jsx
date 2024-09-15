@@ -1,6 +1,6 @@
 // pages/admins/index.jsx
 
-import { useAuthToken } from '@utils/token';
+import { useAuthToken } from '../../lib/utils/token';
 
 const DashboardAdmin = () => {
   // Vérifie si l'utilisateur est connecté

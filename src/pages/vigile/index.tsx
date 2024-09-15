@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 
 const QRCodeScanner = () => {
   const router = useRouter();
-  const [result, setResult] = useState<string | null>(null);
+  const [result, setResult] = useState(null);
   const [isScanned, setIsScanned] = useState(false);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const QRCodeScanner = () => {
     }
   }, [isScanned, result]);
 
-  const handleScan = (data: { text?: string; binaryData?: number[] }) => {
+  const handleScan = (data) => {
     if (data?.text) {
       const scannedResult = data.text.trim();
       console.log('Scanned QR Code:', scannedResult); // Vérifie le matricule scanné
@@ -55,7 +55,7 @@ const QRCodeScanner = () => {
     }
   };
 
-  const handleError = (error: any) => {
+  const handleError = (error) => {
     console.error('QR Code Error:', error);
     Swal.fire({
       icon: 'error',
@@ -64,7 +64,7 @@ const QRCodeScanner = () => {
     });
   };
 
-  const binaryDataToText = (binaryData: number[]): string => {
+  const binaryDataToText = (binaryData) => {
     try {
       const bytes = new Uint8Array(binaryData);
       const text = new TextDecoder().decode(bytes);

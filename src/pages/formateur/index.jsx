@@ -1,7 +1,7 @@
 // pages/admins/index.jsx
 
-import ButtonDeconnexion from '@components/common/ButtonDeconnexion';
-import { useAuthToken } from '@utils/token';
+import ButtonDeconnexion from '../../components/common/ButtonDeconnexion';
+import { useAuthToken } from '../../lib/utils/token';
 
 const DashboardFormateur = () => {
   // Vérifie si l'utilisateur est connecté

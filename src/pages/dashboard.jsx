@@ -1,6 +1,6 @@
 import React from 'react';
-import { useUserWithRoles } from '@utils/hooks/useUserWithRoles'; // Assurez-vous que le chemin est correct
-import { getUserWithRoles } from '@utils/checkRole'; // Assurez-vous que le chemin est correct
+import { useUserWithRoles } from '../lib/utils/hooks/useUserWithRoles';
+import { getUserWithRoles } from '../lib/utils/checkRole';
 
 const ApprenantPage = () => {
   const { user, roles } = useUserWithRoles(['Apprenant']); // Spécifie ici les rôles requis

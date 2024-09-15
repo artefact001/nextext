@@ -1,4 +1,4 @@
-import { api } from '@utils/api'; // S'assurer que l'import du module `api` est correct
+import { api } from "./api";
 
 export const getUserWithRoles = async (context, requiredRoles = []) => {
   const token = context.req.cookies.token || null;
