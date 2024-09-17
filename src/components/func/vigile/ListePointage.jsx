@@ -31,7 +31,7 @@ function ListePointage({ pointages }) {
         fontFamily="Nunito Sans"
 
       >
-        Aujourd&aposhui
+        {`Aujourd'hui `}
       </Heading>
 
       <List

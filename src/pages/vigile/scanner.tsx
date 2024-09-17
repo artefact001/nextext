@@ -138,7 +138,7 @@ const QRCodeScanner = () => {
    <Center display={'block'} bg="black" opacity="0.9"  h="100vh" mt="0">
         {/* QR Code Reader Section */}
         <Center mt="12">
-          <Text color="white">Heure darrivée</Text>
+          <Text color="white">{`Heure d'arrivée`}</Text>
         </Center>
         <Center mt="10">
           <Box   zIndex={43}>
@@ -148,7 +148,7 @@ const QRCodeScanner = () => {
               onError={handleError}
               onScan={handleScan}
             />
-            <p className="mt-4">{result ? result : 'Pas encore scanné'}</p>
+            {/* <p className="mt-4">{result ? result : 'Pas encore scanné'}</p> */}
           </Box >
         </Center>
 

@@ -16,7 +16,7 @@ const NavbarVigile = () => {
   const handleOptionClick = () => {
     Swal.fire({
       title: 'Naviguer vers:',
-      text: "Choisissez votre destination",
+      text: "Choisissez heure de pointage",
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Arrivée',
