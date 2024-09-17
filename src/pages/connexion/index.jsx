@@ -1,12 +1,16 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { api } from '../../lib/utils/api';
+  
+import { Box, Button, Center, FormControl, FormLabel, Input, Heading, Image, useToast } from '@chakra-ui/react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const router = useRouter();
+
+  const toast = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +28,13 @@ const Login = () => {
       } else if (response.access_token) {
         // Si l'authentification réussit, stocke le token dans le localStorage
         localStorage.setItem('token', response.access_token);
-
+        toast({
+          title: 'Connexion réussie.',
+          description: "Vous êtes connecté.",
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
         // Appel de l'API pour récupérer le rôle de l'utilisateur
         const roleResponse = await api(
           'user/role',
@@ -43,7 +53,7 @@ const Login = () => {
               router.push('/apprenant');
               break;
             case 'Vigile':
-              router.push('/vigile');
+              router.push('/vigile/scanner');
               break;
             case 'Chef de projet':
               router.push('/chef-de-projet');
@@ -71,31 +81,80 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <h2>Connexion</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Mot de passe</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit">Se connecter</button>
-      </form>
+
+    <div>
+
+<Heading as="h3" size="md" pt={20} textAlign="center" mb={-3}>
+          Bienvenue dans la page de connexion
+        </Heading>
+    
+  
+      <Center minH="100vh" mx={5} bg="gray.50">
+        
+      <Box   w="full" 
+  maxW="sm" 
+  p={6} 
+  bg="white" 
+  rounded="lg" 
+  borderTop="2px" 
+  borderBottom="2px"
+    borderColor="#CE0033" 
+    // borderColor="red" // Utilisation de la couleur définie dans le thème
+
+  shadow="lg"
+  >
+        {/* Icon de verrou */}
+        <Center mb={4}>
+          <Image src="/path/to/your/lock-icon.png" alt="Lock icon" boxSize="64px" />
+        </Center>
+
+        {/* Titre de la page */}
+        
+
+        {/* Formulaire de connexion */}
+        <form onSubmit={handleSubmit}>
+          {/* Email */}
+          <FormControl id="email" mb={4}>
+            <FormLabel>Email</FormLabel>
+            <Input 
+              type="email"
+              placeholder="Entrez votre email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              focusBorderColor="red.500"
+            />
+          </FormControl>
+
+          {/* Mot de passe */}
+          <FormControl id="password" mb={6}>
+            <FormLabel>Mot de passe</FormLabel>
+            <Input
+              type="password"
+              placeholder="Entrez votre mot de passe"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              focusBorderColor="red.500"
+            />
+          </FormControl>
+          {error && <p style={{ color: 'red' }}>{error}</p>}
+
+          {/* Bouton de soumission */}
+          <Button
+            type="submit"
+            w="full"
+            bg="red.600"
+            color="white"            
+            size="lg"
+            mt={4}
+            _hover={{ bg: "red.600" }}
+          >
+            Connexion
+          </Button>
+        </form>
+      </Box>
+    </Center>
     </div>
+
   );
 };
 

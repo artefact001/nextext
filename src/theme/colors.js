@@ -20,10 +20,12 @@ module.exports = {
       thin: '#a7a7a7',
       sport: '#666666',
     },
-    primary: {
-      light: '#48bb78',
-      regular: '#48bb78',
-    },
+    // primary: {
+    //   light: '#48bb78',
+    //   regular: '#48bb78',
+    // },
+
+    primary: '#CE0033',
     secondary: {
       light: '#c8ebd7',
       regular: '#c8ebd7',

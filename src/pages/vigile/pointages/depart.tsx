@@ -1,8 +1,10 @@
 'use client';
 import { useRouter } from 'next/router';
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import QrReader from 'react-web-qr-reader';
 import Swal from 'sweetalert2';
+import {Box, Center, Text} from '@chakra-ui/react';
+import NavbarVigile from '../../../components/layout/vigile/Navbar';
 
 const QRCodeScanner = () => {
   const router = useRouter();
@@ -30,7 +32,6 @@ const QRCodeScanner = () => {
         icon: 'info',
         showCancelButton: true,
         confirmButtonText: 'Valider le scan',
-        cancelButtonText: 'Annuler',
       }).then(async (result) => {
         if (result.isConfirmed) {
           await handleValidation();
@@ -86,7 +87,7 @@ const QRCodeScanner = () => {
       console.log('Matricule envoyé pour validation:', matricule);
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/pointage/arrivee`,
+        `${process.env.NEXT_PUBLIC_API_URL}/pointage/depart`,
         {
           method: 'POST',
           headers: {
@@ -132,15 +133,29 @@ const QRCodeScanner = () => {
   };
 
   return (
-    <div>
-      <QrReader
-        delay={delay}
-        style={previewStyle}
-        onError={handleError}
-        onScan={handleScan}
-      />
-      <p className="mt-4">{result ? result : 'Pas encore scanné'}</p>
-    </div>
+    <>
+      
+      <Center display={'block'} bg="black" opacity="0.9"  h="93vh" mt="0">
+        {/* QR Code Reader Section */}
+        <Center mt="12">
+          <Text color="white">Heure depart</Text>
+        </Center>
+        <Center mt="10">
+          <Box   zIndex={43}>
+            <QrReader 
+              delay={delay}
+              style={previewStyle}
+              onError={handleError}
+              onScan={handleScan}
+            />
+            <p className="mt-4">{result ? result : 'Pas encore scanné'}</p>
+          </Box >
+        </Center>
+
+        {/* Profile Card fixed at the bottom */}
+        <NavbarVigile />
+      </Center>
+    </>
   );
 };
 
