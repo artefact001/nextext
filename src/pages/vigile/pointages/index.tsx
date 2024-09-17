@@ -39,7 +39,7 @@ export default function PointageAujourdhui() {
       ) : error ? (
         <p>Erreur : {error}</p>
       ) : pointages.length === 0 ? (
-        <p>Aucun pointage pour aujourd&aposhui.</p>
+        <p>Aucun pointage pour aujourdhui.</p>
       ) : (
         <ListePointage pointages={pointages} />
       )}

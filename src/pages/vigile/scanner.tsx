@@ -138,7 +138,7 @@ const QRCodeScanner = () => {
    <Center display={'block'} bg="black" opacity="0.9"  h="100vh" mt="0">
         {/* QR Code Reader Section */}
         <Center mt="12">
-          <Text color="white">Heure d&aposarrivée</Text>
+          <Text color="white">Heure darrivée</Text>
         </Center>
         <Center mt="10">
           <Box   zIndex={43}>

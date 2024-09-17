@@ -31,7 +31,7 @@ const NavbarVigile = () => {
       }
     });
   };
-  const { user, roles } = useUserWithRoles(['Vigile']); // Spécifie ici les rôles requis
+   useUserWithRoles(['Vigile']); // Spécifie ici les rôles requis
 
   return (
     <Box
