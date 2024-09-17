@@ -1,6 +1,6 @@
 // pages/admins/index.jsx
 
-import ButtonDeconnexion from '../../../components/common/ButtonDeconnexion';
+import ButtonDeconnexion from '../../components/common/ButtonDeconnexion';
 import { useAuthToken } from '../../lib/utils/token';
 
 const DashboardChefProjet = () => {
