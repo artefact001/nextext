@@ -1,5 +1,5 @@
-import { Layout } from '../components/layout';
+import Login from "./connexion";
 
 export default function Home() {
-  return <Layout active={'home'}></Layout>;
+  return <Login active={'home'}></Login>;
 }

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useUserWithRoles } from '../../lib/utils/hooks/useUserWithRoles'; // Assurez-vous que le chemin est correct
-import { Image } from '@chakra-ui/react';
+import { Center, Image } from '@chakra-ui/react';
+// import ButtonDeconnexion from '../../components/common/ButtonDeconnexion';
+import ProfileCard from '../../components/layout/apprenant/Navbar';
 
 const ApprenantPage = () => {
-  const { user, roles, loading } = useUserWithRoles(['Apprenant']); // Spécifie ici les rôles requis
+  const { user, loading } = useUserWithRoles(['Apprenant']); // Spécifie ici les rôles requis
   const [qrCodeUrl, setQrCodeUrl] = useState(null);
   const [error, setError] = useState(null);
 
@@ -40,23 +42,32 @@ const ApprenantPage = () => {
   }
 
   return (
-    <div>
-      <h1>Bienvenue, {user.nom}</h1>
-      <p>Votre adresse e-mail est : {user.email}</p>
-      {roles.length > 0 && <p>Vos rôles : {roles.join(', ')}</p>}
+    <Center  display={'block'}> {/* Ensures full height centering and padding for mobile view */}
+      {/* ProfileCard */}
+        <ProfileCard />
+
+      {/* ButtonDeconnexion */}
+
+      {/* QR Code */}
       {error ? (
         <p>{error}</p>
       ) : qrCodeUrl ? (
-        <Image
-          src={qrCodeUrl}
-          alt="QR Code"
-          width={200} // Remplacer par la largeur souhaitée
-          height={200} // Remplacer par la hauteur souhaitée
-        />
+        <Center mt={20} bg="white" p={4} borderRadius="md"> {/* Center the QR code in a nice box */}
+          <Image
+            src={qrCodeUrl}
+            alt="QR Code"
+            width={200} // Mobile size
+            height={200}
+            objectFit="contain"
+          />
+        </Center>
       ) : (
         <p>Chargement du QR Code...</p>
       )}
-    </div>
+
+{/* <ButtonDeconnexion /> */}
+
+  </Center>
   );
 };
 

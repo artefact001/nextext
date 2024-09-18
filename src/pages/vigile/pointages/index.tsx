@@ -10,7 +10,7 @@ export default function PointageAujourdhui() {
   useEffect(() => {
     const fetchPointages = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pointages/all`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pointages/aujourdhui`);
         const data = await response.json();
 
         if (!response.ok) {
@@ -39,7 +39,7 @@ export default function PointageAujourdhui() {
       ) : error ? (
         <p>Erreur : {error}</p>
       ) : pointages.length === 0 ? (
-        <p>Aucun pointage pour aujourdhui.</p>
+        <p>{` Aucun pointage pour aujourd'hui. `}  </p>
       ) : (
         <ListePointage pointages={pointages} />
       )}

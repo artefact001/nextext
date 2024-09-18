@@ -6,7 +6,7 @@ import { mediaStyles } from '../lib/utils/media';
 
 export default function Document() {
   return (
-    <Html lang="en">
+    <Html lang="fr">
       <Head>
         <style
           type="text/css"

@@ -1,24 +1,18 @@
 import React from 'react';
 import { Box, Heading, List } from '@chakra-ui/react';
 import AttendanceItem from './AttendanceItem';
+import dayjs from 'dayjs';
+import 'dayjs/locale/fr';
 
+// Configure dayjs pour utiliser le français
+dayjs.locale('fr');
 function ListePointage({ pointages }) {
   return (
     <Box
       as="section"
       display="flex"
       flexDirection="column"
-      px={2}
-      py={8}
-      mt={16}
-      mx="auto"
-      w="full"
-      maxW={{ base: '366px', md: '700px', lg: '900px' }}  // Responsive width for mobile, tablet, and desktop
-      borderBottom="2px solid"
-      borderTop="2px solid"
-      borderColor="red.700"
-      borderRadius="md"
-      shadow="lg"
+      
       bg="whiteAlpha.80"
       fontFamily="Nunito Sans"
     >
@@ -31,7 +25,7 @@ function ListePointage({ pointages }) {
         fontFamily="Nunito Sans"
 
       >
-        {`Aujourd'hui `}
+        {/* {`Aujourd'hui `} */}
       </Heading>
 
       <List
@@ -41,15 +35,18 @@ function ListePointage({ pointages }) {
         borderColor="gray.300"
         borderRadius="xl"
         boxShadow="sm"
+        size="bold" fonntWidget="bold"
+        fontFamily="Nunito Sans "
       >
         {pointages.map((pointage) => (
-            <AttendanceItem
-                key={pointage.id}
-                name={`${pointage.user.prenom} ${pointage.user.nom}`} // Concatenate first and last names
-                role={pointage.user.role}
-                time={pointage.heure_present}
-                status={pointage.type} // Assuming `type` is either 'present', 'retard', or 'absent'
-            />
+          <AttendanceItem 
+          // date comme lundi
+          date={dayjs(pointage.date).format('dddd, DD/MM ')}ey={pointage.id}
+  
+          status={pointage.type} // Assuming `type` is either 'present', 'retard', or 'absent'
+          time={pointage.heure_present || pointage.type}
+        />
+        
         ))}
       </List>
     </Box>
