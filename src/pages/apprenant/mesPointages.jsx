@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { VStack, Spinner, Center, Alert, AlertIcon, Box, Text } from '@chakra-ui/react';
+import { VStack, Spinner, Center, Alert, AlertIcon, Box, Text, HStack } from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import isoWeeksInYear from 'dayjs/plugin/isoWeeksInYear';
@@ -9,6 +9,7 @@ import MonthPagination from '../../components/common/MonthPagination';
 import WeekSelector from '../../components/common/WeekSelector';
 import AttendanceSummary from '../../components/layout/apprenant/AttendanceSummary';
 import Swal from 'sweetalert2';
+import Profile from './profile';
 
 // Activer les plugins dayjs
 dayjs.extend(isoWeek);
@@ -154,6 +155,10 @@ const MesPointages = () => {
   return (
     <VStack spacing={4} maxW="800px" mx="auto">
       <ProfileCard />
+      <HStack>
+
+      {/* <Profile ></Profile> */}
+
       <Box
         as="section"
         display="flex"
@@ -210,8 +215,10 @@ const MesPointages = () => {
             <ListePointage pointages={pointages} />
             <AttendanceSummary summary={attendanceSummary} />
           </>
+          
         )}
       </Box>
+      </HStack>
     </VStack>
   );
   
