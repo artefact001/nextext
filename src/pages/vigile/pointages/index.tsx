@@ -10,7 +10,7 @@ export default function PointageAujourdhui() {
   useEffect(() => {
     const fetchPointages = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pointages/all`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pointages/aujourdhui`);
         const data = await response.json();
 
         if (!response.ok) {
