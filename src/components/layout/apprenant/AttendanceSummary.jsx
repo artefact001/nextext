@@ -1,54 +1,36 @@
 import React from 'react';
 import { Box, Center, Flex, Text } from '@chakra-ui/react';
 
-function AttendanceSummary() {
+function AttendanceSummary({ summary }) {
   const summaryItems = [
-    { label: "Absent", value: "02" },
-    { label: "Retard", value: "03" }
+    { label: "Absent", value: summary.absent || "0" },
+    { label: "Retard", value: summary.retard || "0" }
   ];
 
   return (
-    <Center>
-    <Flex
-      gap={10}
-      justify="center"
-      mt={9}
-      maxW="full"
-      textAlign="center"
-      color="white"
-      w="225px"
-    >
-      {summaryItems.map((item, index) => (
-        <Box
-          key={index}
-          flex="1"
-          px={4}
-          pb={6}
-          borderWidth="2px"
-          borderColor="red.700"
-          bg="gray.900"
-          borderRadius="lg"
-          textAlign="center"
-        >
-          <Text
-            px={2}
-            py={1}
-            fontSize="xs"
-            bg="red.700"
-            borderRadius="md"
+    <Center fontFamily="Nunito Sans">
+      <Flex gap={10} justify="center" mt={9} maxW="full" textAlign="center" color="white" w="225px">
+        {summaryItems.map((item, index) => (
+          <Box
+            key={index}
+            flex="1"
+            px={4}
+            pb={1}
+            borderWidth="2px"
+            borderColor="red.700"
+            bg="gray.900"
+            borderRadius="lg"
+            textAlign="center"
           >
-            {item.label}
-          </Text>
-          <Text
-            mt={5}
-            fontSize="xl"
-            fontWeight="bold"
-          >
-            {item.value}
-          </Text>
-        </Box>
-      ))}
-    </Flex>
+            <Text px={2} p={-3} fontSize="xs" bg="#ce0033" borderRadius="3">
+              {item.label}
+            </Text>
+            <Text mt={2} fontSize="xl" fontWeight="bold">
+              {item.value}
+            </Text>
+          </Box>
+        ))}
+      </Flex>
     </Center>
   );
 }

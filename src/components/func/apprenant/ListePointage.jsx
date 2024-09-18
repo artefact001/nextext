@@ -9,7 +9,11 @@ dayjs.locale('fr');
 function ListePointage({ pointages }) {
   return (
     <Box
-     
+      as="section"
+      display="flex"
+      flexDirection="column"
+      
+      bg="whiteAlpha.80"
       fontFamily="Nunito Sans"
     >
       <Heading
@@ -31,12 +35,13 @@ function ListePointage({ pointages }) {
         borderColor="gray.300"
         borderRadius="xl"
         boxShadow="sm"
+        size="bold" fonntWidget="bold"
+        fontFamily="Nunito Sans "
       >
         {pointages.map((pointage) => (
-          <AttendanceItem
-          k        name={`${pointage?.user?.prenom || ''} ${pointage?.user?.nom || ''}`} // Safely concatenate first and last names
+          <AttendanceItem 
           // date comme lundi
-          date={dayjs(pointage.date).format('dddd, DD /MM ')}ey={pointage.id}
+          date={dayjs(pointage.date).format('dddd, DD/MM ')}ey={pointage.id}
   
           status={pointage.type} // Assuming `type` is either 'present', 'retard', or 'absent'
           time={pointage.heure_present || pointage.type}

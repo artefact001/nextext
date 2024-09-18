@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Center, Text, Button, Flex, useBreakpointValue, Link } from '@chakra-ui/react';
+import { Box, Center, Text, Flex, useBreakpointValue, Link } from '@chakra-ui/react';
 import { FaUserAlt, FaQrcode, FaHistory } from 'react-icons/fa';
 import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 import { getUserWithRoles } from '../../../lib/utils/checkRole';
