@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { api } from '../api';
 
 export const useUserWithRoles = (requiredRoles = []) => {
   const [user, setUser] = useState(null);
   const [roles, setRoles] = useState([]);
-  const [loading, setLoading] = useState(true); // Ajouter un état de chargement
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -15,34 +16,34 @@ export const useUserWithRoles = (requiredRoles = []) => {
         try {
           const response = await api('user', 'GET', null, token);
           const userData = response.user;
-          const userRoles = response.user.roles.map((r) => r.name);
+          const userRoles = response.user.roles.map(r => r.name);
 
-          // Vérifie si l'utilisateur a les rôles requis
-          const hasRequiredRole = requiredRoles.some((role) =>
-            userRoles.includes(role)
-          );
-
-          if (hasRequiredRole) {
-            setUser(userData);
-            setRoles(userRoles);
-          } else {
-            router.push('/unauthorized'); // Redirection si l'utilisateur n'a pas le bon rôle
-          }
+          setUser(userData);
+          setRoles(userRoles);
         } catch (error) {
-          console.error(
-            'Erreur lors de la récupération des données utilisateur',
-            error
-          );
-          router.push('/connexion'); // Redirection vers la page de connexion en cas d'erreur
+          console.error('Erreur lors de la récupération des données utilisateur', error);
+          setError('Erreur de chargement des données utilisateur.');
+          router.push('/connexion');
         }
       } else {
-        router.push('/connexion'); // Redirection si aucun token n'est trouvé
+        router.push('/connexion');
       }
-      setLoading(false); // Fin du chargement
+      setLoading(false);
     };
 
     fetchUserData();
-  }, [requiredRoles, router]);
+  }, [router]);
 
-  return { user, roles, loading }; // Inclure un état de chargement
+  // Utilisation de useMemo pour mémoriser les rôles et la vérification des rôles requis
+  const hasRequiredRole = useMemo(() => {
+    return requiredRoles.some(role => roles.includes(role));
+  }, [roles, requiredRoles]);
+
+  useEffect(() => {
+    if (!loading && !hasRequiredRole) {
+      router.push('/unauthorized');
+    }
+  }, [loading, hasRequiredRole, router]);
+
+  return { user, roles, loading, error };
 };

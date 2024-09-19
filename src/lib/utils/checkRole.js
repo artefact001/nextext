@@ -1,3 +1,5 @@
+// lib/utils/checkRole.js
+
 import { api } from "./api";
 
 export const getUserWithRoles = async (context, requiredRoles = []) => {
@@ -24,15 +26,16 @@ export const getUserWithRoles = async (context, requiredRoles = []) => {
         props: { initialUser: user },
       };
     } else {
+      // Optionnel : rediriger si l'utilisateur n'a pas le rôle requis
       return {
-        props: { initialUser: null },
+        redirect: {
+          destination: '/unauthorized', // page que vous souhaitez afficher
+          permanent: false,
+        },
       };
     }
   } catch (error) {
-    console.error(
-      'Erreur lors de la récupération des données utilisateur',
-      error
-    );
+    console.error('Erreur lors de la récupération des données utilisateur', error);
     return {
       props: { initialUser: null },
     };

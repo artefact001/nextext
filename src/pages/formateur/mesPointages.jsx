@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { VStack, Spinner, Center, Box, Text, HStack } from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import isoWeeksInYear from 'dayjs/plugin/isoWeeksInYear';
-import ProfileCard from '../../components/layout/formateur/Navbar';
-import ListePointage from '../../components/func/formateur/ListePointage';
-import MonthPagination from '../../components/common/MonthPagination';
-import WeekSelector from '../../components/common/WeekSelector';
-import AttendanceSummary from '../../components/common/AttendanceSummary';
-import ProfileComponent from '../../components/func/formateur/profile';
+
+// Lazy load components
+const ProfileCardFormateur = lazy(() => import('../../components/layout/formateur/Navbar'));
+const ListePointage = lazy(() => import('../../components/func/formateur/ListePointage'));
+const MonthPagination = lazy(() => import('../../components/common/MonthPagination'));
+const WeekSelector = lazy(() => import('../../components/common/WeekSelector'));
+const AttendanceSummary = lazy(() => import('../../components/common/AttendanceSummary'));
+const ProfileComponent = lazy(() => import('../../components/func/formateur/profile'));
+
 
 // Activer les plugins dayjs
 dayjs.extend(isoWeek);
@@ -152,13 +155,14 @@ const MesPointages = () => {
   }
 
   return (
-    <VStack spacing={4} maxW="100%">
-      <ProfileCard />
-      <HStack justifyContent="space-between"  w="100%">
-        {/* ProfileComponent displayed only on desktop */}
+     <VStack spacing={4} maxW="100%">
+      <Suspense fallback={<Spinner />}>
+        <ProfileCardFormateur />
+      </Suspense>
+      <HStack justifyContent="space-between" w="100%">
         <Box display={{ base: 'none', md: 'block' }} flex="1" maxW="50%">
-          <Box
-           as="section"
+          <Box 
+           as="section"           
            flexDirection="column"
            px={20}
            py={8}
@@ -174,14 +178,17 @@ const MesPointages = () => {
            shadow="lg"
            bg="whiteAlpha.80"
            fontFamily="Nunito Sans"
-           flex="2"
-          >
-          <ProfileComponent />
-          </Box>
-        </Box>
+           flex="2">
+         
         
         {/* List section */}
-        <Box
+      
+            <Suspense fallback={<Spinner />}>
+              <ProfileComponent />
+            </Suspense>
+          </Box>
+        </Box>
+        <Box 
           as="section"
           display="flex"
           flexDirection="column"
@@ -199,18 +206,24 @@ const MesPointages = () => {
           bg="whiteAlpha.80"
           fontFamily="Nunito Sans"
           flex="2"
+        
+        
         >
-          <MonthPagination
-            mois={mois}
-            annee={annee}
-            handlePreviousMonth={handlePreviousMonth}
-            handleNextMonth={handleNextMonth}
-          />
-          <WeekSelector
-            semainesDuMois={semainesDuMois}
-            selectedWeek={selectedWeek}
-            setSelectedWeek={setSelectedWeek}
-          />
+          <Suspense fallback={<Spinner />}>
+            <MonthPagination
+              mois={mois}
+              annee={annee}
+              handlePreviousMonth={handlePreviousMonth}
+              handleNextMonth={handleNextMonth}
+            />
+          </Suspense>
+          <Suspense fallback={<Spinner />}>
+            <WeekSelector
+              semainesDuMois={semainesDuMois}
+              selectedWeek={selectedWeek}
+              setSelectedWeek={setSelectedWeek}
+            />
+          </Suspense>
           {loading ? (
             <Center mt={4}>
               <Spinner size="xl" />
@@ -222,7 +235,9 @@ const MesPointages = () => {
                   {error}
                 </Text>
               </Center>
-              <AttendanceSummary summary={attendanceSummary} />
+              <Suspense fallback={<Spinner />}>
+                <AttendanceSummary summary={attendanceSummary} />
+              </Suspense>
             </>
           ) : pointages.length === 0 ? (
             <>
@@ -231,12 +246,18 @@ const MesPointages = () => {
                   Aucun pointage trouvé pour cette période.
                 </Text>
               </Center>
-              <AttendanceSummary summary={attendanceSummary} />
+              <Suspense fallback={<Spinner />}>
+                <AttendanceSummary summary={attendanceSummary} />
+              </Suspense>
             </>
           ) : (
             <>
-              <ListePointage pointages={pointages} />
-              <AttendanceSummary summary={attendanceSummary} />
+              <Suspense fallback={<Spinner />}>
+                <ListePointage pointages={pointages} />
+              </Suspense>
+              <Suspense fallback={<Spinner />}>
+                <AttendanceSummary summary={attendanceSummary} />
+              </Suspense>
             </>
           )}
         </Box>
