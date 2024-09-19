@@ -8,7 +8,7 @@ import ListePointage from '../../components/func/apprenant/ListePointage';
 import MonthPagination from '../../components/common/MonthPagination';
 import WeekSelector from '../../components/common/WeekSelector';
 import AttendanceSummary from '../../components/common/AttendanceSummary';
-import Profile from './profile';
+import ProfileComponent from '../../components/func/apprenant/profile';
 
 // Activer les plugins dayjs
 dayjs.extend(isoWeek);
@@ -152,74 +152,98 @@ const MesPointages = () => {
   }
 
   return (
-    <VStack spacing={4} maxW="800px" mx="auto">
+    <VStack spacing={4} maxW="100%">
       <ProfileCard />
-      <HStack>
-
-      {/* <Profile ></Profile> */}
-
-      <Box
-        as="section"
-        display="flex"
-        flexDirection="column"
-        px={2}
-        py={8}
-        mt={1}
-        mx="auto"
-        w="full"
-        maxW={{ base: '366px', md: '700px', lg: '900px' }}
-        borderBottom="2px solid"
-        borderTop="2px solid"
-        borderColor="red.700"
-        borderRadius="md"
-        shadow="lg"
-        bg="whiteAlpha.80"
-        fontFamily="Nunito Sans"
-      >
-        <MonthPagination
-          mois={mois}
-          annee={annee}
-          handlePreviousMonth={handlePreviousMonth}
-          handleNextMonth={handleNextMonth}
-        />
-        <WeekSelector
-          semainesDuMois={semainesDuMois}
-          selectedWeek={selectedWeek}
-          setSelectedWeek={setSelectedWeek}
-        />
-        {loading ? (
-          <Center mt={4}>
-            <Spinner size="xl" />
-          </Center>
-        ) : error ? (
-          <>
+      <HStack justifyContent="space-between"  w="100%">
+        {/* ProfileComponent displayed only on desktop */}
+        <Box display={{ base: 'none', md: 'block' }} flex="1" maxW="50%">
+          <Box
+           as="section"
+           flexDirection="column"
+           px={20}
+           py={8}
+           mt={8}
+           mx={36}
+           w="full"
+           maxW={{ base: '366px', md: '500px', lg: '75%' }}
+           display={{ base: 'none', md: 'block' }}
+           borderBottom="2px solid"
+           borderTop="2px solid"
+           borderColor="red.700"
+           borderRadius="md"
+           shadow="lg"
+           bg="whiteAlpha.80"
+           fontFamily="Nunito Sans"
+           flex="2"
+          >
+          <ProfileComponent />
+          </Box>
+        </Box>
+        
+        {/* List section */}
+        <Box
+          as="section"
+          display="flex"
+          flexDirection="column"
+          px={1}
+          py={8}
+          mt={1}
+          mx="auto"
+          w="full"
+          maxW={{ base: '366px', md: '500px', lg: '35%' }}
+          borderBottom="2px solid"
+          borderTop="2px solid"
+          borderColor="red.700"
+          borderRadius="md"
+          shadow="lg"
+          bg="whiteAlpha.80"
+          fontFamily="Nunito Sans"
+          flex="2"
+        >
+          <MonthPagination
+            mois={mois}
+            annee={annee}
+            handlePreviousMonth={handlePreviousMonth}
+            handleNextMonth={handleNextMonth}
+          />
+          <WeekSelector
+            semainesDuMois={semainesDuMois}
+            selectedWeek={selectedWeek}
+            setSelectedWeek={setSelectedWeek}
+          />
+          {loading ? (
             <Center mt={4}>
-              <Text fontSize="lg" color="gray.600">
-                {error}
-              </Text>
+              <Spinner size="xl" />
             </Center>
-            <AttendanceSummary summary={attendanceSummary} />
-          </>
-        ) : pointages.length === 0 ? (
-          <>
-            <Center mt={4}>
-              <Text fontSize="lg" color="gray.600">
-                Aucun pointage trouvé pour cette période.
-              </Text>
-            </Center>
-            <AttendanceSummary summary={attendanceSummary} />
-          </>
-        ) : (
-          <>
-            <ListePointage pointages={pointages} />
-            <AttendanceSummary summary={attendanceSummary} />
-          </>
-          
-        )}
-      </Box>
+          ) : error ? (
+            <>
+              <Center mt={4}>
+                <Text fontSize="lg" color="gray.600">
+                  {error}
+                </Text>
+              </Center>
+              <AttendanceSummary summary={attendanceSummary} />
+            </>
+          ) : pointages.length === 0 ? (
+            <>
+              <Center mt={4}>
+                <Text fontSize="lg" color="gray.600">
+                  Aucun pointage trouvé pour cette période.
+                </Text>
+              </Center>
+              <AttendanceSummary summary={attendanceSummary} />
+            </>
+          ) : (
+            <>
+              <ListePointage pointages={pointages} />
+              <AttendanceSummary summary={attendanceSummary} />
+            </>
+          )}
+        </Box>
       </HStack>
     </VStack>
   );
+  
   
 };
 

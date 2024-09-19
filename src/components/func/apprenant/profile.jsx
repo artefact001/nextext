@@ -32,7 +32,7 @@ export default function ProfileComponent() {
           body: JSON.stringify({
             adresse,
             telephone,
-            password,
+            // password,
           }),
         }
       );
@@ -55,9 +55,9 @@ export default function ProfileComponent() {
   }
 
   return (
-    <Box         
-    bg="whiteAlpha.80"
-    h="100vh" p={4}>
+    <Box bg="whiteAlpha.80"  w={{ base: '366px', md: '500px', lg: '100%' }}
+    p={4}>
+      
       {/* Profile Section */}
       <Center mt={6} flexDirection="column">
         <Avatar
@@ -71,10 +71,8 @@ export default function ProfileComponent() {
       </Center>
 
       {/* Profile Details */}
-      <Box mt={6}         bg="whiteAlpha.80"
- p={4} borderRadius="md" shadow="md">
-        <Box        bg="whiteAlpha.80"
- p={4} borderRadius="md" shadow="md">
+      <>
+        <Box bg="whiteAlpha.80" p={4} borderRadius="md" shadow="md">
           <Text fontWeight="bold">Adresse</Text>
           <Input
             type="text"
@@ -104,7 +102,7 @@ export default function ProfileComponent() {
             focusBorderColor="red.500"
           />
         </Box>
-      </Box>
+      </>
 
       {/* Update Button */}
       <Center mt={6}>
