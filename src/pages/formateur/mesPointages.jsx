@@ -162,7 +162,7 @@ const MesPointages = () => {
            flexDirection="column"
            px={20}
            py={8}
-           mt={8}
+           mt={7}
            mx={36}
            w="full"
            maxW={{ base: '366px', md: '500px', lg: '75%' }}
