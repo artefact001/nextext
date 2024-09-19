@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useUserWithRoles } from '../../lib/utils/hooks/useUserWithRoles'; // Assurez-vous que le chemin est correct
-import { Center, Image } from '@chakra-ui/react';
-// import ButtonDeconnexion from '../../components/common/ButtonDeconnexion';
-import ProfileCard from '../../components/layout/formateur/Navbar';
+import { Image } from '@chakra-ui/react';
+import { getUserWithRoles } from '../../lib/utils/checkRole';
+import ButtonDeconnexion from '../../components/common/ButtonDeconnexion';
 
-const FormateurPage = () => {
-  const { user, loading } = useUserWithRoles(['Formateur']); // Spécifie ici les rôles requis
+const DashboardFormateur = () => {
+  const { user, roles, loading } = useUserWithRoles(['Formateur']); // Spécifie ici les rôles requis
   const [qrCodeUrl, setQrCodeUrl] = useState(null);
   const [error, setError] = useState(null);
 
@@ -42,33 +42,31 @@ const FormateurPage = () => {
   }
 
   return (
-    <Center  display={'block'}> {/* Ensures full height centering and padding for mobile view */}
-      {/* ProfileCard */}
-        <ProfileCard />
+    <div>
+            <ButtonDeconnexion></ButtonDeconnexion>
 
-      {/* ButtonDeconnexion */}
-
-      {/* QR Code */}
+      <h1>Bienvenue, {user.nom}</h1>
+      <p>Votre adresse e-mail est : {user.email}</p>
+      {roles.length > 0 && <p>Vos rôles : {roles.join(', ')}</p>}
       {error ? (
         <p>{error}</p>
       ) : qrCodeUrl ? (
-        <Center mt={20} bg="white" p={4} borderRadius="md"> {/* Center the QR code in a nice box */}
-          <Image
-            src={qrCodeUrl}
-            alt="QR Code"
-            width={200} // Mobile size
-            height={200}
-            objectFit="contain"
-          />
-        </Center>
+        <Image
+          src={qrCodeUrl}
+          alt="QR Code"
+          width={200} // Remplacer par la largeur souhaitée
+          height={200} // Remplacer par la hauteur souhaitée
+        />
       ) : (
         <p>Chargement du QR Code...</p>
       )}
-
-{/* <ButtonDeconnexion /> */}
-
-  </Center>
+    </div>
   );
 };
 
-export default FormateurPage;
+
+export async function getServerSideProps(context) {
+  return await getUserWithRoles(context, ['Formateur']); // Spécifie ici les rôles requis
+}
+
+export default DashboardFormateur;
