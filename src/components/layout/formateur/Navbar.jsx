@@ -6,10 +6,10 @@ import { getUserWithRoles } from '../../../lib/utils/checkRole';
 import ThemeToggleButton from '../DarkMode';
 import ButtonDeconnexion from '../../common/ButtonDeconnexion';
 
-const ProfileCardFormateur = () => {
+const ProfileCard = () => {
   const buttonSize = useBreakpointValue({ base: 'sm', md: 'md' });
   const iconSize = useBreakpointValue({ base: '20px', md: '30px' });
-  const { user } = useUserWithRoles(['Apprenant']);
+  const { user } = useUserWithRoles(['Formateur']);
   
   if (!user) {
     return <p>Une erreur est survenue. Veuillez vous reconnecter.</p>;
@@ -44,7 +44,7 @@ const ProfileCardFormateur = () => {
       >
         {/* Lien vers le profil utilisateur */}
         <Link
-          href='/apprenant/profile'
+          href='/formateur/profile'
           color="white"
           display="flex"
           flexDirection="column"
@@ -59,7 +59,7 @@ const ProfileCardFormateur = () => {
 
         {/* Lien vers le QR Code */}
         <Link
-          href='/apprenant'
+          href='/formateur'
           shadow="md"
           display="flex"
           flexDirection="column"
@@ -71,7 +71,7 @@ const ProfileCardFormateur = () => {
 
         {/* Lien vers l'historique */}
         <Link
-          href='/apprenant/mesPointages'
+          href='/formateur/mesPointages'
           color="white"
           display="flex"
           flexDirection="column"
@@ -107,7 +107,7 @@ const ProfileCardFormateur = () => {
 
 // Fetching user data
 export async function getServerSideProps(context) {
-  return await getUserWithRoles(context, ['Apprenant']);
+  return await getUserWithRoles(context, ['Formateur']);
 }
 
-export default ProfileCardFormateur;
+export default ProfileCard;

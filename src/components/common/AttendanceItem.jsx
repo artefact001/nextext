@@ -23,7 +23,7 @@ function AttendanceItem({ name, date, time, status }) {
       alignItems="center"
       py={3}
       px={4} // Use px for consistent padding on both sides
-      bg="white"
+      bg="whiteAlpha.80"
       borderBottom="1px solid"
       borderColor="gray.300" // Lighter border for better UX
     >

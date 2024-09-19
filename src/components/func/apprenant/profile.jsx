@@ -22,17 +22,20 @@ export default function ProfileComponent() {
   // Fonction pour gérer la mise à jour des informations
   const handleUpdate = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/update/information`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          adresse,
-          telephone,
-          password,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/update/information`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            adresse,
+            telephone,
+            // password,
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -52,16 +55,24 @@ export default function ProfileComponent() {
   }
 
   return (
-    <Box bg="white" h="100vh" p={4}>
+    <Box bg="whiteAlpha.80"  w={{ base: '366px', md: '500px', lg: '100%' }}
+    p={4}>
+      
       {/* Profile Section */}
       <Center mt={6} flexDirection="column">
-        <Avatar size="xl" name={user?.nom} src={user?.photo_profile || 'path/to/default-profile-image.jpg'} />
-        <Text fontSize="xl" mt={4}>{user?.email}</Text>
+        <Avatar
+          size="xl"
+          name={user?.nom}
+          src={user?.photo_profile || 'path/to/default-profile-image.jpg'}
+        />
+        <Text fontSize="xl" mt={4}>
+          {user?.email}
+        </Text>
       </Center>
 
       {/* Profile Details */}
-      <Box mt={6} bg="white" p={4} borderRadius="md" shadow="md">
-        <Box bg="white" p={4} borderRadius="md" shadow="md">
+      <>
+        <Box bg="whiteAlpha.80" p={4} borderRadius="md" shadow="md">
           <Text fontWeight="bold">Adresse</Text>
           <Input
             type="text"
@@ -71,7 +82,7 @@ export default function ProfileComponent() {
             focusBorderColor="red.500"
           />
         </Box>
-        <Box bg="white" p={4} borderRadius="md" shadow="md" mt={4}>
+        <Box bg="whiteAlpha.80" p={4} borderRadius="md" shadow="md" mt={4}>
           <Text fontWeight="bold">Téléphone</Text>
           <Input
             type="tel"
@@ -81,7 +92,7 @@ export default function ProfileComponent() {
             focusBorderColor="red.500"
           />
         </Box>
-        <Box bg="white" p={4} borderRadius="md" shadow="md" mt={4}>
+        <Box bg="whiteAlpha.80" p={4} borderRadius="md" shadow="md" mt={4}>
           <Text fontWeight="bold">Mot de passe</Text>
           <Input
             type="password"
@@ -91,7 +102,7 @@ export default function ProfileComponent() {
             focusBorderColor="red.500"
           />
         </Box>
-      </Box>
+      </>
 
       {/* Update Button */}
       <Center mt={6}>

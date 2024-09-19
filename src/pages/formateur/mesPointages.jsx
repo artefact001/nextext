@@ -3,12 +3,12 @@ import { VStack, Spinner, Center, Box, Text, HStack } from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import isoWeeksInYear from 'dayjs/plugin/isoWeeksInYear';
-import ProfileCard from '../../components/layout/apprenant/Navbar';
-import ListePointage from '../../components/func/apprenant/ListePointage';
+import ProfileCard from '../../components/layout/formateur/Navbar';
+import ListePointage from '../../components/func/formateur/ListePointage';
 import MonthPagination from '../../components/common/MonthPagination';
 import WeekSelector from '../../components/common/WeekSelector';
 import AttendanceSummary from '../../components/common/AttendanceSummary';
-import ProfileComponent from '../../components/func/apprenant/profile';
+import ProfileComponent from '../../components/func/formateur/profile';
 
 // Activer les plugins dayjs
 dayjs.extend(isoWeek);
