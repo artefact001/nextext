@@ -1,10 +1,10 @@
 import React from 'react';
 import { Box, Heading, List } from '@chakra-ui/react';
-import AttendanceItem from './AttendanceItem';
+import AttendanceItem from '../../common/AttendanceItem';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
 
-// Configure dayjs pour utiliser le français
+// Configure daylayoutjs pour utiliser le français
 dayjs.locale('fr');
 function ListePointage({ pointages }) {
   return (
@@ -30,7 +30,7 @@ function ListePointage({ pointages }) {
 
       <List
         spacing={4}
-        bg="white"
+        bg="whiteAlpha.80"
         border="1px solid"
         borderColor="gray.300"
         borderRadius="xl"

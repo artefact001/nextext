@@ -30,7 +30,7 @@ const QRCodeScanner = () => {
         title: 'Information Scannée',
         text: result || 'Aucune donnée scannée',
         icon: 'info',
-        showCancelButton: true,
+        // showCancelButton: true,
         confirmButtonText: 'Valider le scan',
       }).then(async (result) => {
         if (result.isConfirmed) {

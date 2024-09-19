@@ -1,36 +1,55 @@
 import React from 'react';
-import { Box, Center, Text, Flex, useBreakpointValue, Link } from '@chakra-ui/react';
+import { Box, Center, Text, Flex, useBreakpointValue, Link, HStack } from '@chakra-ui/react';
 import { FaUserAlt, FaQrcode, FaHistory } from 'react-icons/fa';
 import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 import { getUserWithRoles } from '../../../lib/utils/checkRole';
+import ThemeToggleButton from '../DarkMode';
+import ButtonDeconnexion from '../../common/ButtonDeconnexion';
 
 const ProfileCard = () => {
-  // Utilisation de valeurs réactives pour différentes tailles d'écran
   const buttonSize = useBreakpointValue({ base: 'sm', md: 'md' });
   const iconSize = useBreakpointValue({ base: '20px', md: '30px' });
-  const { user } = useUserWithRoles(['Apprenant']); // Spécifie ici les rôles requis
+  const { user } = useUserWithRoles(['Apprenant']);
+  
   if (!user) {
-    return <p>Une erreur est survenue. Veuillez vous reconnecter.</p>; // Gérer les cas où l'utilisateur n'est pas disponible
+    return <p>Une erreur est survenue. Veuillez vous reconnecter.</p>;
   }
+
   return (
     <Box
       bg="#CE0033"
       roundedBottomEnd="3xl"
       roundedBottomStart="3xl"
-      width={{ base: '100%', md: '400px' }}
-      p={6}
+      width={{ base: '100%', md: '100%', lg: '100%' }}
+      px={{ base: '5%', md: '5%', lg: '25%' }} 
       shadow="lg"
       textAlign="center"
-    >
-      {/* Top section with profile and history buttons */}
-      <Flex justify="space-between" align="center" bg="black" rounded="xl" py={2} px={5} color="white"   shadow={'lg'}   border="2px solid #CE0033">
-        <Link href='/apprenant/profile'
+      justifyContent= "space-between"
+      alignContent='center'    >
+      <ThemeToggleButton />
+
+      {/* Section de la barre noire */}
+      <Flex 
+        justify="space-between" 
+        align="center" 
+        bg="black" 
+        width={{ base: '100%', md: '100%', lg: '100%' }} 
+        rounded="xl" 
+        py={2} 
+        
+        px={{ base: '10%', md: '40px', lg: '80px' }}  // Ajustement du padding horizontal
+        color="white"   
+        shadow="lg"   
+        border="2px solid #CE0033"
+      >
+        {/* Lien vers le profil utilisateur */}
+        <Link
+          href='/apprenant/profile'
           color="white"
           display="flex"
           flexDirection="column"
           alignItems="center"
           justifyContent="center"
-          variant="ghost"
           fontSize={buttonSize}
           _focus={{ outline: 'none' }}
         >
@@ -38,32 +57,26 @@ const ProfileCard = () => {
           <Text mt={2}>Profile</Text>
         </Link>
 
-        <Center position="relative">
-        <Link href='/apprenant'
-          
-            shadow="md"
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-          >
-            <FaQrcode size={iconSize} />
-            <Text mt={2}>QR Code</Text>
-          </Link>
-          {/* <Box
-            position="absolute"
-            inset="0"
-            animation="pulse 2s infinite"
-          /> */}
-        </Center>
+        {/* Lien vers le QR Code */}
+        <Link
+          href='/apprenant'
+          shadow="md"
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+        >
+          <FaQrcode size={iconSize} />
+          <Text mt={2}>QR Code</Text>
+        </Link>
 
-               <Link href='/apprenant/mesPointages'
-
+        {/* Lien vers l'historique */}
+        <Link
+          href='/apprenant/mesPointages'
           color="white"
           display="flex"
           flexDirection="column"
           alignItems="center"
           justifyContent="center"
-          variant="ghost"
           fontSize={buttonSize}
           _focus={{ outline: 'none' }}
         >
@@ -72,22 +85,29 @@ const ProfileCard = () => {
         </Link>
       </Flex>
 
-      {/* Name and ID */}
-      <Box color="white" mt={12}>
-        <Text fontSize="xl" fontWeight="bold">{user.prenom} {user.nom}</Text>
-        <Text>#P7</Text>
-      </Box>
+      {/* Nom et ID utilisateur */}
+      <Center  display='flex' mt={4}  textAlign="center">
+        <Box color="white" px={20 }>
+          <Text fontSize={{ base: '20px', md: '20px', lg: '35px' }} fontWeight="bold">{user.prenom} {user.nom}</Text>
+          <Text>#P7</Text>
+        </Box>
+        
+        <Box  mt={4}>
+          <ButtonDeconnexion />
+        </Box>
+      </Center>
 
-      {/* QR Code (can be added later if needed) */}
-    
-      {/* Bottom Indicator */}
-      <Center mt={2}>
+      {/* Indicateur en bas */}
+      <Center mt={4}>
         <Box w="14" h="1" bg="#CE0033" rounded="full" />
       </Center>
     </Box>
   );
 };
+
+// Fetching user data
 export async function getServerSideProps(context) {
-  return await getUserWithRoles(context, ['Apprenant']); // Spécifie ici les rôles requis
+  return await getUserWithRoles(context, ['Apprenant']);
 }
+
 export default ProfileCard;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { VStack, Spinner, Center, Alert, AlertIcon, Box, Text, HStack } from '@chakra-ui/react';
+import { VStack, Spinner, Center, Box, Text, HStack } from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import isoWeeksInYear from 'dayjs/plugin/isoWeeksInYear';
@@ -7,8 +7,7 @@ import ProfileCard from '../../components/layout/apprenant/Navbar';
 import ListePointage from '../../components/func/apprenant/ListePointage';
 import MonthPagination from '../../components/common/MonthPagination';
 import WeekSelector from '../../components/common/WeekSelector';
-import AttendanceSummary from '../../components/layout/apprenant/AttendanceSummary';
-import Swal from 'sweetalert2';
+import AttendanceSummary from '../../components/common/AttendanceSummary';
 import Profile from './profile';
 
 // Activer les plugins dayjs

@@ -1,6 +1,6 @@
 import { Center } from "@chakra-ui/react";
 import ProfileCard from "../../components/layout/apprenant/Navbar";
-import ProfileComponent from "../../components/func/apprenant";
+import ProfileComponent from "../../components/func/apprenant/profile";
 
 
 const Profile = () => {

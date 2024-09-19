@@ -89,12 +89,13 @@ const Login = () => {
         </Heading>
     
   
-      <Center minH="100vh" mx={5} bg="gray.50">
+      <Center minH="100vh" mx={5}         bg="whiteAlpha.80"
+      >
         
       <Box   w="full" 
   maxW="sm" 
   p={6} 
-  bg="white" 
+  bg="whiteAlpha.80"
   rounded="lg" 
   borderTop="2px" 
   borderBottom="2px"
