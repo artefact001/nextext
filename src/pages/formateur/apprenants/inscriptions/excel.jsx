@@ -1,12 +1,32 @@
 import { useState } from 'react';
-import { Center, Button, Input, FormControl, FormLabel, Box, Text } from '@chakra-ui/react';
-import ProfileCard from '../../../components/layout/formateur/Navbar';
+import { Center, Button, Input, FormControl, FormLabel, Box, Text, useToast } from '@chakra-ui/react';
+import useSWR from 'swr';
+import FormSelect from '../../../../components/common/FormSelect';
+import ProfileCardFormateur from '../../../../components/layout/formateur/Navbar';
+
+const fetcher = (url) =>
+  fetch(url, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  }).then((res) => {
+    if (!res.ok) throw new Error('Erreur lors de la récupération des données.');
+    return res.json();
+  });
 
 const InscrireAppprenantExel = () => {
+  const toast = useToast(); // Hook pour afficher des notifications
+
   const [file, setFile] = useState(null);
   const [promoId, setPromoId] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState(null);
+
+  // Récupérer les promos en cours et terminées
+  const { data: promosData } = useSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/promos/encours`,
+    fetcher
+  );
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -40,6 +60,13 @@ const InscrireAppprenantExel = () => {
       if (response.ok) {
         setMessage(result.message || 'Importation réussie !');
         setError(null);
+        toast({
+          title: 'Succès !',
+          description: 'Les apprenants ont été inscrits avec succès.',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
       } else {
         setError(result.error || 'Une erreur est survenue.');
       }
@@ -48,19 +75,31 @@ const InscrireAppprenantExel = () => {
     }
   };
 
+  const promos = promosData ? promosData.promos : [];
+
   return (
     <Center display={'block'}>
-      <ProfileCard />
+      <ProfileCardFormateur />
 
-      <Box mt={5} p={5} shadow="md" borderWidth="1px" borderRadius="lg" width="100%" maxWidth="500px">
+      <Box mt={5} p={5}borderRadius="lg" width="100%" maxWidth="40%"   borderTop="2px" 
+  borderBottom="2px"
+    borderColor="#CE0033" 
+    // borderColor="red" // Utilisation de la couleur définie dans le thème
+
+  shadow="lg">
         <form onSubmit={handleSubmit}>
           <FormControl id="promo_id" mb={4} isRequired>
             <FormLabel>Promotion ID</FormLabel>
-            <Input
-              type="text"
-              placeholder="Saisir l'ID de la promotion"
-              value={promoId}
-              onChange={(e) => setPromoId(e.target.value)}
+            <FormSelect
+              id="promo_id"
+              label="ID de la promotion"
+              name="promo_id"
+              value={promoId} // Utilisation de promoId
+              onChange={(e) => setPromoId(e.target.value)} // Met à jour promoId
+              options={Array.isArray(promos) ? promos.map((promo) => ({
+                value: promo.id,
+                label: promo.nom // ou autre champ approprié
+              })) : []}
             />
           </FormControl>
 
@@ -76,7 +115,7 @@ const InscrireAppprenantExel = () => {
 
         {message && (
           <Text mt={4} color="green.500">
-            {message}
+            
           </Text>
         )}
         {error && (

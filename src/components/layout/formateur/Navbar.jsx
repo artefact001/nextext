@@ -7,6 +7,7 @@ import ThemeToggleButton from '../DarkMode';
 import ButtonDeconnexion from '../../common/ButtonDeconnexion';
 import Link from 'next/link';
 
+// eslint-disable-next-line react/display-name
 const ProfileCardFormateur = React.memo(() => {
   const buttonSize = useBreakpointValue({ base: 'sm', md: 'md' });
   const iconSize = useBreakpointValue({ base: '20px', md: '30px' });
@@ -23,7 +24,11 @@ const ProfileCardFormateur = React.memo(() => {
   }
 
   if (!user) {
-    return <p>Une erreur est survenue. Veuillez vous reconnecter.</p>;
+    return (
+      <Center h="100vh">
+        <Text>Une erreur est survenue. Veuillez vous reconnecter.</Text>
+      </Center>
+    );
   }
 
   return (
@@ -32,7 +37,7 @@ const ProfileCardFormateur = React.memo(() => {
       roundedBottomEnd="3xl"
       roundedBottomStart="3xl"
       width="100%"
-      px={{ base: '5%', md: '5%', lg: '25%' }}
+      px={{ base: '5%', lg: '25%' }}
       shadow="lg"
       textAlign="center"
     >
@@ -50,31 +55,15 @@ const ProfileCardFormateur = React.memo(() => {
         shadow="lg"
         border="2px solid #CE0033"
       >
-        <Link href='/formateur/profile' passHref>
-          <Flex color="white" display="flex" flexDirection="column" alignItems="center" fontSize={buttonSize}>
-            <FaUserAlt size={iconSize} />
-            <Text mt={2}>Profile</Text>
-          </Flex>
-        </Link>
-        
-        <Link href='/formateur' passHref>
-          <Flex color="white" display="flex" flexDirection="column" alignItems="center">
-            <FaQrcode size={iconSize} />
-            <Text mt={2}>QR Code</Text>
-          </Flex>
-        </Link>
-
-        <Link href='/formateur/mesPointages' passHref>
-          <Flex color="white" display="flex" flexDirection="column" alignItems="center" fontSize={buttonSize}>
-            <FaHistory size={iconSize} />
-            <Text mt={2}>Historique</Text>
-          </Flex>
-        </Link>
+        <NavLink href="/formateur/profile" icon={FaUserAlt} label="Profile" iconSize={iconSize} buttonSize={buttonSize} />
+        <NavLink href="/formateur" icon={FaQrcode} label="QR Code" iconSize={iconSize} />
+        <NavLink href="/formateur/mesPointages" icon={FaHistory} label="Historique" iconSize={iconSize} buttonSize={buttonSize} />
+        <NavLink href="/formateur/promos" icon={FaHistory} label="Promos" iconSize={iconSize} buttonSize={buttonSize} />
       </Flex>
 
-      <Center display='flex' mt={4} textAlign="center">
+      <Center mt={4}>
         <Box color="white" px={20}>
-          <Text fontSize={{ base: '20px', md: '20px', lg: '35px' }} fontWeight="bold">{fullName}</Text>
+          <Text fontSize={{ base: '20px', lg: '35px' }} fontWeight="bold">{fullName}</Text>
           <Text>#P7</Text>
         </Box>
         <Box mt={4}>
@@ -88,6 +77,15 @@ const ProfileCardFormateur = React.memo(() => {
     </Box>
   );
 });
+
+const NavLink = ({ href, icon: Icon, label, iconSize, buttonSize }) => (
+  <Link href={href} passHref>
+    <Flex color="white" display="flex" flexDirection="column" alignItems="center" fontSize={buttonSize}>
+      <Icon size={iconSize} />
+      <Text mt={2}>{label}</Text>
+    </Flex>
+  </Link>
+);
 
 export async function getServerSideProps(context) {
   const result = await getUserWithRoles(context, ['Formateur']);

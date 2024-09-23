@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Center, Button, Box, Text, Select } from '@chakra-ui/react';
+import { Center, Button, Box, Text, SimpleGrid, VStack } from '@chakra-ui/react';
 import FormInput from '../../../components/common/FormInput';
+import FormSelect from '../../../components/common/FormSelect';
 import ProfileCardFormateur from '../../../components/layout/formateur/Navbar';
+import PromoHeader from '../../../components/common/PromoHeader';
+import Link from 'next/link';
 
 const CreatePromoForm = () => {
   const [formData, setFormData] = useState({
@@ -32,7 +35,7 @@ const CreatePromoForm = () => {
       if (response.ok) {
         const data = await response.json();
         setUser(data.user);
-        setFormData(prevFormData => ({
+        setFormData((prevFormData) => ({
           ...prevFormData,
           formateur_id: data.user.id,
         }));
@@ -46,6 +49,7 @@ const CreatePromoForm = () => {
 
   const fetchOptions = async () => {
     try {
+      // eslint-disable-next-line no-undef
       const [fabriquesRes, chefsProjetsRes, formationsRes] = await Promise.all([
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/fabriques`),
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/chefs-projet`),
@@ -130,106 +134,112 @@ const CreatePromoForm = () => {
     <Center display="block">
       <ProfileCardFormateur />
 
-      <Box mt={5} p={5} shadow="md" borderWidth="1px" borderRadius="lg" width="100%" maxWidth="500px">
-        <form onSubmit={handleSubmit}>
-          <FormInput
-            id="nom"
-            label="Nom"
-            name="nom"
-            type="text"
-            placeholder="Nom de la promotion"
-            value={formData.nom}
-            onChange={handleChange}
-            error={errors.nom}
-          />
-          {errors.nom && <Text color="red.500">{errors.nom}</Text>}
+      <SimpleGrid columns={{ sm: 1, md: 2 }} spacing={5} mt={10}>
+   <Box mt={5} p={5} shadow="md" borderWidth="1px" borderRadius="lg" width="70%" mx={32}>
+  <form onSubmit={handleSubmit}>
+  <SimpleGrid columns={[1, 2]} spacing={4}>
 
-          <FormInput
-            id="date_debut"
-            label="Date de début"
-            name="date_debut"
-            type="date"
-            value={formData.date_debut}
-            onChange={handleChange}
-            error={errors.date_debut}
-          />
-          {errors.date_debut && <Text color="red.500">{errors.date_debut}</Text>}
+    {/* Champ Nom */}
+    <FormInput
+      id="nom"
+      label="Nom"
+      name="nom"
+      type="text"
+      placeholder="Nom de la promotion"
+      value={formData.nom}
+      onChange={handleChange}
+      error={errors.nom}  // Ajout de l'erreur ici
+    />
+    {/* Sélection de la Formation */}
+    <FormSelect
+      id="formation_id"
+      label="Formation"
+      name="formation_id"
+      value={formData.formation_id}
+      onChange={handleChange}
+      options={formations.map(formation => ({ value: formation.id, label: formation.nom }))}
+      error={errors.formation_id}  // Ajout de l'erreur ici
+    />
+    {/* Champ Date de début */}
+    <FormInput
+      id="date_debut"
+      label="Date de début"
+      name="date_debut"
+      type="date"
+      value={formData.date_debut}
+      onChange={handleChange}
+      error={errors.date_debut}  // Ajout de l'erreur ici
+    />
 
-          <FormInput
-            id="date_fin"
-            label="Date de fin"
-            name="date_fin"
-            type="date"
-            value={formData.date_fin}
-            onChange={handleChange}
-            error={errors.date_fin}
-          />
-          {errors.date_fin && <Text color="red.500">{errors.date_fin}</Text>}
+    {/* Champ Date de fin */}
+    <FormInput
+      id="date_fin"
+      label="Date de fin"
+      name="date_fin"
+      type="date"
+      value={formData.date_fin}
+      onChange={handleChange}
+      error={errors.date_fin}  // Ajout de l'erreur ici
+    />
 
-          <Select
-            id="fabrique_id"
-            name="fabrique_id"
-            placeholder="Sélectionnez une fabrique"
-            value={formData.fabrique_id}
-            onChange={handleChange}
-            isInvalid={errors.fabrique_id}
-          >
-            {fabriques.map(fabrique => (
-              <option key={fabrique.id} value={fabrique.id}>
-                {fabrique.nom}
-              </option>
-            ))}
-          </Select>
-          {errors.fabrique_id && <Text color="red.500">{errors.fabrique_id}</Text>}
+    {/* Sélection de la Fabrique */}
+    <FormSelect
+      id="fabrique_id"
+      label="Fabrique"
+      name="fabrique_id"
+      value={formData.fabrique_id}
+      onChange={handleChange}
+      options={fabriques.map(fabrique => ({ value: fabrique.id, label: fabrique.nom }))}
+      error={errors.fabrique_id}  // Ajout de l'erreur ici
+    />
 
-          <Select
-            id="chef_projet_id"
-            name="chef_projet_id"
-            placeholder="Sélectionnez un chef de projet"
-            value={formData.chef_projet_id}
-            onChange={handleChange}
-            isInvalid={errors.chef_projet_id}
-          >
-            {chefsProjets.map(chef => (
-              <option key={chef.id} value={chef.id}>
-                {chef.nom}
-              </option>
-            ))}
-          </Select>
-          {errors.chef_projet_id && <Text color="red.500">{errors.chef_projet_id}</Text>}
+    {/* Sélection du Chef de projet */}
+    <FormSelect
+      id="chef_projet_id"
+      label="Chef de Projet"
+      name="chef_projet_id"
+      value={formData.chef_projet_id}
+      onChange={handleChange}
+      options={chefsProjets.map(chef => ({ value: chef.id, label: chef.nom }))}
+      error={errors.chef_projet_id}  // Ajout de l'erreur ici
+    />
 
-          <Select
-            id="formation_id"
-            name="formation_id"
-            placeholder="Sélectionnez une formation"
-            value={formData.formation_id}
-            onChange={handleChange}
-            isInvalid={errors.formation_id}
-          >
-            {formations.map(formation => (
-              <option key={formation.id} value={formation.id}>
-                {formation.nom}
-              </option>
-            ))}
-          </Select>
-          {errors.formation_id && <Text color="red.500">{errors.formation_id}</Text>}
+    
 
-          <Button type="submit" colorScheme="blue" width="full">
-            Créer Promotion
-          </Button>
-        </form>
+    <Button type="submit" mx="auto"  color="white" bg="red.700" width="full">
+      Créer Promotion
+    </Button>
+    </SimpleGrid>
+  </form>
 
-        {message && (
-          <Text mt={4} color="green.500">
-            {message}
-          </Text>
-        )}
-        {errors.general && (
-          <Text mt={4} color="red.500">
-            {errors.general}
-          </Text>
-        )}
-      </Box>
+  {message && (
+    <Text mt={4} color="green.500">
+      {message}
+    </Text>
+  )}
+  {errors.general && (
+    <Text mt={4} color="red.500">
+      {errors.general}
+    </Text>
+  )}
+</Box>  
+<Box mt={5} p={5} shadow="md" borderWidth="1px" borderRadius="lg" width="70%" mx={12}>
+<VStack spacing={4}>
+            <PromoHeader />
+
+            {/* Choix d'ajout d'apprenants */}
+            <Text mt={4} fontWeight="bold">Ajouter des Apprenants :</Text>
+            <SimpleGrid spacing={2} mt={2}>
+              <Link href="/formateur/apprenants/inscriptions/excel" isExternal>
+                <Button colorScheme="teal">Ajouter par Excel</Button>
+              </Link>
+              <Link href="/formateur/apprenants/inscriptions/formulaire" isExternal>
+                <Button colorScheme="teal">Ajouter par Formulaire</Button>
+              </Link>
+            </SimpleGrid>
+              </VStack>
+</Box>  
+   </SimpleGrid>
     </Center>
   );
 };
