@@ -1,8 +1,29 @@
 import React from 'react';
 import { VStack, Flex, Box, Text, Image, List, ListItem } from '@chakra-ui/react';
-import dayjs from 'dayjs'; // Assurez-vous d'importer dayjs
+import dayjs from 'dayjs'; // Make sure to import dayjs
 
-const getStatusImage = (status) => {
+// Define the interface for pointage object
+interface Pointage {
+  id: string;
+  type: string;
+  date: string;
+  heure_present: string;
+  user: {
+    prenom: string;
+    nom: string;
+  };
+}
+
+interface Promo {
+  nom: string;
+}
+
+interface ListePointageProps {
+  pointages: Pointage[];
+  promo?: Promo;
+}
+
+const getStatusImage = (status: string) => {
   switch (status) {
     case 'present':
       return '/images/presence.png';
@@ -15,7 +36,7 @@ const getStatusImage = (status) => {
   }
 };
 
-const AttendanceItem = ({ pointage }) => {
+const AttendanceItem = ({ pointage }: { pointage: Pointage }) => {
   return (
     <ListItem
       display="flex"
@@ -38,24 +59,23 @@ const AttendanceItem = ({ pointage }) => {
       />
       <Flex direction="column" flex="1" minW="200px">
         <Text fontSize="md" fontWeight="bold" color="gray.800" isTruncated>
-          {pointage.user.prenom || 'Prenom inconnu'}  { pointage.user.nom || 'Nom inconnu'}
+          {pointage.user.prenom || 'Prenom inconnu'} {pointage.user.nom || 'Nom inconnu'}
         </Text>
-      
       </Flex>
       <Box fontSize="md" fontWeight="medium" color="gray.800" w="full" textAlign="right" fontFamily="Nunito Sans">
-      {pointage.heure_present}
+        {pointage.heure_present}
       </Box>
     </ListItem>
   );
 };
 
-const ListePointage = ({ pointages, promo }) => {
+const ListePointage = ({ pointages, promo }: ListePointageProps) => {
   if (!pointages || pointages.length === 0) {
     return <Text>Aucun pointage disponible.</Text>;
   }
 
-  // Grouper les pointages par date
-  const pointagesParDate = pointages.reduce((acc, pointage) => {
+  // Group pointages by date
+  const pointagesParDate: { [key: string]: Pointage[] } = pointages.reduce((acc: { [key: string]: Pointage[] }, pointage) => {
     const date = dayjs(pointage.date).format('YYYY-MM-DD');
     if (!acc[date]) {
       acc[date] = [];
@@ -67,28 +87,25 @@ const ListePointage = ({ pointages, promo }) => {
   return (
     <VStack spacing={4} align="stretch" w="100%">
       {Object.entries(pointagesParDate).map(([date, pointagesDuJour]) => (
-        <>
+        <React.Fragment key={date}>
           <Box display="flex" alignItems="center" justifyContent="center" mb={3}>
-            {/* NOM DU PROMO */}
+            {/* Display promo name */}
+            {promo && <Text fontWeight="bold" textAlign="center" mb={3}>Promotion : {promo.nom}</Text>}
             <Text fontWeight="bold" textAlign="center" mb={3}>
-            {promo && <Text>Promotion : {promo.nom}</Text>}
-            </Text><Text fontWeight="bold" textAlign="center" mb={3}>
               Date : {date}
             </Text>
           </Box>
-          
-          <Box key={date} p={4} shadow="md" borderWidth="1px">
+          <Box p={4} shadow="md" borderWidth="1px">
             <List>
               {pointagesDuJour.map((pointage) => (
                 <AttendanceItem key={pointage.id} pointage={pointage} />
               ))}
             </List>
           </Box>
-        </>
+        </React.Fragment>
       ))}
     </VStack>
   );
-  
 };
 
 export default ListePointage;
