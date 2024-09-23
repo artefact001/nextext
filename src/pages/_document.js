@@ -14,7 +14,7 @@ export default function Document() {
         />
       </Head>
       <body>
-        {/* 👇 Here's the script */}
+        {/* This script ensures the correct color mode is applied */}
         <ColorModeScript />
         <Main />
         <NextScript />

@@ -4,7 +4,6 @@ import WeekSelector from './WeekSelector';
 import DaysOfWeek from './DaysOfWeek';
 import AttendanceSummary from './AttendanceSummary';
 import { Box, Center, Spinner, Text } from '@chakra-ui/react';
-import ListePointage from './ListePointage';
 
 const PointageBoxPromo = ({
   date,
@@ -12,7 +11,6 @@ const PointageBoxPromo = ({
   semainesDuMois,
   selectedWeek,
   setSelectedWeek,
-  pointagesData,
   pointagesError,
   attendanceSummary,
   setSelectedDay,
@@ -52,7 +50,7 @@ const PointageBoxPromo = ({
     ) : (
       <>
         <Suspense fallback={<Spinner />}>
-          <DaysOfWeek daysOfWeek={daysOfWeek} setSelectedDay={setSelectedDay} />
+          <DaysOfWeek daysOfWeek={daysOfWeek} setSelectedDay={setSelectedDay} retard={undefined} absent={undefined} />
         </Suspense>
 
 

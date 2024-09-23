@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { api } from '../../lib/utils/api';
-  
-import { Box, Button, Center, FormControl, FormLabel, Input, Heading, Image, useToast } from '@chakra-ui/react';
+import { PiLockKeyOpenFill } from "react-icons/pi";
+import { Box, Button, Center, FormControl, FormLabel, Input, Heading  , useToast } from '@chakra-ui/react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -82,7 +82,9 @@ const Login = () => {
 
   return (
 
-    <div>
+    <div
+    
+    >
 
 <Heading as="h3" size="md" pt={20} textAlign="center" mb={-3}>
           Bienvenue dans la page de connexion
@@ -106,8 +108,8 @@ const Login = () => {
   >
         {/* Icon de verrou */}
         <Center mb={4}>
-          <Image src="/path/to/your/lock-icon.png" alt="Lock icon" boxSize="64px" />
-        </Center>
+        <PiLockKeyOpenFill />
+                </Center>
 
         {/* Titre de la page */}
         

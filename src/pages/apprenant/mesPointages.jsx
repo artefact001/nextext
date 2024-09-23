@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, lazy, Suspense } from 'react';
-import { VStack, Spinner, Center, Box, HStack, SimpleGrid } from '@chakra-ui/react';
+import React, { useState, Suspense } from 'react';
+import { VStack, Spinner, Center, Box, SimpleGrid } from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import isoWeeksInYear from 'dayjs/plugin/isoWeeksInYear';
