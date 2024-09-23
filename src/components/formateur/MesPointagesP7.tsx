@@ -19,7 +19,11 @@ const PointageBoxPromo = ({
   daysOfWeek,
   dailyData,
 }) => (
-  <Box as="section" display="flex" flexDirection="column" w="full" maxW={{ base: '366px', md: '500px', lg: '35%' }} borderBottom="2px solid" borderTop="2px solid" borderColor="red.700" borderRadius="md" shadow="lg" bg="whiteAlpha.80" fontFamily="Nunito Sans">
+  <Box as="section" display="flex" 
+  px={{ base: '12px', md: '12px', lg: '42px'}} 
+  
+  
+  flexDirection="column" w="full" maxW={{ base: '366px', md: '500px', lg: '100%' }} borderBottom="2px solid" borderTop="2px solid" borderColor="red.700" borderRadius="md" shadow="lg" bg="whiteAlpha.80" fontFamily="Nunito Sans">
     <Suspense fallback={<Spinner />}>
       <MonthPagination
         mois={date.format('MM')}

@@ -2,7 +2,7 @@ import { Box, Link, Text } from '@chakra-ui/react';
 
 const PromoHeader = () => {
   return (
-    <Box position="relative" w="86%" h="14">
+    <Box position="relative" w="100%" h="14">
       {/* Rectangle de fond */}
       <Box
         position=""

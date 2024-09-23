@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useUserWithRoles } from '../../lib/utils/hooks/useUserWithRoles';
-import { Center, Image, Text, Spinner, Box } from '@chakra-ui/react';
+import { Center, Image, Text, Spinner, Box, SimpleGrid } from '@chakra-ui/react';
 import ProfileCard from '../../components/layout/apprenant/Navbar';
 
 const ApprenantPage = () => {
@@ -46,7 +46,31 @@ const ApprenantPage = () => {
     <Center display={'block'}>
       <ProfileCard />
 
-      <Box mt={4} textAlign="center">
+       <SimpleGrid
+        mx={{ base: '2px', md: '3px', lg: '12px' }}
+        justifyContent="space-between"
+        columns={[1, 2]}
+        spacing={8}
+      >
+        <Box
+          as="section"
+          px={{ base: '2px', md: '3px', lg: '20px' }}
+          mx={{ base: '2px', md: '3px', lg: '10px' }}
+          py={8}
+          mt={7}
+          w="full"
+          maxW={{ base: '366px', md: '100%', lg: '100%' }}
+          borderBottom="2px solid"
+          borderTop="2px solid"
+          borderColor="red.700"
+          borderRadius="md"
+          shadow="lg"
+          bg="whiteAlpha.80"
+          fontFamily="Nunito Sans"
+          flex="2"
+          display={{ base: 'none', md: 'none', lg: 'block' }}
+          >
+
         {loadingQRCode ? (
           <>
             <Spinner size="xl" color="red.500" />
@@ -68,6 +92,7 @@ const ApprenantPage = () => {
           <Text>Aucun QR Code disponible.</Text>
         )}
       </Box>
+      </SimpleGrid>
     </Center>
   );
 };

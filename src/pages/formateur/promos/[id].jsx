@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, lazy, Suspense } from 'react';
-import { VStack, Spinner, Center, Box, HStack, Text } from '@chakra-ui/react';
+import { VStack, Spinner, Center, Box , Text, SimpleGrid } from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import isoWeeksInYear from 'dayjs/plugin/isoWeeksInYear';
@@ -28,16 +28,7 @@ const fetcher = (url) =>
     if (!res.ok) throw new Error('Erreur lors de la récupération des données');
     return res.json();
   });
-  const fetchDailyData = async () => {
-    try {
-      const response = await fetch(selectedDayUrl);
-      const data = await response.json();
-      console.log('Daily Data:', data); // Vérifiez ici
-      setDailyData(data); // Vérifiez que cette ligne est bien atteinte
-    } catch (error) {
-      console.error('Erreur lors de la récupération des données quotidiennes:', error);
-    }
-  };
+  
   
 const MesPointagesP7 = () => {
   const [date, setDate] = useState(dayjs());
@@ -118,26 +109,69 @@ const MesPointagesP7 = () => {
 
   return (
     <VStack spacing={4} maxW="100%">
+
       <Suspense fallback={<Spinner />}>
         <ProfileCardFormateur />
       </Suspense>
 
-      <HStack justifyContent="space-between" w="100%">
-        {/* Rendu conditionnel basé sur selectedDay et l'état des données */}
-        <Suspense fallback={<Spinner />}>
-  {dailyData ? (
-    dailyData.pointages.length > 0 ? (
-      <ListePointage pointages={dailyData.pointages}  promo={promo}/>
-    ) : (
-      <Text>Aucun pointage trouvé pour la journée sélectionnée.</Text>
-    )
+ <SimpleGrid justifyContent="space-between" columns={[1, 2]} spacing={4} >
+    
+          <Box
+            as="section"
+            py={8}
+            mt={7}
+            w="full"
+            px={{ base: '12px', md: '13px', lg: '40px' }}
+            mx={{ base: '2px', md: '3px', lg: '60px' }}
+            maxW={{ base: '366px', md: '100%', lg: '80%' }}
+                    borderBottom="2px solid"
+            borderTop="2px solid"
+            borderColor="red.700"
+            borderRadius="md"
+            shadow="lg"
+            bg="whiteAlpha.80"
+            fontFamily="Nunito Sans"
+            flex="2"
+          >        {/* Rendu conditionnel basé sur selectedDay et l'état des données */}
+     <Suspense fallback={<Spinner />}>
+  {/* Handle loading and empty states */}
+  {isDailyLoading ? (
+    <Text>Chargement des données...</Text> // Loading state
+  ) : dailyError ? (
+    <>
+      {/* Display the selected date */}
+      <Text>Date: {selectedDay ? selectedDay.format('DD/MM/YYYY') : 'Date non sélectionnée'}</Text> 
+      <Text>Aucun pointage trouvé pour la journée sélectionnée.</Text> 
+    </>
+  ) : dailyData && dailyData.pointages.length > 0 ? (
+    <ListePointage pointages={dailyData.pointages} promo={promo} />
   ) : (
-    <Text>Chargement des données...</Text>
+    <>  
+      {/* Display the selected date */}
+      <Text>Date: {selectedDay ? selectedDay.format('DD/MM/YYYY') : 'Date non sélectionnée'}</Text>
+      <Text>Aucun pointage trouvé pour la journée sélectionnée.</Text> 
+    </>
   )}
 </Suspense>
 
-
-
+</Box>
+<Box
+          as="section"
+          px={{ base: '2px', md: '1px', lg: '40px' }}
+          mx={{ base: '2px', md: '3px', lg: '60px' }}
+          maxW={{ base: '366px', md: '100%', lg: '80%' }}
+          py={8}
+          mt={7}
+          w="full"
+          borderBottom="2px solid"
+          borderTop="2px solid"
+          borderColor="red.100"
+          borderRadius="md"
+          shadow="lg"
+          bg="whiteAlpha.80"
+          fontFamily="Nunito Sans"
+          flex="2"
+        >
         <PointageBoxPromo
           date={date}
           handleMonthChange={handleMonthChange}
@@ -151,7 +185,9 @@ const MesPointagesP7 = () => {
           daysOfWeek={daysOfWeek}
           dailyData={dailyData} // Données filtrées par jour
         />
-      </HStack>
+        </Box>
+
+      </SimpleGrid>
     </VStack>
   );
 };

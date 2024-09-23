@@ -10,12 +10,15 @@ const WeekSelector = ({ semainesDuMois, selectedWeek, setSelectedWeek }) => {
   const isDarkMode = colorMode === 'dark'; // Vérifie si le mode sombre est activé
 
   return (
-    <HStack justify="center">
+    <HStack justify="center"   mb={10}>
       {semainesDuMois.map((week) => (
         <Button
           display="block"
           height="full"
-          py={2}
+          py={3}
+          w="full"
+          px={{ base: '0px' , md: '2px', lg: '22px'}}
+          maxW={{ base: '140px' , md: '322px', lg: '100px'}}
           key={week.number}
           onClick={() => setSelectedWeek(week.number)}
           // Gestion des couleurs en fonction du mode
@@ -42,7 +45,7 @@ const WeekSelector = ({ semainesDuMois, selectedWeek, setSelectedWeek }) => {
           color={selectedWeek === week.number ? 'white' : isDarkMode ? 'gray.400' : 'gray.400'}
         >
           <Icon size="xl" as={FaCalendarAlt} />
-          <Text ml="-3">Semaine</Text>
+          <Text ml="">Semaine</Text>
         </Button>
       ))}
     </HStack>

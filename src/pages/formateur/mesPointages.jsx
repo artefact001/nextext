@@ -1,7 +1,14 @@
 'use client';
 
 import React, { useState, lazy, Suspense } from 'react';
-import { VStack, Spinner, Center, Box, HStack } from '@chakra-ui/react';
+import {
+  VStack,
+  Spinner,
+  Center,
+  Box,
+  HStack,
+  SimpleGrid,
+} from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import isoWeeksInYear from 'dayjs/plugin/isoWeeksInYear';
@@ -78,45 +85,68 @@ const MesPointages = () => {
   }
 
   return (
-    <VStack spacing={4} maxW="100%">
+    <VStack spacing={2}>
       <Suspense fallback={<Spinner />}>
         <ProfileCardFormateur />
       </Suspense>
-      <HStack justifyContent="space-between" w="100%">
-        <Box display={{ base: 'none', md: 'block' }} flex="1" maxW="50%">
-          <Box
-            as="section"
-            px={20}
-            py={8}
-            mt={7}
-            mx={36}
-            w="full"
-            maxW={{ base: '366px', md: '500px', lg: '75%' }}
-            borderBottom="2px solid"
-            borderTop="2px solid"
-            borderColor="red.700"
-            borderRadius="md"
-            shadow="lg"
-            bg="whiteAlpha.80"
-            fontFamily="Nunito Sans"
-            flex="2"
-          >
-            <Suspense fallback={<Spinner />}>
-              <ProfileComponent />
-            </Suspense>
-          </Box>
+      <SimpleGrid
+        mx={{ base: '2px', md: '3px', lg: '12px' }}
+        justifyContent="space-between"
+        columns={[1, 2]}
+        spacing={8}
+      >
+        <Box
+          as="section"
+          px={{ base: '2px', md: '3px', lg: '20px' }}
+          mx={{ base: '2px', md: '3px', lg: '10px' }}
+          py={8}
+          mt={7}
+          w="full"
+          maxW={{ base: '366px', md: '100%', lg: '100%' }}
+          borderBottom="2px solid"
+          borderTop="2px solid"
+          borderColor="red.700"
+          borderRadius="md"
+          shadow="lg"
+          bg="whiteAlpha.80"
+          fontFamily="Nunito Sans"
+          flex="2"
+          display={{ base: 'none', md: 'none', lg: 'block' }}
+
+        >
+          <Suspense fallback={<Spinner />}>
+            <ProfileComponent />
+          </Suspense>
         </Box>
-        <PointageBox
-          date={date}
-          handleMonthChange={handleMonthChange}
-          semainesDuMois={semainesDuMois}
-          selectedWeek={selectedWeek}
-          setSelectedWeek={setSelectedWeek}
-          pointagesData={pointagesData}
-          pointagesError={pointagesError}
-          attendanceSummary={attendanceSummary}
-        />
-      </HStack>
+        <Box
+          as="section"
+          px={{ base: '12px', md: '13px', lg: '40px' }}
+          mx={{ base: '2px', md: '3px', lg: '60px' }}
+          maxW={{ base: '366px', md: '100%', lg: '80%' }}
+          py={8}
+          mt={7}
+          w="full"
+          borderBottom="2px solid"
+          borderTop="2px solid"
+          borderColor="red.100"
+          borderRadius="md"
+          shadow="lg"
+          bg="whiteAlpha.80"
+          fontFamily="Nunito Sans"
+          flex="2"
+        >
+          <PointageBox
+            date={date}
+            handleMonthChange={handleMonthChange}
+            semainesDuMois={semainesDuMois}
+            selectedWeek={selectedWeek}
+            setSelectedWeek={setSelectedWeek}
+            pointagesData={pointagesData}
+            pointagesError={pointagesError}
+            attendanceSummary={attendanceSummary}
+          />
+        </Box>
+      </SimpleGrid>
     </VStack>
   );
 };

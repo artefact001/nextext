@@ -7,6 +7,7 @@ import ThemeToggleButton from '../DarkMode';
 import ButtonDeconnexion from '../../common/ButtonDeconnexion';
 import Link from 'next/link';
 
+// eslint-disable-next-line react/display-name
 const ProfileCardApprenant = React.memo(() => {
   const buttonSize = useBreakpointValue({ base: 'sm', md: 'md' });
   const iconSize = useBreakpointValue({ base: '20px', md: '30px' });

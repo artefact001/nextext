@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
 import { Box, Center, Text, Flex, useBreakpointValue, Spinner } from '@chakra-ui/react';
 import { FaUserAlt, FaQrcode, FaHistory } from 'react-icons/fa';
+import { FaUsersLine } from "react-icons/fa6";
+
 import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 import { getUserWithRoles } from '../../../lib/utils/checkRole';
 import ThemeToggleButton from '../DarkMode';
@@ -57,8 +59,8 @@ const ProfileCardFormateur = React.memo(() => {
       >
         <NavLink href="/formateur/profile" icon={FaUserAlt} label="Profile" iconSize={iconSize} buttonSize={buttonSize} />
         <NavLink href="/formateur" icon={FaQrcode} label="QR Code" iconSize={iconSize} />
+        <NavLink href="/formateur/promos" icon={FaUsersLine } label="Promos" iconSize={iconSize} buttonSize={buttonSize} />
         <NavLink href="/formateur/mesPointages" icon={FaHistory} label="Historique" iconSize={iconSize} buttonSize={buttonSize} />
-        <NavLink href="/formateur/promos" icon={FaHistory} label="Promos" iconSize={iconSize} buttonSize={buttonSize} />
       </Flex>
 
       <Center mt={4}>

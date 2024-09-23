@@ -81,11 +81,10 @@ const InscrireAppprenantExel = () => {
     <Center display={'block'}>
       <ProfileCardFormateur />
 
-      <Box mt={5} p={5}borderRadius="lg" width="100%" maxWidth="40%"   borderTop="2px" 
+      <Box mt={5} p={5}borderRadius="lg" width="100%" maxW={{ base:"98%",md: "100%", lg:"40%" }}  borderTop="2px" 
   borderBottom="2px"
     borderColor="#CE0033" 
     // borderColor="red" // Utilisation de la couleur définie dans le thème
-
   shadow="lg">
         <form onSubmit={handleSubmit}>
           <FormControl id="promo_id" mb={4} isRequired>
@@ -108,7 +107,7 @@ const InscrireAppprenantExel = () => {
             <Input type="file" accept=".xls,.xlsx" onChange={handleFileChange} />
           </FormControl>
 
-          <Button type="submit" colorScheme="red" width="full">
+          <Button type="submit" color="white" bg="#CE0033" width="full">
             Importer Apprenants
           </Button>
         </form>

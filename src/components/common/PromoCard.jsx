@@ -3,7 +3,7 @@ import { FaUsers } from "react-icons/fa"; // Import an icon for the user group
 
 const PromoCard = ({ promos, handlePromoClick, isCompleted = false }) => {
   return (
-    <Box shadow="md" borderWidth="1px" borderRadius="lg" p={5}>
+    <Box shadow="md" borderWidth="1px" borderRadius="lg" p={5} mt={5}>
     <Text fontSize="2xl" fontWeight="bold" mb={5}>
       {isCompleted ? 'Terminées' : 'En cours'}
     </Text>
@@ -12,7 +12,7 @@ const PromoCard = ({ promos, handlePromoClick, isCompleted = false }) => {
     <Box
     onClick={() => handlePromoClick(promo.id)}
       key={promo.id}
-      w="96" 
+      w="100%" 
       h="16"
       bg="white"
       borderRadius="md"

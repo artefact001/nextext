@@ -123,6 +123,7 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               focusBorderColor="red.500"
+               shadow="lg"
             />
           </FormControl>
 
@@ -135,6 +136,7 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               focusBorderColor="red.500"
+               shadow="lg"
             />
           </FormControl>
           {error && <p style={{ color: 'red' }}>{error}</p>}

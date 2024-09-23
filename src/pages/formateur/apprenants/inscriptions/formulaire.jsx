@@ -104,8 +104,7 @@ const InscrireApprenantForm = () => {
     <Center display={'block'}>
           <ProfileCardFormateur />
 
-      <Box mt={5} p={5}   borderRadius="lg" justifyContent={"center"} mx={'auto'} width="100%" maxWidth="60%"  rounded="lg" 
-  borderTop="2px" 
+          <Box mt={5} p={5}borderRadius="lg" width="100%" maxW={{ base:"98%",md: "100%", lg:"40%" }}  borderTop="2px" 
   borderBottom="2px"
     borderColor="#CE0033" 
     // borderColor="red" // Utilisation de la couleur définie dans le thème

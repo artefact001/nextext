@@ -16,12 +16,12 @@ const PointageBox = ({ // Définition du composant PointageBox avec des props.
   attendanceSummary, // Résumé des présences.
 }) => (
   <Box as="section" display="flex" flexDirection="column" // Conteneur principal avec styles.
-       w="full" maxW={{ base: '366px', md: '500px', lg: '35%' }} // Largeur maximale en fonction de l'écran.
+       w="full" maxW={{ base: '366px', md: '500px', lg: '100%' }} // Largeur maximale en fonction de l'écran.
        borderBottom="2px solid" borderTop="2px solid" borderColor="red.700" // Styles de bordure.
        borderRadius="md" shadow="lg" bg="whiteAlpha.80" fontFamily="Nunito Sans"> 
        {/* // Autres styles. */}
 
-    <Suspense fallback={<Spinner />}> 
+    <Suspense mt fallback={<Spinner />}> 
     {/*  Chargement du composant MonthPagination. */}
       <MonthPagination
         mois={date.format('MM')} // Mois actuel.

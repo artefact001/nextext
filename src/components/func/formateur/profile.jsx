@@ -55,7 +55,7 @@ export default function ProfileComponent() {
   }
 
   return (
-    <Box bg="whiteAlpha.80"  w={{ base: '366px', md: '500px', lg: '100%' }}
+    <Box bg="whiteAlpha.80"  w={{ base: '366px', md: '100%', lg: '100%' }}
     p={4}>
       
       {/* Profile Section */}

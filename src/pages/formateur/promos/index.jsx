@@ -1,9 +1,7 @@
 import {
   Box,
   Text,
-  
   SimpleGrid,
-  VStack,
 } from '@chakra-ui/react';
 import ProfileCardFormateur from '../../../components/layout/formateur/Navbar';
 import useSWR from 'swr';
@@ -87,9 +85,31 @@ const Dashboard = () => {
       {/* Profil Formateur et Header */}
       <ProfileCardFormateur />
 
-      <SimpleGrid columns={{ sm: 1, md: 2 }} spacing={5} mt={10}>
-        {/* Liste des Promos en cours */}
-        <VStack>
+      <SimpleGrid
+        mx={{ base: '2px', md: '3px', lg: '12px' }}
+        justifyContent="space-between"
+        columns={[1, 2]}
+        spacing={8}
+      >
+        <Box
+          as="section"
+          px={{ base: '2px', md: '3px', lg: '20px' }}
+          mx={{ base: '2px', md: '3px', lg: '10px' }}
+          py={8}
+          mt={7}
+          w="full"
+          maxW={{ base: '366px', md: '100%', lg: '100%' }}
+          borderBottom="2px solid"
+          borderTop="2px solid"
+          borderColor="red.700"
+          borderRadius="md"
+          shadow="lg"
+          bg="whiteAlpha.80"
+          fontFamily="Nunito Sans"
+          flex="2"
+          display={{ base: 'none', md: 'none', lg: 'block' }}
+
+        >
 
           {/* <ListePointage /> */}
           {selectedPromoId && (
@@ -102,13 +122,29 @@ const Dashboard = () => {
             
             />
           )};
-        </VStack>
-            <VStack>  
-              <PromoHeader/>
+        </Box>
+        <Box
+          as="section"
+          px={{ base: '2px', md: '3px', lg: '20px' }}
+          mx={{ base: '2px', md: '3px', lg: '10px' }}
+          py={8}
+          mt={7}
+          w="full"
+          maxW={{ base: '366px', md: '100%', lg: '100%' }}
+          borderBottom="2px solid"
+          borderTop="2px solid"
+          borderColor="red.700"
+          borderRadius="md"
+          shadow="lg"
+          bg="whiteAlpha.80"
+          fontFamily="Nunito Sans"
+          flex="2"
+
+        >              <PromoHeader/>
               <PromoCard promos={promos} handlePromoClick={handlePromoClick} />
               {/* Liste des Promos terminées */}
               <PromoCard promos={promosTerminer} isCompleted />
-            </VStack>
+            </Box>
       </SimpleGrid>
     </Box>
   );
