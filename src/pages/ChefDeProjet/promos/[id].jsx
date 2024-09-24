@@ -12,7 +12,7 @@ import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import isoWeeksInYear from 'dayjs/plugin/isoWeeksInYear';
 import { useRouter } from 'next/router';
-import { lazy, Suspense, useEffect, useState } from 'react';
+import {  Suspense, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import ListePointage from '../../../components/formateur/ListePointage';
 import PointageBoxPromo from '../../../components/formateur/MesPointages';

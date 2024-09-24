@@ -1,11 +1,11 @@
 import { Box, Center } from '@chakra-ui/react';
 import ProfileComponent from '../../components/func/formateur/profile';
-import ProfileCardFormateur from '../../components/layout/formateur/Navbar';
+import ProfileCardChefDeProjet from '../../components/layout/chefDeProjet/Navbar';
 
 const Profile = () => {
   return (
     <Center display={'block'}>
-      <ProfileCardFormateur></ProfileCardFormateur>
+      <ProfileCardChefDeProjet/>
       <Box
         mt={6}
         bg="whiteAlpha.80"

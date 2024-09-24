@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Box, Center, Text, Flex, useBreakpointValue, Spinner } from '@chakra-ui/react';
-import { FaUserAlt, FaQrcode, FaHistory } from 'react-icons/fa';
+import { FaUserAlt, FaQrcode } from 'react-icons/fa';
 import { FaUsersLine } from "react-icons/fa6";
 
 import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
@@ -60,7 +60,6 @@ const ProfileCardChefDeProjet = React.memo(() => {
         <NavLink href="/ChefDeProjet/profile" icon={FaUserAlt} label="Profile" iconSize={iconSize} buttonSize={buttonSize} />
         <NavLink href="/ChefDeProjet" icon={FaQrcode} label="QR Code" iconSize={iconSize} />
         <NavLink href="/ChefDeProjet/promos" icon={FaUsersLine } label="Promos" iconSize={iconSize} buttonSize={buttonSize} />
-        <NavLink href="/ChefDeProjet/mesPointages" icon={FaHistory} label="Historique" iconSize={iconSize} buttonSize={buttonSize} />
       </Flex>
 
       <Center mt={4}>

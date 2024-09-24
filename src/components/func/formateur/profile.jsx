@@ -3,7 +3,7 @@ import { Box, Center, Text, Avatar, Button, Input } from '@chakra-ui/react';
 import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 
 export default function ProfileComponent() {
-  const { user } = useUserWithRoles(['Formateur']); // Spécifie ici les rôles requis
+  const { user } = useUserWithRoles(['Formateur', 'ChefDeProjet']); // Spécifie ici les rôles requis
 
   // États pour gérer les valeurs des champs de profil
   const [adresse, setAdresse] = useState('');
