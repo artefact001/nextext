@@ -64,8 +64,8 @@ const Login = () => {
             case 'Vigile':
               router.push('/vigile/scanner');
               break;
-            case 'Chef de projet':
-              router.push('/chef-de-projet');
+            case 'ChefDeProjet':
+              router.push('/ChefDeProjet');
               break;
             case 'Administrateur':
               router.push('/admins');
@@ -93,14 +93,12 @@ const Login = () => {
     <div
       style={{
         backgroundImage: `
-            linear-gradient(rgba(250, 250, 250, 0.1), rgba(250, 250, 250, 0.4)),
-            url(/images/background-simplon-pattern.svg)
-          `,
+                                                                                                                                                      linear-gradient(rgba(250, 250, 250, 0.1), rgba(250, 250, 250, 0.4)),
+                                                                                                                                                      url(/images/background-simplon-pattern.svg)
+                                                                                                                                                    `,
         backgroundSize: 'cover', // Ensures the image covers the entire page
         backgroundPosition: 'center', // Centers the image
         backgroundRepeat: 'no-repeat', // Prevents image repetition
-        
-        
       }}
     >
       <Heading as="h3" size="md" py={20} textAlign="center">
@@ -122,8 +120,8 @@ const Login = () => {
           shadow="lg"
         >
           {/* Icon de verrou */}
-          <Center mb={4}>
-            <PiLockKeyOpenFill />
+          <Center  mb={4}>
+            <PiLockKeyOpenFill size={46} />
           </Center>
 
           {/* Titre de la page */}
