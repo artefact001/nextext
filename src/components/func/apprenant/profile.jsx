@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Center, Text, Avatar, Button, Input } from '@chakra-ui/react';
+import {
+  Box,
+  Center,
+  Text,
+  Avatar,
+  Button,
+  Input,
+  SimpleGrid,
+} from '@chakra-ui/react';
 import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 
 export default function ProfileComponent() {
@@ -55,11 +63,19 @@ export default function ProfileComponent() {
   }
 
   return (
-    <Box bg="whiteAlpha.80"  w={{ base: '366px', md: '500px', lg: '100%' }}
-    p={4}>
-      
+    <SimpleGrid
+      columns={1}
+      spacing={8}
+      bg="whiteAlpha.80"
+      justifyContent="center"
+      p={4}
+    >
       {/* Profile Section */}
-      <Center mt={6} flexDirection="column">
+      <Center
+        mt={6}
+        flexDirection="column"
+        w={{ base: '366px', md: '100%', lg: '100%' }}
+      >
         <Avatar
           size="xl"
           name={user?.nom}
@@ -71,8 +87,13 @@ export default function ProfileComponent() {
       </Center>
 
       {/* Profile Details */}
-      <>
-        <Box bg="whiteAlpha.80" p={4} borderRadius="md" shadow="md">
+      <Center mt={6} flexDirection="column">
+        <Box
+          w={{ base: '366px', md: '100%', lg: '50%' }}
+          bg="whiteAlpha.80"
+          p={4}
+          borderRadius="md"
+        >
           <Text fontWeight="bold">Adresse</Text>
           <Input
             type="text"
@@ -82,7 +103,13 @@ export default function ProfileComponent() {
             focusBorderColor="red.500"
           />
         </Box>
-        <Box bg="whiteAlpha.80" p={4} borderRadius="md" shadow="md" mt={4}>
+        <Box
+          w={{ base: '366px', md: '100%', lg: '50%' }}
+          bg="whiteAlpha.80"
+          p={4}
+          borderRadius="md"
+          mt={4}
+        >
           <Text fontWeight="bold">Téléphone</Text>
           <Input
             type="tel"
@@ -92,7 +119,13 @@ export default function ProfileComponent() {
             focusBorderColor="red.500"
           />
         </Box>
-        <Box bg="whiteAlpha.80" p={4} borderRadius="md" shadow="md" mt={4}>
+        <Box
+          w={{ base: '366px', md: '100%', lg: '50%' }}
+          bg="whiteAlpha.80"
+          p={4}
+          borderRadius="md"
+          mt={4}
+        >
           <Text fontWeight="bold">Mot de passe</Text>
           <Input
             type="password"
@@ -102,14 +135,20 @@ export default function ProfileComponent() {
             focusBorderColor="red.500"
           />
         </Box>
-      </>
+      </Center>
 
       {/* Update Button */}
       <Center mt={6}>
-        <Button colorScheme="red" size="lg" onClick={handleUpdate}>
+        <Button
+          w={{ base: '366px', md: '100%', lg: '50%' }}
+          bg="#CE0033"
+          color="white"
+          size="lg"
+          onClick={handleUpdate}
+        >
           Mise à jour
         </Button>
       </Center>
-    </Box>
+    </SimpleGrid>
   );
 }

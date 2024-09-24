@@ -48,8 +48,8 @@ const ApprenantPage = () => {
 
        <SimpleGrid
         mx={{ base: '2px', md: '3px', lg: '12px' }}
-        justifyContent="space-between"
-        columns={[1, 2]}
+        justifyContent="center"
+        columns={[1]}
         spacing={8}
       >
         <Box
@@ -60,15 +60,12 @@ const ApprenantPage = () => {
           mt={7}
           w="full"
           maxW={{ base: '366px', md: '100%', lg: '100%' }}
-          borderBottom="2px solid"
-          borderTop="2px solid"
+        
           borderColor="red.700"
           borderRadius="md"
-          shadow="lg"
           bg="whiteAlpha.80"
           fontFamily="Nunito Sans"
           flex="2"
-          display={{ base: 'none', md: 'none', lg: 'block' }}
           >
 
         {loadingQRCode ? (
@@ -79,12 +76,12 @@ const ApprenantPage = () => {
         ) : error ? (
           <Text color="red.500">{error}</Text>
         ) : qrCodeUrl ? (
-          <Center mt={20} bg="white" p={4} borderRadius="md">
+          <Center mt={18} w='100%' bg="white" p={4} borderRadius="md">
             <Image
               src={qrCodeUrl}
               alt="QR Code"
-              width={200}
-              height={200}
+              width={240}
+              height={240}
               objectFit="contain"
             />
           </Center>

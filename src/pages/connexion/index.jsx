@@ -1,8 +1,17 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { api } from '../../lib/utils/api';
-import { PiLockKeyOpenFill } from "react-icons/pi";
-import { Box, Button, Center, FormControl, FormLabel, Input, Heading  , useToast } from '@chakra-ui/react';
+import { PiLockKeyOpenFill } from 'react-icons/pi';
+import {
+  Box,
+  Button,
+  Center,
+  FormControl,
+  FormLabel,
+  Input,
+  Heading,
+  useToast,
+} from '@chakra-ui/react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -30,7 +39,7 @@ const Login = () => {
         localStorage.setItem('token', response.access_token);
         toast({
           title: 'Connexion réussie.',
-          description: "Vous êtes connecté.",
+          description: 'Vous êtes connecté.',
           status: 'success',
           duration: 3000,
           isClosable: true,
@@ -81,85 +90,89 @@ const Login = () => {
   };
 
   return (
-
     <div
-    
+      style={{
+        backgroundImage: `
+            linear-gradient(rgba(250, 250, 250, 0.1), rgba(250, 250, 250, 0.4)),
+            url(/images/background-simplon-pattern.svg)
+          `,
+        backgroundSize: 'cover', // Ensures the image covers the entire page
+        backgroundPosition: 'center', // Centers the image
+        backgroundRepeat: 'no-repeat', // Prevents image repetition
+        
+        
+      }}
     >
+      <Heading as="h3" size="md" py={20} textAlign="center">
+        Bienvenue dans la page de connexion
+      </Heading>
 
-<Heading as="h3" size="md" pt={20} textAlign="center" mb={-3}>
-          Bienvenue dans la page de connexion
-        </Heading>
-    
-  
-      <Center minH="100vh" mx={5}         bg="whiteAlpha.80"
-      >
-        
-      <Box   w="full" 
-  maxW="sm" 
-  p={6} 
-  bg="whiteAlpha.80"
-  rounded="lg" 
-  borderTop="2px" 
-  borderBottom="2px"
-    borderColor="#CE0033" 
-    // borderColor="red" // Utilisation de la couleur définie dans le thème
+      <Center h="100%" mx={5} bg="whiteAlpha.80">
+        <Box
+          w="full"
+          maxW={{ base: 'sm', md: 'sm', lg: '' }}
+          p={10}
+          bg="whiteAlpha.80"
+          rounded="lg"
+          borderTop="2px"
+          borderBottom="2px"
+          borderColor="#CE0033"
+          // borderColor="red" // Utilisation de la couleur définie dans le thème
 
-  shadow="lg"
-  >
-        {/* Icon de verrou */}
-        <Center mb={4}>
-        <PiLockKeyOpenFill />
-                </Center>
+          shadow="lg"
+        >
+          {/* Icon de verrou */}
+          <Center mb={4}>
+            <PiLockKeyOpenFill />
+          </Center>
 
-        {/* Titre de la page */}
-        
+          {/* Titre de la page */}
 
-        {/* Formulaire de connexion */}
-        <form onSubmit={handleSubmit}>
-          {/* Email */}
-          <FormControl id="email" mb={4}>
-            <FormLabel>Email</FormLabel>
-            <Input 
-              type="email"
-              placeholder="Entrez votre email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              focusBorderColor="red.500"
-               shadow="lg"
-            />
-          </FormControl>
+          {/* Formulaire de connexion */}
+          <form onSubmit={handleSubmit}>
+            {/* Email */}
+            <FormControl id="email" mb={4}>
+              <FormLabel>Email</FormLabel>
+              <Input
+                type="email"
+                placeholder="Entrez votre email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                focusBorderColor="red.500"
+                shadow="lg"
+              />
+            </FormControl>
 
-          {/* Mot de passe */}
-          <FormControl id="password" mb={6}>
-            <FormLabel>Mot de passe</FormLabel>
-            <Input
-              type="password"
-              placeholder="Entrez votre mot de passe"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              focusBorderColor="red.500"
-               shadow="lg"
-            />
-          </FormControl>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
+            {/* Mot de passe */}
+            <FormControl id="password" mb={6}>
+              <FormLabel>Mot de passe</FormLabel>
+              <Input
+                type="password"
+                placeholder="Entrez votre mot de passe"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                focusBorderColor="red.500"
+                shadow="lg"
+              />
+            </FormControl>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
 
-          {/* Bouton de soumission */}
-          <Button
-            type="submit"
-            w="full"
-            bg="red.600"
-            color="white"            
-            size="lg"
-            mt={4}
-            _hover={{ bg: "red.600" }}
-          >
-            Connexion
-          </Button>
-        </form>
-      </Box>
-    </Center>
+            {/* Bouton de soumission */}
+            <Button
+              type="submit"
+              w="full"
+              bg="red.600"
+              color="white"
+              size="lg"
+              mt={4}
+              _hover={{ bg: 'red.600' }}
+            >
+              Connexion
+            </Button>
+          </form>
+        </Box>
+      </Center>
     </div>
-
   );
 };
 

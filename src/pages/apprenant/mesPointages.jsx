@@ -79,47 +79,57 @@ const MesPointages = () => {
 
   return (
     <VStack spacing={4} maxW="100%">
-    <ProfileCardApprenant />
-    <SimpleGrid justifyContent="space-between" columns={[1, 2]} spacing={4} px={32}>
-    
-          <Box
-            as="section"
-            px={20}
-            py={8}
-            mt={7}
-            mx={20}
-            w="full"
-            maxW={{ base: '366px', md: '500px', lg: '100%' }}
-            borderBottom="2px solid"
-            borderTop="2px solid"
-            borderColor="red.700"
-            borderRadius="md"
-            shadow="lg"
-            bg="whiteAlpha.80"
-            fontFamily="Nunito Sans"
-            flex="2"
-          >
             <Suspense fallback={<Spinner />}>
+
+    <ProfileCardApprenant />
+    </Suspense>
+
+    <SimpleGrid
+        mx={{ base: '2px', md: '3px', lg: '12px' }}
+        justifyContent="space-between"
+        columns={[1, 2]}
+        spacing={8}
+      >
+        <Box
+          as="section"
+          px={{ base: '2px', md: '3px', lg: '20px' }}
+          mx={{ base: '2px', md: '3px', lg: '10px' }}
+          py={8}
+          mt={7}
+          w="full"
+          maxW={{ base: '366px', md: '100%', lg: '100%' }}
+          borderBottom="2px solid"
+          borderTop="2px solid"
+          borderColor="red.700"
+          borderRadius="md"
+          shadow="lg"
+          bg="whiteAlpha.80"
+          fontFamily="Nunito Sans"
+          flex="2"
+          display={{ base: 'none', md: 'none', lg: 'block' }}
+
+        >
+          <Suspense fallback={<Spinner />}>
               <ProfileComponent />
             </Suspense>
           </Box>
           <Box
-            as="section"
-            px={7}
-            py={8}
-            mt={7}
-            mx={32}
-            w="full"
-            maxW={{ base: '366px', md: '500px', lg: '70%' }}
-            borderBottom="2px solid"
-            borderTop="2px solid"
-            borderColor="red.700"
-            borderRadius="md"
-            shadow="lg"
-            bg="whiteAlpha.80"
-            fontFamily="Nunito Sans"
-            flex="2"
-          >
+          as="section"
+          px={{ base: '12px', md: '13px', lg: '40px' }}
+          mx={{ base: '2px', md: '3px', lg: '60px' }}
+          maxW={{ base: '366px', md: '100%', lg: '80%' }}
+          py={8}
+          mt={7}
+          w="full"
+          borderBottom="2px solid"
+          borderTop="2px solid"
+          borderColor="red.100"
+          borderRadius="md"
+          shadow="lg"
+          bg="whiteAlpha.80"
+          fontFamily="Nunito Sans"
+          flex="2"
+        >
         <PointageBox
           date={date}
           handleMonthChange={handleMonthChange}
