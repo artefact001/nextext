@@ -6,6 +6,7 @@ import Swal from 'sweetalert2'; // Import de SweetAlert
 
 import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 import { getUserWithRoles } from '../../../lib/utils/checkRole';
+import ButtonDeconnexion from '../../common/ButtonDeconnexion';
 
 const NavbarVigile = () => {
   const router = useRouter();
@@ -70,7 +71,9 @@ const NavbarVigile = () => {
           _focus={{ outline: 'none' }}
           color={router.pathname === '/option' ? activeColor : inactiveColor}
           onClick={handleOptionClick} // Appelle la fonction quand l'utilisateur clique
-        >
+        > <Box mt={4}>
+        <ButtonDeconnexion />
+      </Box>
           <Center flexDirection="column">
             <FaUserAlt size={30} />
             <Text mt={2}>Option</Text>

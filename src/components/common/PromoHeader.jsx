@@ -30,6 +30,7 @@ const PromoHeader = () => {
         >
           Mes promos
         </Text>
+        
         <Link href="/formateur/promos/ajoute"
         
         mx={4} my={1}>
