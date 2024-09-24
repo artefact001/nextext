@@ -6,6 +6,7 @@ import Swal from 'sweetalert2'; // Import de SweetAlert
 
 import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 import { getUserWithRoles } from '../../../lib/utils/checkRole';
+import ButtonDeconnexion from '../../common/ButtonDeconnexion';
 
 const NavbarVigile = () => {
   const router = useRouter();
@@ -75,6 +76,7 @@ const NavbarVigile = () => {
             <FaUserAlt size={30} />
             <Text mt={2}>Option</Text>
           </Center>
+          
         </Box>
 
         {/* Lien vers le scanner */}

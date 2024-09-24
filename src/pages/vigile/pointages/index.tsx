@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import ListePointage from '../../../components/func/vigile/ListePointage';
 import NavbarVigile from '../../../components/layout/vigile/Navbar';
+import ButtonDeconnexion from '../../../components/common/ButtonDeconnexion';
+import { Box } from '@chakra-ui/react';
 
 export default function PointageAujourdhui() {
   const [pointages, setPointages] = useState([]);
@@ -45,6 +47,9 @@ export default function PointageAujourdhui() {
       )}
 
       <NavbarVigile /> 
+      <Box mt={4}>
+        <ButtonDeconnexion/>
+      </Box>
     </div>
   );
 }
