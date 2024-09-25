@@ -8,12 +8,15 @@ import { getUserWithRoles } from '../../../lib/utils/checkRole';
 import ThemeToggleButton from '../DarkMode';
 import ButtonDeconnexion from '../../common/ButtonDeconnexion';
 import Link from 'next/link';
+import { useAuthToken } from '../../../lib/utils/token';
 
 // eslint-disable-next-line react/display-name
-const ProfileCardChefDeProjet = React.memo(() => {
+const ProfileCardAdministrateur = React.memo(() => {
+  useAuthToken();
+
   const buttonSize = useBreakpointValue({ base: 'sm', md: 'md' });
   const iconSize = useBreakpointValue({ base: '20px', md: '30px' });
-  const { user, loading } = useUserWithRoles(['ChefDeProjet']);
+  const { user, loading } = useUserWithRoles(['Administrateur']);
 
   const fullName = useMemo(() => (user ? `${user.prenom} ${user.nom}` : ''), [user]);
 
@@ -57,9 +60,9 @@ const ProfileCardChefDeProjet = React.memo(() => {
         shadow="lg"
         border="2px solid #CE0033"
       >
-        <NavLink href="/ChefDeProjet/profile" icon={FaUserAlt} label="Profile" iconSize={iconSize} buttonSize={buttonSize} />
-        <NavLink href="/ChefDeProjet" icon={FaQrcode} label="QR Code" iconSize={iconSize} />
-        <NavLink href="/ChefDeProjet/promos" icon={FaUsersLine } label="Promos" iconSize={iconSize} buttonSize={buttonSize} />
+        <NavLink href="/admins/promos" icon={FaUsersLine } label="Promos" iconSize={iconSize} buttonSize={buttonSize} />
+        <NavLink href="/admins/personnels" icon={FaQrcode} label="QR Code" iconSize={iconSize} />
+        <NavLink href="/admins/formations" icon={FaUserAlt} label="Profile" iconSize={iconSize} buttonSize={buttonSize} />
       </Flex>
 
       <Center mt={4}>
@@ -89,9 +92,9 @@ const NavLink = ({ href, icon: Icon, label, iconSize, buttonSize }) => (
 );
 
 export async function getServerSideProps(context) {
-  const result = await getUserWithRoles(context, ['ChefDeProjet']);
+  const result = await getUserWithRoles(context, ['Administrateur']);
   console.log('Server-side props:', result);
   return result;
 }
 
-export default ProfileCardChefDeProjet;
+export default ProfileCardAdministrateur;

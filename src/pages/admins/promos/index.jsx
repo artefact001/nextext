@@ -3,13 +3,13 @@ import {
   Text,
   SimpleGrid,
 } from '@chakra-ui/react';
-import ProfileCardFormateur from '../../../components/layout/formateur/Navbar';
+import ProfileCardAdministrateur from '../../../components/layout/admin/Navbar';
 import useSWR from 'swr';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import PromoCard from '../../../components/common/PromoCard';
 import ListePointage from '../../../components/func/apprenant/ListePointage';
-import PromoHeader from '../../../components/common/PromoHeader';
+import PromoHeader from '../../../components/layout/admin/PromoHeader';
 
 // Fonction de récupération des données
 const fetcher = (url) =>
@@ -25,11 +25,11 @@ const fetcher = (url) =>
 const Dashboard = () => {
   // Récupérer les promos en cours et terminées
   const { data: promosData, error: promosError } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_URL}/promos/encours`,
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/promos/encours`,
     fetcher
   );
   const { data: promosDataTerminer, error: promosErrorTerminer } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_URL}/promos/terminer`,
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/promos/terminees`,
     fetcher
   );
   const [pointages, setPointages] = useState([]);
@@ -38,7 +38,7 @@ const Dashboard = () => {
 
   // Rediriger vers la page de la promotion sélectionnée
   const handlePromoClick = (promoId) => {
-    router.push(`/formateur/promos/${promoId}`);
+    router.push(`/admins/promos/${promoId}`);
   };
 
   // Récupérer les pointages du jour pour une promotion
@@ -73,7 +73,7 @@ const Dashboard = () => {
     return (
       <Box p={0}>
       {/* Profil Formateur et Header */}
-      <ProfileCardFormateur />
+      <ProfileCardAdministrateur />
 
       <SimpleGrid
         mx={{ base: '2px', md: '3px', lg: '12px' }}
@@ -125,13 +125,13 @@ const Dashboard = () => {
     );
   }
 
-  const promos = promosData ? promosData.promos : [];
-  const promosTerminer = promosDataTerminer ? promosDataTerminer.promos : [];
+  const promos = promosData ? promosData : [];
+  const promosTerminer = promosDataTerminer ? promosDataTerminer : [];
 
   return (
     <Box p={0}>
     {/* Profil Formateur et Header */}
-    <ProfileCardFormateur />
+    <ProfileCardAdministrateur />
 
     <SimpleGrid
       mx={{ base: '2px', md: '3px', lg: '12px' }}

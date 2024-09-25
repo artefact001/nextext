@@ -14,7 +14,7 @@ const PromoCard = ({ promos, handlePromoClick, isCompleted = false }) => {
       key={promo.id}
       w="100%" 
       h="16"
-      bg="white"
+      bg="whiteAlpha.80"
       borderRadius="md"
       boxShadow="2xl"
       shadow="xl"
@@ -23,7 +23,7 @@ const PromoCard = ({ promos, handlePromoClick, isCompleted = false }) => {
       display="flex"
       alignItems="center"
       cursor="pointer"
-      borderBottom="1px solid"
+      border="1px solid"
       borderColor="gray.200" // Lighter border for better UX
     >
       {/* Icon */}
