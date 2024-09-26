@@ -53,6 +53,7 @@ const FormationCard = ({ imageUrl, title, description, location }) => (
         {description}
         </Text>
       </Box>
+      
       </ButtonGroup>
 
      

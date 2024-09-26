@@ -155,7 +155,7 @@ const AdminPage = ({ promoData }) => {
          py={8}
          mt={7}
          w="full"
-         maxW={{ base: '100%', md: '100%', lg: '90%' }}
+         maxW={{ base: '100%', md: '100%', lg: '60%' }}
          borderBottom="2px solid"
          borderTop="2px solid"
          borderColor="red.700"
@@ -175,7 +175,7 @@ const AdminPage = ({ promoData }) => {
               Formations
             </Heading>
 
-            <Link href="/admins/promos/ajoute"
+            <Link href="/admins/formations"
 
               mx={4} my={1}>
               <svg
@@ -195,6 +195,7 @@ const AdminPage = ({ promoData }) => {
           </Flex>
 
           <FormationSection promoData={promoData} />
+          
 
         </Box>
       </SimpleGrid>

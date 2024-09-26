@@ -13,7 +13,7 @@ import Link from 'next/link';
 const ProfileCardChefDeProjet = React.memo(() => {
   const buttonSize = useBreakpointValue({ base: 'sm', md: 'md' });
   const iconSize = useBreakpointValue({ base: '20px', md: '30px' });
-  const { user, loading } = useUserWithRoles(['ChefDeProjet']);
+  const {roles, user, loading } = useUserWithRoles(['ChefDeProjet']);
 
   const fullName = useMemo(() => (user ? `${user.prenom} ${user.nom}` : ''), [user]);
 
@@ -65,8 +65,11 @@ const ProfileCardChefDeProjet = React.memo(() => {
       <Center mt={4}>
         <Box color="white" px={20}>
           <Text fontSize={{ base: '20px', lg: '35px' }} fontWeight="bold">{fullName}</Text>
-          <Text>#P7</Text>
-        </Box>
+          {roles.length > 0 &&
+
+<Text>       {roles.join(', ')}
+</Text>
+}        </Box>
         <Box mt={4}>
           <ButtonDeconnexion />
         </Box>

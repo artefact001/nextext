@@ -174,7 +174,7 @@ const AdminPage = ({ promoData }) => {
               Formations
             </Heading>
 
-            <Link href="/admins/promos/ajoute" mx={4} my={1}>
+            <Link href="/admins/formations" mx={4} my={1}>
               <svg
                 width="48"
                 height="48"
