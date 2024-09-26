@@ -2,7 +2,7 @@ import { Flex, Text, Box, Icon, Grid, ButtonGroup } from '@chakra-ui/react';
 import React from 'react';
 import { FaUsers } from 'react-icons/fa';
 
-const PromoCard = ({ imageUrl, title, description, location }) => (
+const PromoCard = ({promo, imageUrl, description, location }) => (
  
 
   <Grid
@@ -47,7 +47,7 @@ const PromoCard = ({ imageUrl, title, description, location }) => (
       {/* Text Information */}
       <Box ml="4">
         <Text fontSize="lg" fontWeight="bold" fontFamily="Nunito Sans">
-        {title}
+        {promo.nom}
         </Text>
         <Text fontSize="sm" maxW=""  fontFamily="Nunito Sans">
         {description}

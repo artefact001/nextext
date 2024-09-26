@@ -8,31 +8,39 @@ import {
   Button,
   SimpleGrid,
   Text,
-  Image,
   Spinner,
 } from '@chakra-ui/react';
 
 import useSWR from 'swr';
 import ProfileCardAdministrateur from '../../components/layout/admin/Navbar';
-import LocationList from './fabriques';
 import PromoSection from '../../components/func/admin/PromoSection';
 import FormationSection from '../../components/func/admin/FormationSection';
 import Link from 'next/link';
 
 const fetcher = (url) =>
-  fetch(url).then((res) => {
-    if (!res.ok) throw new Error('Failed to fetch QR Code');
-    return res.blob();
+  fetch(url, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  }).then((res) => {
+    if (!res.ok) throw new Error('Erreur lors de la récupération des données.');
+    return res.json();
   });
 
 const AdminPage = ({ promoData }) => {
-  const { user, loading } = useUserWithRoles(['Administrateur']);
+  const {  loading } = useUserWithRoles(['Administrateur']);
 
-  // Fetch QR code using SWR
-  const { data: qrCodeBlob, error } = useSWR(
-    user ? `${process.env.NEXT_PUBLIC_API_URL}/qr/${user.matricule}` : null,
-    fetcher
-  );
+// Réceperation des fabriques
+const {data: fabriquesData, error:fobriquesError}= useSWR(
+  `${process.env.NEXT_PUBLIC_API_URL}/fabriques`,
+  fetcher
+)
+
+console.log(fabriquesData)
+const fabriques = fabriquesData ? fabriquesData.fabriques : [];
+
+  // Récupération des promotions
+  
 
   // Handle loading state
   if (loading) {
@@ -44,7 +52,7 @@ const AdminPage = ({ promoData }) => {
   }
 
   // Handle user not available
-  if (!user) {
+  if (fobriquesError) {
     return <Text>Une erreur est survenue. Veuillez vous reconnecter.</Text>;
   }
 
@@ -78,7 +86,32 @@ const AdminPage = ({ promoData }) => {
           flex="2"
         // display={{ base: 'none', md: 'none', lg: 'block' }}
         >
-          <LocationList />
+          <Flex
+      direction="column"
+      fontSize="lg"
+      letterSpacing="normal"
+      textAlign="center"
+      color="black"
+      maxW="763px"
+    >
+      <Flex
+        wrap="wrap"
+        gap={10}
+        align="flex-start"
+        px={{ base: 5, md: 20 }}
+        pt={3}
+        pb={6}
+        w="full"
+        bg="whiteAlpha.80"
+        borderRadius="xl"
+        boxShadow="0px 1px 10px rgba(0,0,0,0.26)"
+      >
+        {fabriques && fabriques.map((fabrique, index) => (
+          <fabriqueItem key={index} imageSrc={location.nom} locationName={location.name} />
+        ))}
+      </Flex>
+    </Flex>
+          {/* <LocationList fabriques={fabriques}  /> */}
 
           <Flex direction="column" maxW="763px">
             <Box

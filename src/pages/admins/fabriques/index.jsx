@@ -30,7 +30,7 @@ const LocationList = () => {
         pt={3}
         pb={6}
         w="full"
-        bg="whiteAlpha.80"
+      bg="whiteAlpha.80"
         borderRadius="xl"
         boxShadow="0px 1px 10px rgba(0,0,0,0.26)"
       >

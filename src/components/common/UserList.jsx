@@ -2,12 +2,13 @@
 import { Box, ButtonGroup, Flex, Text } from '@chakra-ui/react';
 import { FaUsers } from 'react-icons/fa';
 
-const UserList = ({ users, userType }) => {
+const UserList = ({ users, userType , onSelectFormateur }) => {
   return (
     <>
       {users.length > 0 ? (
         users.map((user) => (
           <Box
+            onClick={() => onSelectFormateur(user)}
             key={user.id}
             minWidth="max-content"
             alignItems="center"
