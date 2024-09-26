@@ -3,6 +3,8 @@ import {
   Button,
   Center,
   Flex,
+  useToast,
+
   Heading,
   SimpleGrid,
   Spinner,
@@ -37,10 +39,118 @@ const fetcher = (url) =>
   });
 
 const AdminPage = () => {
+  const [message, setMessage] = useState('');
+
   const { user, loading } = useUserWithRoles(['Administrateur']);
   const [selectedFormation, setSelectedFormation] = useState(null);
+  const [formData, setFormData] = useState({ nom: '', localisation: '' });
+  const [errors, setErrors] = useState({ nom: '', localisation: '' });
+  const [formDataFormation, setFormDataFormation] = useState({ nom: '' });
+const [errorsFormation, setErrorsFormation] = useState({ nom: '' });
+const toast = useToast();
 
+const handleChangeFormation = (e) => {
+  const { name, value } = e.target;
+  setFormDataFormation({ ...formDataFormation, [name]: value });
+};
 
+const handleSubmitFormation = async (e) => {
+  e.preventDefault();
+  let newErrors = {};
+  if (!formDataFormation.nom) newErrors.nom = "Le nom est requis";
+
+  if (Object.keys(newErrors).length > 0) {
+    setErrorsFormation(newErrors);
+    return;
+  }
+
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/formations`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+    body: JSON.stringify(formDataFormation),
+  });
+
+  if (response.ok) {
+    setMessage(``);
+
+    toast({
+      title: 'Succès !',
+      description: ' ajoute avec succès.',
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    });
+    console.log("Formation ajoutée :", formDataFormation);
+    setFormDataFormation({ nom: '' });
+    setErrorsFormation({ nom: '' });
+    // Optionally refresh the list of formations here
+  } else {
+    console.error('Erreur lors de l’ajout de la formation');
+    toast({
+      title: 'error !',
+      description: ' Erreur lors de l’ajout de la formation .',
+      status: 'error',
+      duration: 3000,
+      isClosable: true,
+    });
+  }
+};
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+      
+  };
+  const handleSubmitFabrique = async (e) => {
+    e.preventDefault();
+    let newErrors = {};
+    if (!formData.nom) newErrors.nom = "Le nom est requis";
+    if (!formData.localisation) newErrors.localisation = "La localisation est requise";
+
+    // error messages
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/fabriques`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      console.log("Fabrique ajoutée :", formData);
+      setMessage(``);
+
+      toast({
+        title: 'Succès !',
+        description: ' ajoute avec succès.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      setFormData({ nom: '', localisation: '' });
+      setErrors({ nom: '', localisation: '' });
+      // Optionally refresh the list of fabriques here
+    } else {
+      console.error('Erreur lors de l’ajout de la fabrique');
+      toast({
+        title: 'error !',
+        description: ' Erreur lors de l’ajout de la fabrique .',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -72,7 +182,28 @@ const AdminPage = () => {
   if (FormationsError) {
     return <p>Erreur lors de la récupération des formateurs.</p>;
   }
-
+  const handleDeleteFormation = async (formationId) => {
+    const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer cette formation ?");
+    if (!confirmed) return;
+  
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/formations/${formationId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+  
+      if (response.ok) {
+        // Remove the deleted formation from the state
+        console.log('Formation supprimée');
+      } else {
+        console.error('Erreur lors de la suppression de la formation');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la suppression de la formation:', error);
+    }
+  };
  
   if (loading) {
     return (
@@ -125,25 +256,45 @@ const AdminPage = () => {
           <SimpleGrid columns={[1, 2]} spacing={4}>
             {/* Add Fabrique Form */}
             <Box
-              mt={5}
-              p={5}
-              borderRadius="lg"
-              borderColor="#CE0033"
-              borderTop="2px"
-              borderBottom="2px"
-              shadow="lg"
-            >
-              <Heading size="md" as="h3">
-                Ajouter un Fabrique
-              </Heading>
-              <form>
-                <FormInput placeholder="Nom" />
-                <FormInput placeholder="Description" />
-                <Button type="submit" color="white" bg="#CE0033" width="full">
-                  Ajouter
-                </Button>
-              </form>
-            </Box>
+  mt={5}
+  p={5}
+  borderRadius="lg"
+  borderColor="#CE0033"
+  borderTop="2px"
+  borderBottom="2px"
+  shadow="lg"
+>
+  <Heading size="md" as="h3">
+    Ajouter un Fabrique
+  </Heading>
+  <form onSubmit={handleSubmitFabrique}>
+    <FormInput 
+      placeholder="Nom" 
+      id="nom"
+      label="Nom"
+      name="nom"
+      type="text"
+      value={formData.nom}
+      onChange={handleChange}
+      error={errors.nom} 
+    />
+    <FormInput 
+      placeholder="Localisation"
+      id="Localisation"
+      label="Localisation"
+      name="localisation"
+      type="text"
+      value={formData.localisation}
+      onChange={handleChange}
+      error={errors.localisation} 
+    />
+    <Button type="submit" color="white" bg="#CE0033" width="full">
+      Ajouter
+    </Button>
+  </form>
+  
+</Box>
+    
 
             {/* Add Formation Form */}
             <Box
@@ -158,13 +309,32 @@ const AdminPage = () => {
               <Heading size="md" as="h3">
                 Ajouter une Formation
               </Heading>
-              <form>
-                <FormInput placeholder="Nom de la formation" />
+              <form onSubmit={handleSubmitFormation}>
+                <FormInput 
+                  placeholder="Nom de la formation"
+                  id="nomFormation"
+                  label="Nom"
+                  name="nom"
+                  type="text"
+                  value={formDataFormation.nom}
+                  onChange={handleChangeFormation}
+                  error={errorsFormation.nom} 
+                />
                 <Button type="submit" color="white" bg="#CE0033" width="full">
                   Ajouter
                 </Button>
               </form>
             </Box>
+            {message && (
+            <Text mt={4} color="green.500">
+              {message}
+            </Text>
+          )}
+          {errors.general && (
+            <Text mt={4} color="red.500">
+              {errors.general}
+            </Text>
+          )}
           </SimpleGrid>
         </Box>
 
@@ -209,6 +379,8 @@ const AdminPage = () => {
             formation={formation}
              onClick={openModal} colorScheme="blue"
             onSelect={() => handleSelectFormation(formation)}
+            onDelete={() => handleDeleteFormation(formation.id)}  // Pass the delete handler
+
           />
         ))
       ) : (
@@ -232,14 +404,17 @@ const AdminPage = () => {
                 </Text>
 
                 <SimpleGrid columns={1} spacing={4} mt={4}>
-                  {selectedFormation.promos?.length > 0 ? (
-                    selectedFormation.promos.map((promo) => (
-                      <PromoCard key={promo.id} promo={promo} />
-                    ))
-                  ) : (
-                    <Text>Aucune promotion pour cette formation.</Text>
-                  )}
-                </SimpleGrid>
+  {selectedFormation.promos?.length > 0 ? (
+    selectedFormation.promos.map((promo) => (
+      <Link href={`/admins/promos/${promo.id}`} key={promo.id}>
+        <PromoCard promo={promo} />
+      </Link>
+    ))
+  ) : (
+    <Text>Aucune promotion pour cette formation.</Text>
+  )}
+</SimpleGrid>
+
               </>
             )}
           </ModalBody>

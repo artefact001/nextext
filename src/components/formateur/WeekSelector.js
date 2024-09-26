@@ -45,7 +45,9 @@ const WeekSelector = ({ semainesDuMois, selectedWeek, setSelectedWeek }) => {
           color={selectedWeek === week.number ? 'white' : isDarkMode ? 'gray.400' : 'gray.400'}
         >
           <Icon size="xl" as={FaCalendarAlt} />
-          <Text ml="">Semaine</Text>
+          {/* <Text ml="">Semaine</Text> */}
+          <Text fontSize={{base: '12px' , md : '12px', lg: '18px'}} ml={{base: '0' , md : '0', lg: '-10px'}}>Semaine</Text>
+
         </Button>
       ))}
     </HStack>

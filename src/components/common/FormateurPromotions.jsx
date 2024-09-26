@@ -1,4 +1,5 @@
 import { Box, Flex, Icon, Text } from '@chakra-ui/react';
+import Link from 'next/link';
 import { FaUsers } from 'react-icons/fa';
 
 const FormateurPromotions = ({ formateur ,  isCompleted = false }) => {
@@ -19,6 +20,7 @@ const FormateurPromotions = ({ formateur ,  isCompleted = false }) => {
     {promotions && promotions.length > 0 ? (
 
     promotions.map((promo) => (
+      <Link href={`/admins/promos/${promo.id}`} key={promo.id}>
 
     <Box
       key={promo.id}
@@ -58,6 +60,7 @@ const FormateurPromotions = ({ formateur ,  isCompleted = false }) => {
       </Box>
 
     </Box>
+    </Link>
   ))
 ) : (
   <Text>Aucune promotion disponible.</Text>

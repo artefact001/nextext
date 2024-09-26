@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { Box, Center, Text, Flex, useBreakpointValue, Spinner } from '@chakra-ui/react';
-import { FaUserAlt, FaQrcode } from 'react-icons/fa';
-import { FaUsersLine } from "react-icons/fa6";
+import { FaSchool, FaUsers, FaUsersLine } from "react-icons/fa6";
 
 import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 import { getUserWithRoles } from '../../../lib/utils/checkRole';
@@ -61,8 +60,8 @@ const ProfileCardAdministrateur = React.memo(() => {
         border="2px solid #CE0033"
       >
         <NavLink href="/admins/promos" icon={FaUsersLine } label="Promos" iconSize={iconSize} buttonSize={buttonSize} />
-        <NavLink href="/admins/personnels" icon={FaQrcode} label="QR Code" iconSize={iconSize} />
-        <NavLink href="/admins/formations" icon={FaUserAlt} label="Profile" iconSize={iconSize} buttonSize={buttonSize} />
+        <NavLink href="/admins/personnels" icon={FaUsers} label="Personnels" iconSize={iconSize} />
+        <NavLink href="/admins/formations" icon={FaSchool} label="Formation" iconSize={iconSize} buttonSize={buttonSize} />
       </Flex>
 
       <Center mt={4}>

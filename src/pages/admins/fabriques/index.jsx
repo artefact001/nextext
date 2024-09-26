@@ -35,7 +35,7 @@ const LocationList = () => {
         boxShadow="0px 1px 10px rgba(0,0,0,0.26)"
       >
         {locations.map((location, index) => (
-          <LocationItem key={index} imageSrc={location.imageSrc} locationName={location.name} />
+          <LocationItem key={index} imageSrc={location.imageSrc} locationName={location.nom} />
         ))}
       </Flex>
     </Flex>

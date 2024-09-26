@@ -1,8 +1,9 @@
 import { Flex, Text, Box, Icon, ButtonGroup } from '@chakra-ui/react';
 import React from 'react';
 import { FaUsers } from 'react-icons/fa';
+import { FaDeleteLeft } from 'react-icons/fa6';
 
-const FormationCard = ({ formation, onSelect }) => (
+const FormationCard = ({onDelete, formation, onSelect }) => (
   <Box
     // minWidth="max-content"
     alignItems="center"
@@ -21,8 +22,11 @@ const FormationCard = ({ formation, onSelect }) => (
     borderColor="gray.200"
     onClick={() => onSelect(formation)}
   >
-    <ButtonGroup gap="2">
+  
+
+    <ButtonGroup  gap="2">
       <Flex
+
         justifyContent="center"
         alignItems="center"
         w="12"
@@ -42,7 +46,10 @@ const FormationCard = ({ formation, onSelect }) => (
             Promos
         </Text>
       </Box>
+      
     </ButtonGroup>
+
+      <FaDeleteLeft  onClick={onDelete} colorScheme="red"></FaDeleteLeft>
   </Box>
 );
 
