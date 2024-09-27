@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Thead, Tbody, Tr, Th, Td, Box, Text } from "@chakra-ui/react";
 
-const PointageTable = ({ promoId=1, startDate, endDate }) => {
+const PointageTable = ({ promoId = 2, startDate, endDate }) => {
   const [pointages, setPointages] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -38,7 +38,9 @@ const PointageTable = ({ promoId=1, startDate, endDate }) => {
   if (loading) {
     return <Text>Chargement...</Text>;
   }
-console.log(pointages)
+
+  const dates = Object.keys(pointages.pointages_apprenants[0].pointages);
+
   return (
     <Box>
       {pointages.start_of_week && pointages.end_of_week ? (
@@ -47,22 +49,22 @@ console.log(pointages)
         <Text>Dates de la semaine indisponibles.</Text>
       )}
 
-      <Table variant="striped" colorScheme="teal">
+      <Table variant="striped" colorScheme="red">
         <Thead>
           <Tr>
-            <Th>Jour</Th>
-            <Th>Présences</Th>
-            <Th>Retards</Th>
-            <Th>Absences</Th>
+            <Th>Apprenant</Th>
+            {dates.map((date, index) => (
+              <Th key={index}>{date}</Th>
+            ))}
           </Tr>
         </Thead>
         <Tbody>
-          {pointages.presences && Object.keys(pointages.presences).map((jour, index) => (
+          {pointages.pointages_apprenants && pointages.pointages_apprenants.map((apprenantData, index) => (
             <Tr key={index}>
-              <Td>{jour}</Td>
-              <Td>{pointages.presences[jour]?.length || 0}</Td>
-              <Td>{pointages.retards[jour]?.length || 0}</Td>
-              <Td>{pointages.absences[jour]?.length || 0}</Td>
+              <Td>{apprenantData.apprenant}</Td>
+              {Object.values(apprenantData.pointages).map((pointage, idx) => (
+                <Td key={idx}>{pointage}</Td>
+              ))}
             </Tr>
           ))}
         </Tbody>
