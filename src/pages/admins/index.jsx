@@ -152,6 +152,8 @@ const handleSubmitFormation = async (e) => {
         isClosable: true,
       });
     }
+
+    
   };
 
   const [isOpen, setIsOpen] = useState(false);
@@ -192,7 +194,29 @@ const handleSubmitFormation = async (e) => {
   const fabriques = FabriquesData ? FabriquesData : [];
   console.log('Fabriques', fabriques);
 
+const ITEMS_PER_PAGE = 3;
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(fabriques.length / ITEMS_PER_PAGE);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const selectedFabriques = fabriques.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
  
+  
   if (loading) {
     return (
       <Center>
@@ -239,24 +263,30 @@ const handleSubmitFormation = async (e) => {
           bg="whiteAlpha.80"
           fontFamily="Nunito Sans"
         >
-        <Flex>
-          {fabriques?.length > 0 ? (
-        fabriques.map((fabrique) => (
-          <Box >
-          <Image loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/4ab18d4eb620294560328c98d7834f71abf167307ffbe85a4a9b42def28b575c?placeholderIfAbsent=true&apiKey=5a4129e8dacc4e7b95518ebfcb6a026b" />
-          <Text>{fabrique.nom}</Text>
-        </Box>
-          // <LocationList
-          //   key={fabrique.id}
-          //   fabrique={fabrique}
-          //    onClick={openModal} colorScheme="blue"
-          //   onSelect={() => handleSelectFormation(fabrique)}
-          // />
-        ))
-      ) : (
-        <Text>Aucune formation disponible.</Text>
-      )}
-</Flex>
+       <Box>
+      <Flex  justifyContent="space-around">
+      <Button onClick={handlePrevPage} isDisabled={currentPage === 1}>Précédent</Button>
+
+        {selectedFabriques?.length > 0 ? (
+          selectedFabriques.map((fabrique) => (
+            <Box 
+            key={fabrique.id}>
+              <Image
+                loading="lazy"
+                src="https://cdn.builder.io/api/v1/image/assets/TEMP/4ab18d4eb620294560328c98d7834f71abf167307ffbe85a4a9b42def28b575c?placeholderIfAbsent=true&apiKey=5a4129e8dacc4e7b95518ebfcb6a026b"
+              />
+              <Text>{fabrique.nom}</Text>
+            </Box>
+          ))
+        ) : (
+          <Text>Aucune formation disponible.</Text>
+        )}
+                    <Button onClick={handleNextPage} isDisabled={currentPage === totalPages}>Suivant</Button>
+
+      </Flex>
+
+      
+    </Box>
           <SimpleGrid columns={[1, 2]} spacing={4}>
             {/* Add Fabrique Form */}
             <Box
