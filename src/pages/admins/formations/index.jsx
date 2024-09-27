@@ -23,7 +23,6 @@ import Link from 'next/link';
 import useSWR from 'swr';
 import FormInput from '../../../components/common/FormInput';
 import ProfileCardAdministrateur from '../../../components/layout/admin/Navbar';
-import LocationList from '../fabriques';
 import FormationCard from '../../../components/func/admin/FormationCard';
 import PromoCard from '../../../components/func/admin/PromoCard';
 
@@ -251,7 +250,6 @@ const handleSubmitFormation = async (e) => {
           bg="whiteAlpha.80"
           fontFamily="Nunito Sans"
         >
-          <LocationList />
 
           <SimpleGrid columns={[1, 2]} spacing={4}>
             {/* Add Fabrique Form */}
