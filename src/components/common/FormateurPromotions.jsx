@@ -1,16 +1,28 @@
-import { Box, Flex, Text, Icon } from "@chakra-ui/react";
-import { FaUsers } from "react-icons/fa"; // Import an icon for the user group
+import { Box, Flex, Icon, Text } from '@chakra-ui/react';
+import Link from 'next/link';
+import { FaUsers } from 'react-icons/fa';
 
-const PromoCard = ({ promos, handlePromoClick, isCompleted = false }) => {
+const FormateurPromotions = ({ formateur ,  isCompleted = false }) => {
+  if (!formateur) {
+    return <Text>Sélectionnez un formateur pour voir ses promotions.</Text>;
+  }
+
+  const { promos_chef_de_projet, promos_foramateur, role } = formateur;
+
+  const promotions = role === 'ChefDeProjet' ? promos_chef_de_projet : promos_foramateur;
+
   return (
+    <>
     <Box shadow="md" borderWidth="1px" borderRadius="lg" p={5} mt={5}>
     <Text fontSize="2xl" fontWeight="bold" mb={5}>
       {isCompleted ? 'Terminées' : 'En cours'}
     </Text>
-    {promos.map((promo) => (
+    {promotions && promotions.length > 0 ? (
+
+    promotions.map((promo) => (
+      <Link href={`/admins/promos/${promo.id}`} key={promo.id}>
 
     <Box
-    onClick={() => handlePromoClick(promo.id)}
       key={promo.id}
       w="100%" 
       h="16"
@@ -48,11 +60,15 @@ const PromoCard = ({ promos, handlePromoClick, isCompleted = false }) => {
       </Box>
 
     </Box>
-        ))}
+    </Link>
+  ))
+) : (
+  <Text>Aucune promotion disponible.</Text>
+)}
     </Box>
-
-
+   
+    </>
   );
 };
 
-export default PromoCard;
+export default FormateurPromotions;

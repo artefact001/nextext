@@ -12,6 +12,7 @@ const NavbarVigile = () => {
   const router = useRouter();
   const activeColor = '#CE0033'; // Couleur pour l'état actif
   const inactiveColor = useColorModeValue('gray.600', 'gray.400'); // Couleur pour l'état inactif selon le mode
+  useUserWithRoles(['Vigile']);
 
   // Fonction pour afficher SweetAlert et rediriger selon le choix
   const handleOptionClick = () => {

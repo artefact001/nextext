@@ -1,19 +1,21 @@
 import React, { useMemo } from 'react';
 import { Box, Center, Text, Flex, useBreakpointValue, Spinner } from '@chakra-ui/react';
-import { FaUserAlt, FaQrcode } from 'react-icons/fa';
-import { FaUsersLine } from "react-icons/fa6";
+import { FaSchool, FaUsers, FaUsersLine } from "react-icons/fa6";
 
 import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 import { getUserWithRoles } from '../../../lib/utils/checkRole';
 import ThemeToggleButton from '../DarkMode';
 import ButtonDeconnexion from '../../common/ButtonDeconnexion';
 import Link from 'next/link';
+import { useAuthToken } from '../../../lib/utils/token';
 
 // eslint-disable-next-line react/display-name
-const ProfileCardChefDeProjet = React.memo(() => {
+const ProfileCardAdministrateur = React.memo(() => {
+  useAuthToken();
+
   const buttonSize = useBreakpointValue({ base: 'sm', md: 'md' });
   const iconSize = useBreakpointValue({ base: '20px', md: '30px' });
-  const {roles, user, loading } = useUserWithRoles(['ChefDeProjet']);
+  const {roles,  user, loading } = useUserWithRoles(['Administrateur']);
 
   const fullName = useMemo(() => (user ? `${user.prenom} ${user.nom}` : ''), [user]);
 
@@ -57,19 +59,21 @@ const ProfileCardChefDeProjet = React.memo(() => {
         shadow="lg"
         border="2px solid #CE0033"
       >
-        <NavLink href="/ChefDeProjet/profile" icon={FaUserAlt} label="Profile" iconSize={iconSize} buttonSize={buttonSize} />
-        <NavLink href="/ChefDeProjet" icon={FaQrcode} label="QR Code" iconSize={iconSize} />
-        <NavLink href="/ChefDeProjet/promos" icon={FaUsersLine } label="Promos" iconSize={iconSize} buttonSize={buttonSize} />
+        <NavLink href="/admins/promos" icon={FaUsersLine } label="Promos" iconSize={iconSize} buttonSize={buttonSize} />
+        <NavLink href="/admins/personnels" icon={FaUsers} label="Personnels" iconSize={iconSize} />
+        <NavLink href="/admins/formations" icon={FaSchool} label="Formation" iconSize={iconSize} buttonSize={buttonSize} />
       </Flex>
 
       <Center mt={4}>
         <Box color="white" px={20}>
           <Text fontSize={{ base: '20px', lg: '35px' }} fontWeight="bold">{fullName}</Text>
+          
           {roles.length > 0 &&
 
-<Text>       {roles.join(', ')}
-</Text>
-}        </Box>
+          <Text>       {roles.join(', ')}
+          </Text>
+          }
+        </Box>
         <Box mt={4}>
           <ButtonDeconnexion />
         </Box>
@@ -92,9 +96,9 @@ const NavLink = ({ href, icon: Icon, label, iconSize, buttonSize }) => (
 );
 
 export async function getServerSideProps(context) {
-  const result = await getUserWithRoles(context, ['ChefDeProjet']);
+  const result = await getUserWithRoles(context, ['Administrateur']);
   console.log('Server-side props:', result);
   return result;
 }
 
-export default ProfileCardChefDeProjet;
+export default ProfileCardAdministrateur;

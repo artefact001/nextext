@@ -1,16 +1,24 @@
-import { Box, Flex, Text, Icon } from "@chakra-ui/react";
-import { FaUsers } from "react-icons/fa"; // Import an icon for the user group
+import { Box, Flex, Icon, Text } from '@chakra-ui/react';
+import { FaUsers } from 'react-icons/fa';
 
-const PromoCard = ({ promos, handlePromoClick, isCompleted = false }) => {
+const FormationPromotions = ({ formation ,promos,  isCompleted = false }) => {
+  if (!formation) {
+    return <Text>Sélectionnez une formation pour voir ses promotions.</Text>;
+  }
+
+
+
   return (
+    <>
     <Box shadow="md" borderWidth="1px" borderRadius="lg" p={5} mt={5}>
     <Text fontSize="2xl" fontWeight="bold" mb={5}>
       {isCompleted ? 'Terminées' : 'En cours'}
     </Text>
-    {promos.map((promo) => (
+    {promos && promos.length > 0 ? (
+
+    promos.map((promo) => (
 
     <Box
-    onClick={() => handlePromoClick(promo.id)}
       key={promo.id}
       w="100%" 
       h="16"
@@ -48,11 +56,14 @@ const PromoCard = ({ promos, handlePromoClick, isCompleted = false }) => {
       </Box>
 
     </Box>
-        ))}
+  ))
+) : (
+  <Text>Aucune promotion disponible.</Text>
+)}
     </Box>
-
-
+   
+    </>
   );
 };
 
-export default PromoCard;
+export default FormationPromotions;
