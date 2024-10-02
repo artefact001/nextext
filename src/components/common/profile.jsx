@@ -9,7 +9,9 @@ export default function ProfileComponent() {
 
   const [adresse, setAdresse] = useState('');
   const [telephone, setTelephone] = useState('');
-  const [setPhotoProfile] = useState('');
+
+  // eslint-disable-next-line no-unused-vars
+  const [photoProfile, setPhotoProfile] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [imageFile, setImageFile] = useState(null);

@@ -42,7 +42,7 @@ const AttendanceItem = ({ pointage }) => {
           {pointage.user && pointage.user.prenom && pointage.user.nom ? (
             `${pointage.user.prenom} ${pointage.user.nom}`
           ) : (
-            'Utilisateur inconnu'
+            'Pas de pointages'
           )}
         </Text>
       </Flex>
