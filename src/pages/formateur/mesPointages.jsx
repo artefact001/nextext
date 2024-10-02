@@ -23,7 +23,7 @@ const ProfileCardFormateur = lazy(() =>
 );
 
 const ProfileComponent = lazy(() =>
-  import('../../components/func/formateur/profile')
+  import ('../../components/common/profile')
 );
 
 // Fetch function

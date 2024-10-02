@@ -5,7 +5,6 @@ import {
   Button,
   Center,
   Flex,
-  useToast,
   Heading,
   SimpleGrid,
   Spinner,
@@ -22,10 +21,10 @@ import { useEffect, useState } from 'react';
 import { useUserWithRoles } from '../../lib/utils/hooks/useUserWithRoles';
 import Link from 'next/link';
 import useSWR from 'swr';
-import FormInput from '../../components/common/FormInput';
 import ProfileCardAdministrateur from '../../components/layout/admin/Navbar';
 import FormationCard from '../../components/func/admin/FormationCard';
-import PromoCard from '../../components/func/admin/PromoCard';
+import PromoCardAdmin from '../../components/func/admin/PromoCard';
+import ListePointage from '../../components/func/vigile/ListePointage';
 
 // Fetcher function for SWR
 const fetcher = (url) =>
@@ -39,124 +38,8 @@ const fetcher = (url) =>
   });
 
 const AdminPage = () => {
-  const [message, setMessage] = useState('');
-
   const { user, loading } = useUserWithRoles(['Administrateur']);
   const [selectedFormation, setSelectedFormation] = useState(null);
-  const [formData, setFormData] = useState({ nom: '', localisation: '' });
-  const [errors, setErrors] = useState({ nom: '', localisation: '' });
-  const [formDataFormation, setFormDataFormation] = useState({ nom: '' });
-  const [errorsFormation, setErrorsFormation] = useState({ nom: '' });
-  const toast = useToast();
-
-  const handleChangeFormation = (e) => {
-    const { name, value } = e.target;
-    setFormDataFormation({ ...formDataFormation, [name]: value });
-  };
-
-  const handleSubmitFormation = async (e) => {
-    e.preventDefault();
-    let newErrors = {};
-    if (!formDataFormation.nom) newErrors.nom = 'Le nom est requis';
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrorsFormation(newErrors);
-      return;
-    }
-
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/formations`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify(formDataFormation),
-      }
-    );
-
-    if (response.ok) {
-      setMessage(``);
-
-      toast({
-        title: 'Succès !',
-        description: ' ajoute avec succès.',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
-      console.log('Formation ajoutée :', formDataFormation);
-      setFormDataFormation({ nom: '' });
-      setErrorsFormation({ nom: '' });
-      // Optionally refresh the list of formations here
-    } else {
-      console.error('Erreur lors de l’ajout de la formation');
-      toast({
-        title: 'error !',
-        description: ' Erreur lors de l’ajout de la formation .',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-  const handleSubmitFabrique = async (e) => {
-    e.preventDefault();
-    let newErrors = {};
-    if (!formData.nom) newErrors.nom = 'Le nom est requis';
-    if (!formData.localisation)
-      newErrors.localisation = 'La localisation est requise';
-
-    // error messages
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/fabriques`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify(formData),
-      }
-    );
-
-    if (response.ok) {
-      console.log('Fabrique ajoutée :', formData);
-      setMessage(``);
-
-      toast({
-        title: 'Succès !',
-        description: ' ajoute avec succès.',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
-      setFormData({ nom: '', localisation: '' });
-      setErrors({ nom: '', localisation: '' });
-      // Optionally refresh the list of fabriques here
-    } else {
-      console.error('Erreur lors de l’ajout de la fabrique');
-      toast({
-        title: 'error !',
-        description: ' Erreur lors de l’ajout de la fabrique .',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-  };
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -195,7 +78,7 @@ const AdminPage = () => {
   const fabriques = FabriquesData ? FabriquesData : [];
   console.log('Fabriques', fabriques);
 
-  const ITEMS_PER_PAGE = 3;
+  const ITEMS_PER_PAGE = 6;
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -219,7 +102,54 @@ const AdminPage = () => {
     startIndex + ITEMS_PER_PAGE
   );
 
+  const [pointages, setPointages] = useState([]);
+  const [loadingP, setLoadingP] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchPointages = async () => {
+      try {
+        // Retrieve the token from localStorage or wherever it's stored
+        const token = localStorage.getItem('token'); // Adjust this to how you're managing tokens
+
+        // Fetch pointages with the token included in the headers
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/pointages/aujourdhui/tous`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.message || 'Erreur lors de la récupération des pointages.'
+          );
+        }
+
+        setPointages(data.pointages);
+        setLoadingP(false);
+      } catch (error) {
+        setError(error.message);
+        setLoadingP(false);
+      }
+    };
+
+    fetchPointages();
+  }, []);
+
   if (loading) {
+    return (
+      <Center>
+        <Spinner size="lg" color="red.500" />
+      </Center>
+    );
+  }
+  if (loadingP) {
     return (
       <Center>
         <Spinner size="lg" color="red.500" />
@@ -252,7 +182,7 @@ const AdminPage = () => {
         <Box
           as="section"
           px={{ base: '2px', md: '30px', lg: '20px' }}
-          mx="auto"
+          ml={{ base: '2px', md: '20px', lg: '120px' }}
           py={8}
           mt={7}
           w="full"
@@ -266,23 +196,28 @@ const AdminPage = () => {
           fontFamily="Nunito Sans"
         >
           <Box>
-          <Flex justifyContent="center" alignItems="center" overflow="hidden">
-          <Button onClick={handlePrevPage} isDisabled={currentPage === 1}>
+            <Flex
+              justifyContent="space-between"
+              alignItems="center"
+              overflow="hidden"
+            >
+              <Button onClick={handlePrevPage} isDisabled={currentPage === 1}>
                 Précédent
               </Button>
 
               {selectedFabriques?.length > 0 ? (
                 selectedFabriques.map((fabrique) => (
                   <Box key={fabrique.id} mx={4} textAlign="center">
-                  <Image
-                    loading="lazy"
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/4ab18d4eb620294560328c98d7834f71abf167307ffbe85a4a9b42def28b575c?placeholderIfAbsent=true&apiKey=5a4129e8dacc4e7b95518ebfcb6a026b"
-                    alt={fabrique.nom}
-                    boxSize="150px"
-                    borderRadius="md"
-                  />
-                  <Text mt={2}>{fabrique.nom}</Text>
-                </Box>
+                    <Image
+                      loading="lazy"
+                      src="https://cdn.builder.io/api/v1/image/assets/TEMP/4ab18d4eb620294560328c98d7834f71abf167307ffbe85a4a9b42def28b575c?placeholderIfAbsent=true&apiKey=5a4129e8dacc4e7b95518ebfcb6a026b"
+                      alt={fabrique.nom}
+                      boxSize="50px"
+                      borderRadius="md"
+                      mx={8}
+                    />
+                    <Text mt={2}>{fabrique.nom}</Text>
+                  </Box>
                 ))
               ) : (
                 <Text>Aucune formation disponible.</Text>
@@ -295,86 +230,19 @@ const AdminPage = () => {
               </Button>
             </Flex>
           </Box>
-          <SimpleGrid columns={[1, 2]} spacing={4}>
+          <SimpleGrid columns={[1]} spacing={4}>
             {/* Add Fabrique Form */}
-            <Box
-              mt={5}
-              p={5}
-              borderRadius="lg"
-              borderColor="#CE0033"
-              borderTop="2px"
-              borderBottom="2px"
-              shadow="lg"
-            >
-              <Heading size="md" as="h3">
-                Ajouter un Fabrique
-              </Heading>
-              <form onSubmit={handleSubmitFabrique}>
-                <FormInput
-                  placeholder="Nom"
-                  id="nom"
-                  label="Nom"
-                  name="nom"
-                  type="text"
-                  value={formData.nom}
-                  onChange={handleChange}
-                  error={errors.nom}
-                />
-                <FormInput
-                  placeholder="Localisation"
-                  id="Localisation"
-                  label="Localisation"
-                  name="localisation"
-                  type="text"
-                  value={formData.localisation}
-                  onChange={handleChange}
-                  error={errors.localisation}
-                />
-                <Button type="submit" color="white" bg="#CE0033" width="full">
-                  Ajouter
-                </Button>
-              </form>
+            <Box>
+              {loading ? (
+                <Text>Chargement des pointages...</Text>
+              ) : error ? (
+                <Text>Erreur : {error}</Text>
+              ) : pointages.length === 0 ? (
+                <Text>{`Aucun pointage pour aujourd'hui.`}</Text>
+              ) : (
+                <ListePointage pointages={pointages} />
+              )}
             </Box>
-
-            {/* Add Formation Form */}
-            <Box
-              mt={5}
-              p={5}
-              borderRadius="lg"
-              borderColor="#CE0033"
-              borderTop="2px"
-              borderBottom="2px"
-              shadow="lg"
-            >
-              <Heading size="md" as="h3">
-                Ajouter une Formation
-              </Heading>
-              <form onSubmit={handleSubmitFormation}>
-                <FormInput
-                  placeholder="Nom de la formation"
-                  id="nomFormation"
-                  label="Nom"
-                  name="nom"
-                  type="text"
-                  value={formDataFormation.nom}
-                  onChange={handleChangeFormation}
-                  error={errorsFormation.nom}
-                />
-                <Button type="submit" color="white" bg="#CE0033" width="full">
-                  Ajouter
-                </Button>
-              </form>
-            </Box>
-            {message && (
-              <Text mt={4} color="green.500">
-                {message}
-              </Text>
-            )}
-            {errors.general && (
-              <Text mt={4} color="red.500">
-                {errors.general}
-              </Text>
-            )}
           </SimpleGrid>
         </Box>
 
@@ -449,7 +317,7 @@ const AdminPage = () => {
                             href={`/admins/promos/${promo.id}`}
                             key={promo.id}
                           >
-                            <PromoCard promo={promo} />
+                            <PromoCardAdmin promo={promo} />
                           </Link>
                         ))
                       ) : (

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Box, Center, Text, Flex, useBreakpointValue, Spinner } from '@chakra-ui/react';
 import { FaUserAlt, FaQrcode, FaHistory } from 'react-icons/fa';
 import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
@@ -6,16 +6,25 @@ import { getUserWithRoles } from '../../../lib/utils/checkRole';
 import ThemeToggleButton from '../DarkMode';
 import ButtonDeconnexion from '../../common/ButtonDeconnexion';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 // eslint-disable-next-line react/display-name
 const ProfileCardApprenant = React.memo(() => {
+  const router = useRouter();
   const buttonSize = useBreakpointValue({ base: 'sm', md: 'md' });
   const iconSize = useBreakpointValue({ base: '20px', md: '30px' });
-  const { roles,user, loading } = useUserWithRoles(['Apprenant']);
+  const { roles, user, loading } = useUserWithRoles(['Apprenant']);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fullName = useMemo(() => (user ? `${user.prenom} ${user.nom}` : ''), [user]);
 
-  if (loading) {
+  const handleNavigation = async (href) => {
+    setIsLoading(true);
+    await router.push(href);
+    setIsLoading(false); // Gérer le chargement après la navigation
+  };
+
+  if (loading || isLoading) {
     return (
       <Center h="100vh">
         <Spinner size="lg" color="red.500" />
@@ -51,36 +60,27 @@ const ProfileCardApprenant = React.memo(() => {
         shadow="lg"
         border="2px solid #CE0033"
       >
-        <Link href='/apprenant/profile' passHref>
-          <Flex color="white" display="flex" flexDirection="column" alignItems="center" fontSize={buttonSize}>
-            <FaUserAlt size={iconSize} />
-            <Text mt={2}>Profile</Text>
-          </Flex>
-        </Link>
+        <Box as="button" onClick={() => handleNavigation('/apprenant/profile')} display="flex" flexDirection="column" alignItems="center" fontSize={buttonSize}>
+          <FaUserAlt size={iconSize} />
+          <Text mt={2}>Profile</Text>
+        </Box>
         
-        <Link href='/apprenant' passHref>
-          <Flex color="white" display="flex" flexDirection="column" alignItems="center">
-            <FaQrcode size={iconSize} />
-            <Text mt={2}>QR Code</Text>
-          </Flex>
-        </Link>
+        <Box as="button" onClick={() => handleNavigation('/apprenant')} display="flex" flexDirection="column" alignItems="center">
+          <FaQrcode size={iconSize} />
+          <Text mt={2}>QR Code</Text>
+        </Box>
 
-        <Link href='/apprenant/mesPointages' passHref>
-          <Flex color="white" display="flex" flexDirection="column" alignItems="center" fontSize={buttonSize}>
-            <FaHistory size={iconSize} />
-            <Text mt={2}>Historique</Text>
-          </Flex>
-        </Link>
+        <Box as="button" onClick={() => handleNavigation('/apprenant/mesPointages')} display="flex" flexDirection="column" alignItems="center" fontSize={buttonSize}>
+          <FaHistory size={iconSize} />
+          <Text mt={2}>Historique</Text>
+        </Box>
       </Flex>
 
       <Center display='flex' mt={4} textAlign="center">
         <Box color="white" px={20}>
           <Text fontSize={{ base: '20px', md: '20px', lg: '35px' }} fontWeight="bold">{fullName}</Text>
-          {roles.length > 0 &&
-
-<Text>       {roles.join(', ')}
-</Text>
-}        </Box>
+          {roles.length > 0 && <Text>{roles.join(', ')}</Text>}
+        </Box>
         <Box mt={4}>
           <ButtonDeconnexion />
         </Box>

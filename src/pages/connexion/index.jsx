@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { api } from '../../lib/utils/api';
+import { api } from '../../lib/utils/api'; // Appel de l'API pour l'authentification
 import { PiLockKeyOpenFill } from 'react-icons/pi';
 import {
   Box,
@@ -17,26 +17,67 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
   const toast = useToast();
+
+  // Vérifie si l'utilisateur est déjà connecté et redirige en fonction de son rôle
+  useEffect(() => {
+    const checkUserRole = async () => {
+      const token = localStorage.getItem('token'); // Utiliser localStorage ou sessionStorage
+      if (token) {
+        try {
+          const roleResponse = await api('user/role', 'GET', null, token);
+          if (roleResponse.role) {
+            // Redirection en fonction du rôle
+            switch (roleResponse.role) {
+              case 'Formateur':
+                router.push('/formateur');
+                break;
+              case 'Apprenant':
+                router.push('/apprenant');
+                break;
+              case 'Vigile':
+                router.push('/vigile/scanner');
+                break;
+              case 'ChefDeProjet':
+                router.push('/ChefDeProjet');
+                break;
+              case 'Administrateur':
+                router.push('/admins');
+                break;
+              default:
+                setError(
+                  "Rôle non reconnu. Veuillez contacter l'administrateur."
+                );
+            }
+          }
+        } catch (err) {
+          console.error('Erreur lors de la récupération du rôle', err);
+        }
+      }
+    };
+
+    checkUserRole();
+  }, [router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null); // Réinitialise les erreurs à chaque soumission
+    setError(null);
+    setIsLoading(true);
 
     try {
-      // Appel API pour le login
       const response = await api('login', 'POST', { email, password });
 
       if (response.errors || response.message || response.error) {
-        // En cas d'erreur, affiche le message provenant du backend
         setError(
           response.errors?.email?.[0] || response.message || response.error
         );
       } else if (response.access_token) {
-        // Si l'authentification réussit, stocke le token dans le localStorage
-        localStorage.setItem('token', response.access_token);
+        localStorage.setItem('token', response.access_token); // Stocke le token
+
+        document.cookie = `refresh_token=${response.refresh_token}; HttpOnly; Secure`; // Stocke le refresh token
+
         toast({
           title: 'Connexion réussie.',
           description: 'Vous êtes connecté.',
@@ -44,16 +85,10 @@ const Login = () => {
           duration: 3000,
           isClosable: true,
         });
-        // Appel de l'API pour récupérer le rôle de l'utilisateur
-        const roleResponse = await api(
-          'user/role',
-          'GET',
-          null,
-          response.access_token
-        );
 
+        // Récupère le rôle de l'utilisateur après la connexion
+        const roleResponse = await api('user/role', 'GET', null, response.access_token);
         if (roleResponse.role) {
-          // Redirection en fonction du rôle de l'utilisateur
           switch (roleResponse.role) {
             case 'Formateur':
               router.push('/formateur');
@@ -83,9 +118,9 @@ const Login = () => {
       }
     } catch (err) {
       console.error('Erreur lors de la requête', err);
-      setError(
-        'Erreur lors de la connexion. Veuillez vérifier vos informations et réessayer.'
-      );
+      setError('Erreur lors de la connexion. Veuillez vérifier vos informations.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -93,12 +128,12 @@ const Login = () => {
     <div
       style={{
         backgroundImage: `
-                                                                                                                                                      linear-gradient(rgba(250, 250, 250, 0.1), rgba(250, 250, 250, 0.4)),
-                                                                                                                                                      url(/images/background-simplon-pattern.svg)
-                                                                                                                                                    `,
-        backgroundSize: 'cover', // Ensures the image covers the entire page
-        backgroundPosition: 'center', // Centers the image
-        backgroundRepeat: 'no-repeat', // Prevents image repetition
+          linear-gradient(rgba(250, 250, 250, 0.1), rgba(250, 250, 250, 0.4)),
+          url(/images/background-simplon-pattern.svg)
+        `,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
       }}
     >
       <Heading as="h3" size="md" py={20} textAlign="center">
@@ -115,20 +150,13 @@ const Login = () => {
           borderTop="2px"
           borderBottom="2px"
           borderColor="#CE0033"
-          // borderColor="red" // Utilisation de la couleur définie dans le thème
-
           shadow="lg"
         >
-          {/* Icon de verrou */}
-          <Center  mb={4}>
+          <Center mb={4}>
             <PiLockKeyOpenFill size={46} />
           </Center>
 
-          {/* Titre de la page */}
-
-          {/* Formulaire de connexion */}
           <form onSubmit={handleSubmit}>
-            {/* Email */}
             <FormControl id="email" mb={4}>
               <FormLabel>Email</FormLabel>
               <Input
@@ -141,7 +169,6 @@ const Login = () => {
               />
             </FormControl>
 
-            {/* Mot de passe */}
             <FormControl id="password" mb={6}>
               <FormLabel>Mot de passe</FormLabel>
               <Input
@@ -153,9 +180,9 @@ const Login = () => {
                 shadow="lg"
               />
             </FormControl>
+
             {error && <p style={{ color: 'red' }}>{error}</p>}
 
-            {/* Bouton de soumission */}
             <Button
               type="submit"
               w="full"
@@ -163,6 +190,7 @@ const Login = () => {
               color="white"
               size="lg"
               mt={4}
+              isLoading={isLoading}
               _hover={{ bg: 'red.600' }}
             >
               Connexion

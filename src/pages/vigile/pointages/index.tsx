@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import ListePointage from '../../../components/func/vigile/ListePointage';
 import NavbarVigile from '../../../components/layout/vigile/Navbar';
+import { Box, Text } from '@chakra-ui/react';
 import ButtonDeconnexion from '../../../components/common/ButtonDeconnexion';
-import { Box } from '@chakra-ui/react';
+import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 
 export default function PointageAujourdhui() {
+  useUserWithRoles(['Vigile']);
+
   const [pointages, setPointages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,7 +15,17 @@ export default function PointageAujourdhui() {
   useEffect(() => {
     const fetchPointages = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pointages/aujourdhui`);
+        // Retrieve the token from localStorage or wherever it's stored
+        const token = localStorage.getItem('token'); // Adjust this to how you're managing tokens
+
+        // Fetch pointages with the token included in the headers
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pointages/aujourdhui`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
         const data = await response.json();
 
         if (!response.ok) {
@@ -21,13 +34,9 @@ export default function PointageAujourdhui() {
 
         setPointages(data.pointages);
         setLoading(false);
-
-        
       } catch (error) {
         setError(error.message);
         setLoading(false);
-
-       
       }
     };
 
@@ -35,21 +44,21 @@ export default function PointageAujourdhui() {
   }, []);
 
   return (
-    <div>
+    <Box
+    mx={5}
+    >
+      <ButtonDeconnexion />
       {loading ? (
-        <p>Chargement des pointages...</p>
+        <Text>Chargement des pointages...</Text>
       ) : error ? (
-        <p>Erreur : {error}</p>
+        <Text>Erreur : {error}</Text>
       ) : pointages.length === 0 ? (
-        <p>{` Aucun pointage pour aujourd'hui. `}  </p>
+        <Text>{`Aucun pointage pour aujourd'hui.`}</Text>
       ) : (
         <ListePointage pointages={pointages} />
       )}
 
-      <NavbarVigile /> 
-      <Box mt={4}>
-        <ButtonDeconnexion/>
-      </Box>
-    </div>
+      <NavbarVigile />
+    </Box>
   );
 }

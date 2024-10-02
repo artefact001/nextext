@@ -3,6 +3,7 @@ import { useUserWithRoles } from '../../lib/utils/hooks/useUserWithRoles';
 import { Center, Image, Spinner, Text } from '@chakra-ui/react';
 import ProfileCard from '../../components/layout/formateur/Navbar';
 import useSWR from 'swr';
+import PointageHebdomadaire from '../../components/func/admin/PointageHebdomadaire';
 
 const fetcher = (url) => fetch(url).then((res) => {
   if (!res.ok) throw new Error('Failed to fetch QR Code');
@@ -60,6 +61,9 @@ const FormateurPage = () => {
       Chargement du QR Code, veuillez patienter...
     </Text>
   </Center>      )}
+
+
+  <PointageHebdomadaire></PointageHebdomadaire>
     </Center>
   );
 };

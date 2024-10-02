@@ -85,13 +85,15 @@ const QRCodeScanner = () => {
       // Extraire uniquement le matricule
       const matricule = result.split('\n')[1].split(':')[1].trim();
       console.log('Matricule envoyé pour validation:', matricule);
+      const token = localStorage.getItem('token'); // Utiliser localStorage ou sessionStorage
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/pointage/depart`,
         {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({ matricule }),
         }

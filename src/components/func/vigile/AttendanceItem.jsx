@@ -1,7 +1,7 @@
 import React from 'react';
 import { ListItem, Flex, Box, Text, Image } from '@chakra-ui/react';
 
-function AttendanceItem({ name, role, time, status }) {
+function AttendanceItem({ name, heure_depard, heur_arrive, status, promos }) {
   // Determine which image to use based on status
   const getStatusImage = () => {
     switch (status) {
@@ -48,11 +48,11 @@ function AttendanceItem({ name, role, time, status }) {
           {name}
         </Text>
         <Text fontSize="sm" color="gray.600">
-          {role}
+          {promos}
         </Text>
       </Flex>
 
-      {/* Time Information */}
+      {/* heur_arrive Information */}
       <Box
         fontSize="md"
         fontWeight="medium"
@@ -61,8 +61,17 @@ function AttendanceItem({ name, role, time, status }) {
         textAlign="right"
         fontFamily="Nunito Sans"
       >
-        {time}
+        <Text>
+        {heur_arrive} 
+        </Text>
+
+        <Text>
+        {heure_depard}
+        </Text>
+   
+
       </Box>
+     
     </ListItem>
   );
 }

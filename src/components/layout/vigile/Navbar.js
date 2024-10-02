@@ -1,18 +1,36 @@
-import React from 'react';
-import { Box, Center, Link, Text, useColorModeValue } from '@chakra-ui/react';
+import React, { useMemo } from 'react';
+import { Box, Center, Link, Spinner, Text, useColorModeValue } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { FaUserAlt, FaQrcode, FaHistory } from 'react-icons/fa'; // Import des icônes
 import Swal from 'sweetalert2'; // Import de SweetAlert
 
 import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 import { getUserWithRoles } from '../../../lib/utils/checkRole';
-import ButtonDeconnexion from '../../common/ButtonDeconnexion';
 
 const NavbarVigile = () => {
   const router = useRouter();
   const activeColor = '#CE0033'; // Couleur pour l'état actif
   const inactiveColor = useColorModeValue('gray.600', 'gray.400'); // Couleur pour l'état inactif selon le mode
   useUserWithRoles(['Vigile']);
+  const {  user, loading } = useUserWithRoles(['Vigile']);
+
+  const fullName = useMemo(() => (user ? `${user.prenom} ${user.nom}` : ''), [user]);
+
+  if (loading) {
+    return (
+      <Center h="100vh">
+        <Spinner size="lg" color="red.500" />
+      </Center>
+    );
+  }
+
+  if (!user) {
+    return (
+      <Center h="100vh">
+        <Text>Une erreur est survenue. Veuillez vous reconnecter.</Text>
+      </Center>
+    );
+  }
 
   // Fonction pour afficher SweetAlert et rediriger selon le choix
   const handleOptionClick = () => {
@@ -33,19 +51,22 @@ const NavbarVigile = () => {
       }
     });
   };
-   useUserWithRoles(['Vigile']); // Spécifie ici les rôles requis
 
   return (
     <Box
       position="fixed"
       bottom="0"
       borderRadius="xl"
-      w="320px"
+      px={{ base: '4%', lg: '5%' }}
+      w={{ base: '96%', lg: '50%' }}
+
       mx="auto"
       left="50%"
       shadow="2xl"
       transform="translateX(-50%)"
     >
+                <Text fontSize={{ base: '20px', lg: '35px' }} fontWeight="bold">{fullName}</Text>
+
       <Box
         display="flex"
         justifyContent="space-between"
@@ -57,7 +78,7 @@ const NavbarVigile = () => {
         borderColor="red.700"
         color="white"
         shadow="lg"
-        px={4}
+        px={{ base: '10%', md: '40px', lg: '80px' }}
         py={3}
         position="fixed"
         bottom="0"
@@ -72,12 +93,12 @@ const NavbarVigile = () => {
           _focus={{ outline: 'none' }}
           color={router.pathname === '/option' ? activeColor : inactiveColor}
           onClick={handleOptionClick} // Appelle la fonction quand l'utilisateur clique
-        >
+        > <Box mt={4}>
+      </Box>
           <Center flexDirection="column">
             <FaUserAlt size={30} />
             <Text mt={2}>Option</Text>
           </Center>
-          
         </Box>
 
         {/* Lien vers le scanner */}
@@ -126,7 +147,11 @@ const NavbarVigile = () => {
     </Box>
   );
 };
+
+
 export async function getServerSideProps(context) {
-  return await getUserWithRoles(context, ['Vigile']); // Spécifie ici les rôles requis
-} 
+  const result = await getUserWithRoles(context, ['Administrateur']);
+  console.log('Server-side props:', result);
+  return result;
+}
 export default NavbarVigile;

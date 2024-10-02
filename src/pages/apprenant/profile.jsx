@@ -1,6 +1,6 @@
 import { Box, Center } from '@chakra-ui/react';
 import ProfileCard from '../../components/layout/apprenant/Navbar';
-import ProfileComponent from '../../components/func/apprenant/profile';
+import ProfileComponent from '../../components/common/profile';
 
 const Profile = () => {
   return (

@@ -38,16 +38,18 @@ function ListePointage({ pointages }) {
         size="bold" fonntWidget="bold"
         fontFamily="Nunito Sans "
       >
-        {pointages.map((pointage) => (
+         {pointages.map((pointage) => (
           <AttendanceItem 
-          // date comme lundi
-          date={dayjs(pointage.date).format('dddd, DD/MM ')}ey={pointage.id}
-  
-          status={pointage.type} // Assuming `type` is either 'present', 'retard', or 'absent'
-          time={pointage.heure_present || pointage.type}
-        />
-        
+            key={pointage.id}
+            name={pointage.name}
+            date={dayjs(pointage.date).format('dddd, DD/MM')}
+            status={pointage.type}
+            time={pointage.heure_present || pointage.type}
+            heure_depart={pointage.heure_depart}
+            pointageId={pointage.id} // Ajoutez l'ID du pointage
+          />
         ))}
+        
       </List>
     </Box>
   );

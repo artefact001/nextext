@@ -14,13 +14,14 @@ import isoWeeksInYear from 'dayjs/plugin/isoWeeksInYear';
 import { useRouter } from 'next/router';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import useSWR from 'swr';
-import ListePointage from '../../../components/formateur/ListePointage';
-import PointageBoxPromo from '../../../components/formateur/MesPointages';
+import ListePointage from '../../../components/func/admin/ListePointage';
+import PointageBoxPromo from '../../../components/func/admin/MesPointages';
+
 dayjs.extend(isoWeek);
 dayjs.extend(isoWeeksInYear);
 
 // Dynamic component imports
-const ProfileCardFormateur = lazy(() =>
+const ProfileCardAdministrateur = lazy(() =>
   import('../../../components/layout/formateur/Navbar')
 );
 
@@ -40,6 +41,7 @@ const MesPointagesP7 = () => {
   const [date, setDate] = useState(dayjs());
   const [selectedWeek, setSelectedWeek] = useState(date.isoWeek());
   const [selectedDay, setSelectedDay] = useState(null); // Selected day state
+  // eslint-disable-next-line no-unused-vars
   const [promo, setPromo] = useState(null); // State for promo data
   const router = useRouter();
   const { id: promoId } = router.query; // Access the dynamic id (promoId)
@@ -66,12 +68,12 @@ const MesPointagesP7 = () => {
     isLoading: isDailyLoading,
   } = useSWR(selectedDay ? dailyAttendanceUrl(selectedDay) : null, fetcher);
 
-  const attendanceSummary = dailyData
+  const attendanceSummary = dailyData?.pointages
     ? {
         absent: dailyData.pointages.filter((p) => p.type === 'absence').length,
         retard: dailyData.pointages.filter((p) => p.type === 'retard').length,
       }
-    : { absent: 0, retard: 0 };
+    : { absent: 0, retard: 0 }; // Default values if pointages is undefined
 
   const loading = !pointagesData && !pointagesError;
 
@@ -85,6 +87,7 @@ const MesPointagesP7 = () => {
   useEffect(() => {
     setSelectedWeek(date.isoWeek());
   }, [date]);
+
   // Fetch promo data
   useEffect(() => {
     const fetchPromoData = async () => {
@@ -106,6 +109,7 @@ const MesPointagesP7 = () => {
     };
     fetchPromoData();
   }, [promoId]);
+
   useEffect(() => {
     console.log('API URL:', pointagesUrl);
     console.log(
@@ -131,7 +135,7 @@ const MesPointagesP7 = () => {
   return (
     <VStack spacing={4} maxW="100%">
       <Suspense fallback={<Spinner />}>
-        <ProfileCardFormateur />
+        <ProfileCardAdministrateur />
       </Suspense>
 
       <SimpleGrid justifyContent="space-between" columns={[1, 2]} spacing={4}>
@@ -152,28 +156,37 @@ const MesPointagesP7 = () => {
           fontFamily="Nunito Sans"
           flex="2"
         >
-          {' '}
-          {/* Rendu conditionnel basé sur selectedDay et l'état des données */}
           <Suspense fallback={<Spinner />}>
-            {/* Handle loading and empty states */}
             {isDailyLoading ? (
-              <Text>Chargement des données...</Text> // Loading state
+              <Text>Chargement des données...</Text>
             ) : dailyError ? (
+              <Text>Erreur lors de la récupération des données.</Text>
+            ) : dailyData?.apprenants_avec_pointage?.length > 0 ||
+              dailyData?.apprenants_sans_pointage?.length > 0 ? (
               <>
-                {/* Display the selected date */}
                 <Text>
                   Date:{' '}
                   {selectedDay
                     ? selectedDay.format('DD/MM/YYYY')
                     : 'Date non sélectionnée'}
                 </Text>
-                <Text>Aucun pointage trouvé pour la journée sélectionnée.</Text>
+                {dailyData.apprenants_avec_pointage.length > 0 && (
+                  <Box>
+                    <ListePointage
+                      pointages={dailyData.apprenants_avec_pointage}
+                    />
+                  </Box>
+                )}
+                {dailyData.apprenants_sans_pointage.length > 0 && (
+                  <Box>
+                    <ListePointage
+                      pointages={dailyData.apprenants_sans_pointage}
+                    />
+                  </Box>
+                )}
               </>
-            ) : dailyData && dailyData.pointages.length > 0 ? (
-              <ListePointage pointages={dailyData.pointages} promo={promo} />
             ) : (
               <>
-                {/* Display the selected date */}
                 <Text>
                   Date:{' '}
                   {selectedDay
@@ -242,7 +255,7 @@ const getWeeksOfMonth = (mois, annee) => {
 
 const getDaysOfWeek = (week, year) => {
   const startOfWeek = dayjs().isoWeek(week).year(year).startOf('isoWeek');
-  return Array.from({ length: 5 }, (_, index) => startOfWeek.add(index, 'day')); // Limité à 5 jours pour la semaine
+  return Array.from({ length: 5 }, (_, index) => startOfWeek.add(index, 'day')); // Limité à 7 jours pour la semaine
 };
 
 export default MesPointagesP7;

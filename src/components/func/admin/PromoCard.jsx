@@ -50,7 +50,7 @@ const PromoCard = ({promo, description }) => (
         {promo.nom}
         </Text>
         <Text fontSize="sm" maxW=""  fontFamily="Nunito Sans">
-        {description}
+        {promo.fabrique?.nom || 'Fabrique inconnue'}
         </Text>
       </Box>
       </ButtonGroup>

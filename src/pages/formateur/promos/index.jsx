@@ -1,15 +1,11 @@
-import {
-  Box,
-  Text,
-  SimpleGrid,
-} from '@chakra-ui/react';
+import { Box, Text, SimpleGrid } from '@chakra-ui/react';
 import ProfileCardFormateur from '../../../components/layout/formateur/Navbar';
 import useSWR from 'swr';
-import { useState } from 'react';
 import { useRouter } from 'next/router';
 import PromoCard from '../../../components/common/PromoCard';
-import ListePointage from '../../../components/func/apprenant/ListePointage';
 import PromoHeader from '../../../components/common/PromoHeader';
+import CardBox from '../../../components/common/Card';
+import CreatePromoForm from '../../../components/func/formateur/CreatePromoForm';
 
 // Fonction de récupération des données
 const fetcher = (url) =>
@@ -32,8 +28,6 @@ const Dashboard = () => {
     `${process.env.NEXT_PUBLIC_API_URL}/promos/terminer`,
     fetcher
   );
-  const [pointages, setPointages] = useState([]);
-  const [selectedPromoId, setSelectedPromoId] = useState(null);
   const router = useRouter();
 
   // Rediriger vers la page de la promotion sélectionnée
@@ -42,36 +36,39 @@ const Dashboard = () => {
   };
 
   // Récupérer les pointages du jour pour une promotion
-  const fetchPointages = async (promoId) => {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/promos/${promoId}/pointages-aujourdhui`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      }
-    );
+  
 
-    if (response.ok) {
-      const data = await response.json();
-      if (data.success) {
-        setPointages(data.pointages);
-        setSelectedPromoId(promoId);
-      } else {
-        console.error(
-          data.message || 'Erreur lors de la récupération des pointages.'
-        );
-      }
-    } else {
-      console.error('Erreur lors de la récupération des pointages.');
-    }
-  };
-
-  if (promosError || promosErrorTerminer) {
+  if (promosError && promosErrorTerminer) {
     return (
       <Box p={0}>
+        {/* Profil Formateur et Header */}
+        <ProfileCardFormateur />
+
+        <SimpleGrid
+          mx={{ base: '2px', md: '3px', lg: '12px' }}
+          justifyContent="space-between"
+          columns={[1, 2]}
+          spacing={8}
+        >
+          <CardBox>
+            {/* Component */}
+            <CreatePromoForm />
+          </CardBox>
+          <CardBox as="section">
+            {' '}
+            <PromoHeader />
+            <Text color="red.500">Aucune promotion</Text>{' '}
+          </CardBox>
+        </SimpleGrid>
+      </Box>
+    );
+  }
+
+  const promos = promosData ? promosData.promos : [];
+  const promosTerminer = promosDataTerminer ? promosDataTerminer.promos : [];
+
+  return (
+    <Box p={0}>
       {/* Profil Formateur et Header */}
       <ProfileCardFormateur />
 
@@ -81,14 +78,14 @@ const Dashboard = () => {
         columns={[1, 2]}
         spacing={8}
       >
-        <Box
+        <CardBox
           as="section"
-          px={{ base: '2px', md: '3px', lg: '20px' }}
-          mx={{ base: '2px', md: '3px', lg: '10px' }}
-          py={8}
-          mt={7}
+          // px={{ base: '2px', md: '3px', lg: '20px' }}
+          // mx={{ base: '2px', md: '3px', lg: '10px' }}
+          // py={8}
+          // mt={7}
           w="full"
-          maxW={{ base: '366px', md: '100%', lg: '100%' }}
+          maxW={{ base: '366px', md: '100%', lg: '90%' }}
           borderBottom="2px solid"
           borderTop="2px solid"
           borderColor="red.700"
@@ -98,67 +95,9 @@ const Dashboard = () => {
           fontFamily="Nunito Sans"
           flex="2"
           display={{ base: 'none', md: 'none', lg: 'block' }}
-        ></Box>
-        <Box
-          as="section"
-          px={{ base: '2px', md: '3px', lg: '20px' }}
-          mx={{ base: '2px', md: '3px', lg: '10px' }}
-          py={8}
-          mt={7}
-          w="full"
-          maxW={{ base: '366px', md: '100%', lg: '100%' }}
-          borderBottom="2px solid"
-          borderTop="2px solid"
-          borderColor="red.700"
-          borderRadius="md"
-          shadow="lg"
-          bg="whiteAlpha.80"
-          fontFamily="Nunito Sans"
-          flex="2"
         >
-          {' '}
-          <PromoHeader />
-          <Text color="red.500">Aucune promotion</Text>{' '}
-        </Box>
-      </SimpleGrid>
-    </Box>
-    );
-  }
-
-  const promos = promosData ? promosData.promos : [];
-  const promosTerminer = promosDataTerminer ? promosDataTerminer.promos : [];
-
-  return (
-    <Box p={0}>
-    {/* Profil Formateur et Header */}
-    <ProfileCardFormateur />
-
-    <SimpleGrid
-      mx={{ base: '2px', md: '3px', lg: '12px' }}
-      justifyContent="space-between"
-      columns={[1, 2]}
-      spacing={8}
-    >
-      <Box
-        as="section"
-        px={{ base: '2px', md: '3px', lg: '20px' }}
-        mx={{ base: '2px', md: '3px', lg: '10px' }}
-        py={8}
-        mt={7}
-        w="full"
-        maxW={{ base: '366px', md: '100%', lg: '100%' }}
-        borderBottom="2px solid"
-        borderTop="2px solid"
-        borderColor="red.700"
-        borderRadius="md"
-        shadow="lg"
-        bg="whiteAlpha.80"
-        fontFamily="Nunito Sans"
-        flex="2"
-        display={{ base: 'none', md: 'none', lg: 'block' }}
-      >
-        {/* <ListePointage /> */}
-        {selectedPromoId && (
+          {/* <ListePointage /> */}
+          {/* {selectedPromoId && (
           <ListePointage
             pointages={pointages}
             promoId={selectedPromoId}
@@ -166,45 +105,36 @@ const Dashboard = () => {
             isCompleted
           />
         )}
-        ;
-      </Box>
-      <Box
-        as="section"
-        px={{ base: '2px', md: '3px', lg: '20px' }}
-        mx={{ base: '2px', md: '3px', lg: '10px' }}
-        py={8}
-        mt={7}
-        w="full"
-        maxW={{ base: '366px', md: '100%', lg: '100%' }}
-        borderBottom="2px solid"
-        borderTop="2px solid"
-        borderColor="red.700"
-        borderRadius="md"
-        shadow="lg"
-        bg="whiteAlpha.80"
-        fontFamily="Nunito Sans"
-        flex="2"
-      >
-        {' '}
-        <PromoHeader />
-        {promos.length > 0 ? (
-          <PromoCard promos={promos} handlePromoClick={handlePromoClick} />
-        ) : (
-          <Text fontSize="lg" color="red.500">
-            Aucune promotion en cours.
-          </Text>
-        )}{' '}
-        {/* Liste des Promos terminées */}
-        {promosTerminer.length > 0 ? (
-          <PromoCard promos={promosTerminer} isCompleted handlePromoClick={handlePromoClick} />
-        ) : (
-          <Text fontSize="lg" color="red.500">
-            Aucune promotion terminée.
-          </Text>
-        )}{' '}
-      </Box>
-    </SimpleGrid>
-  </Box>
+        ; */}
+
+          {/* Component */}
+          <CreatePromoForm />
+        </CardBox>
+        <CardBox as="section" flex="2">
+          {' '}
+          <PromoHeader />
+          {promos.length > 0 ? (
+            <PromoCard promos={promos} handlePromoClick={handlePromoClick} />
+          ) : (
+            <Text fontSize="lg" color="red.500">
+              Aucune promotion en cours.
+            </Text>
+          )}{' '}
+          {/* Liste des Promos terminées */}
+          {promosTerminer.length > 0 ? (
+            <PromoCard
+              promos={promosTerminer}
+              isCompleted
+              handlePromoClick={handlePromoClick}
+            />
+          ) : (
+            <Text fontSize="lg" color="red.500">
+              Aucune promotion terminée.
+            </Text>
+          )}{' '}
+        </CardBox>
+      </SimpleGrid>
+    </Box>
   );
 };
 

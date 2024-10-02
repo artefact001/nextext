@@ -43,11 +43,14 @@ function ListePointage({ pointages }) {
         boxShadow="sm"
       >
         {pointages.map((pointage) => (
+          console.log(pointage),
             <AttendanceItem
                 key={pointage.id}
                 name={`${pointage.user.prenom} ${pointage.user.nom}`} // Concatenate first and last names
                 role={pointage.user.role}
-                time={pointage.heure_present}
+                promos={pointage.user.promos && pointage.user.promos.length > 0 ? pointage.user.promos[0].nom : 'Formateur'} // Check if promos exist and not empty
+                heur_arrive={pointage.heure_present}
+                heure_depard={pointage.heure_depart  ? pointage.heure_depart : null}
                 status={pointage.type} // Assuming `type` is either 'present', 'retard', or 'absent'
             />
         ))}

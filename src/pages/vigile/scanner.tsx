@@ -1,22 +1,20 @@
 'use client';
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import QrReader from 'react-web-qr-reader';
 import Swal from 'sweetalert2';
 import NavbarVigile from '../../components/layout/vigile/Navbar';
 import { Box, Center, Text } from '@chakra-ui/react';
+import { useUserWithRoles } from '../../lib/utils/hooks/useUserWithRoles';
 
 const QRCodeScanner = () => {
-  const router = useRouter();
   const [result, setResult] = useState(null);
   const [isScanned, setIsScanned] = useState(false);
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      router.push('/connexion');
-    }
-  }, [router]);
+
+
+  useUserWithRoles(['Vigile']);
+  // token
+  
 
   const delay = 500;
   const previewStyle = {
@@ -85,13 +83,15 @@ const QRCodeScanner = () => {
       // Extraire uniquement le matricule
       const matricule = result.split('\n')[1].split(':')[1].trim();
       console.log('Matricule envoyé pour validation:', matricule);
+      const token = localStorage.getItem('token');
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/pointage/arrivee`,
         {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({ matricule }),
         }

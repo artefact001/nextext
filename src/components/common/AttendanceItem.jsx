@@ -1,69 +1,77 @@
-import React from 'react';
-import { ListItem, Flex, Box, Text, Image } from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { ListItem, Flex, Box, Text, Image, useDisclosure, Button } from '@chakra-ui/react';
+import JustificationModal from '../func/apprenant/JustificationModal'; // Importez la modale
 
-function AttendanceItem({ name, date, time, status }) {
+function AttendanceItem({ name, date, time, status, heure_depart, pointageId }) {
+  const { isOpen, onOpen, onClose } = useDisclosure(); // Hook pour ouvrir/fermer la modale
+  const [showModal, setShowModal] = useState(false);
+
   // Determine which image to use based on status
   const getStatusImage = () => {
     switch (status) {
       case 'present':
-        return '/images/presence.png'; // Path to presence image
+        return '/images/presence.png';
       case 'retard':
-        return '/images/retard.png'; // Path to retard image
+        return '/images/retard.png';
       case 'absent':
-        return '/images/absent.png'; // Path to absence image (small correction)
+        return '/images/absent.png';
       default:
-        return '/images/absent.png'; // Default to absence if status is not recognized
+        return '/images/absent.png';
+    }
+  };
+
+  // Fonction pour afficher la modale uniquement pour les absences
+  const handleItemClick = () => {
+    if (status === 'absence') {
+      onOpen(); // Ouvrir la modale si absent
     }
   };
 
   return (
-    <ListItem
-      display="flex"
-      gap={3}
-      alignItems="center"
-      py={3}
-      px={4} // Use px for consistent padding on both sides
-      bg="whiteAlpha.80"
-      borderBottom="1px solid"
-      borderColor="gray.300" // Lighter border for better UX
-    >
-      {/* Status Image */}
-      <Image
-        src={getStatusImage()}
-        alt={`Status: ${status}`}
-        loading="lazy"
-        objectFit="contain"
-        w="24px" // Slightly bigger for better visibility
-        h="24px" // Maintain aspect ratio
-        flexShrink={0}
-      />
-
-      {/* Name and Role */}
-      <Flex direction="column" flex="1" minW="200px">
-        {' '}
-        {/* Reduced width to ensure better mobile responsiveness */}
-        <Text fontSize="md" fontWeight="bold" color="gray.800" isTruncated>
-          {' '}
-          {/* Truncate text for long names */}
-          {name}
-        </Text>
-        <Text fontSize="sm" color="gray.600">
-          {date}
-        </Text>
-      </Flex>
-
-      {/* Time Information */}
-      <Box
-        fontSize="md"
-        fontWeight="medium"
-        color="gray.800"
-        w="full"
-        textAlign="right"
-        fontFamily="Nunito Sans"
+    <>
+      <ListItem
+        display="flex"
+        gap={3}
+        alignItems="center"
+        py={3}
+        px={4}
+        bg="whiteAlpha.80"
+        borderBottom="1px solid"
+        borderColor="gray.300"
+        cursor={status === 'absent' ? 'pointer' : 'default'} // Pointer pour absents
+        onClick={handleItemClick} // Afficher la modale pour absents
       >
-        {time}
-      </Box>
-    </ListItem>
+        <Image
+          src={getStatusImage()}
+          alt={`Status: ${status}`}
+          loading="lazy"
+          objectFit="contain"
+          w="24px"
+          h="24px"
+          flexShrink={0}
+        />
+        <Flex direction="column" flex="1" minW="200px">
+          <Text fontSize="md" fontWeight="bold" color="gray.800" isTruncated>
+            {name}
+          </Text>
+          <Text fontSize="sm" color="gray.600">
+            {date}
+          </Text>
+        </Flex>
+        <Box fontSize="md" fontWeight="medium" color="gray.800" w="full" textAlign="right">
+          {time} {heure_depart}
+        </Box>
+      </ListItem>
+
+      {/* Modal for justification */}
+      {status === 'absence' && (
+        <JustificationModal
+          isOpen={isOpen}
+          onClose={onClose}
+          pointageId={pointageId}
+        />
+      )}
+    </>
   );
 }
 

@@ -8,7 +8,7 @@ import isoWeeksInYear from 'dayjs/plugin/isoWeeksInYear';
 import useSWR from 'swr';
 import PointageBox from '../../components/common/PointageSection';
 import ProfileCardApprenant from '../../components/layout/apprenant/Navbar';
-import ProfileComponent from '../../components/func/apprenant/profile';
+import ProfileComponent from '../../components/common/profile';
 // import stylecss globals.css
 
 

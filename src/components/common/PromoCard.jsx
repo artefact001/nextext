@@ -44,7 +44,8 @@ const PromoCard = ({ promos, handlePromoClick, isCompleted = false }) => {
         <Text fontSize="lg" fontWeight="bold" fontFamily="Nunito Sans">
         {promo.nom}        </Text>
         <Text fontSize="sm" color="gray.600" fontFamily="Nunito Sans">
-        {promo.nom}         </Text>
+        {promo.fabrique && promo.fabrique.nom ? promo.fabrique.nom : 'Fabrique inconnue'}
+        </Text>
       </Box>
 
     </Box>

@@ -1,20 +1,22 @@
-import { Box, Center } from '@chakra-ui/react';
-import ProfileComponent from '../../components/func/formateur/profile';
+import {  Center } from '@chakra-ui/react';
 import ProfileCardFormateur from '../../components/layout/formateur/Navbar';
+import ProfileComponent from '../../components/common/profile';
+import CardBox from '../../components/common/Card';
 
 const Profile = () => {
   return (
     <Center display={'block'}>
       <ProfileCardFormateur></ProfileCardFormateur>
-      <Box
+      <CardBox
         mt={6}
         bg="whiteAlpha.80"
-        p={4}
         borderRadius="md"
         shadow="md"
+        px={30}
+        mx={10 }
       >
         <ProfileComponent></ProfileComponent>
-      </Box>
+      </CardBox>
     </Center>
   );
 };

@@ -1,37 +1,20 @@
 'use client';
-
-import useSWR from 'swr';
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import QrReader from 'react-web-qr-reader';
 import Swal from 'sweetalert2';
 import NavbarVigile from '../../../components/layout/vigile/Navbar';
 import { Box, Center, Text } from '@chakra-ui/react';
-
-// Fetcher function for SWR
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 
 const QRCodeScanner = () => {
-  const router = useRouter();
-  const [result, setResult] = useState<string | null>(null);
+  const [result, setResult] = useState(null);
   const [isScanned, setIsScanned] = useState(false);
 
-  // Using SWR to get the API URL from environment variables
-  const { data: apiUrl, error: apiError } = useSWR(
-    '/api/config', // Hypothetical API to get config
-    fetcher,
-    {
-      fallbackData: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api',
-    }
-  );
 
-  // Ensure the user is authenticated before proceeding
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      router.push('/connexion');
-    }
-  }, [router]);
+
+  useUserWithRoles(['Vigile']);
+  // token
+  
 
   const delay = 500;
   const previewStyle = {
@@ -39,38 +22,39 @@ const QRCodeScanner = () => {
     width: 320,
   };
 
-  // Handle the scanned result in a SweetAlert modal
   useEffect(() => {
-    if (isScanned && result) {
+    if (isScanned) {
       Swal.fire({
         title: 'Information Scannée',
         text: result || 'Aucune donnée scannée',
         icon: 'info',
+        // showCancelButton: true,
         confirmButtonText: 'Valider le scan',
-      }).then(async (scanResult) => {
-        if (scanResult.isConfirmed) {
+      }).then(async (result) => {
+        if (result.isConfirmed) {
           await handleValidation();
         } else {
-          setIsScanned(false); // Reset if the user cancels
+          setIsScanned(false);
         }
       });
     }
   }, [isScanned, result]);
 
-  // Handle the scan event from the QR reader
-  const handleScan = (data: any) => {
+  const handleScan = (data) => {
     if (data?.text) {
       const scannedResult = data.text.trim();
+      console.log('Scanned QR Code:', scannedResult); // Vérifie le matricule scanné
       setResult(scannedResult);
       setIsScanned(true);
     } else if (data?.binaryData) {
       const qrCodeText = binaryDataToText(data.binaryData).trim();
+      console.log('Scanned QR Code from binary data:', qrCodeText); // Vérifie le matricule scanné
       setResult(qrCodeText);
       setIsScanned(true);
     }
   };
 
-  const handleError = (error: any) => {
+  const handleError = (error) => {
     console.error('QR Code Error:', error);
     Swal.fire({
       icon: 'error',
@@ -79,7 +63,7 @@ const QRCodeScanner = () => {
     });
   };
 
-  const binaryDataToText = (binaryData: ArrayBuffer) => {
+  const binaryDataToText = (binaryData) => {
     try {
       const bytes = new Uint8Array(binaryData);
       const text = new TextDecoder().decode(bytes);
@@ -90,27 +74,32 @@ const QRCodeScanner = () => {
     }
   };
 
-  // Handle the scanned data validation
   const handleValidation = async () => {
     try {
       if (!result) {
         throw new Error('Aucun matricule scanné.');
       }
 
-      // Extract the matricule from the result (second line, after ":")
+      // Extraire uniquement le matricule
       const matricule = result.split('\n')[1].split(':')[1].trim();
       console.log('Matricule envoyé pour validation:', matricule);
+      const token = localStorage.getItem('token');
 
-      // Send the matricule to the API for validation
-      const response = await fetch(`${apiUrl}/pointage/arrivee`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ matricule }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/pointage/arrivee`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ matricule }),
+        }
+      );
 
       const data = await response.json();
+
+      console.log('Réponse du serveur:', data);
 
       if (!response.ok) {
         const errorMessage = data.errors
@@ -119,6 +108,7 @@ const QRCodeScanner = () => {
         throw new Error(errorMessage);
       }
 
+      // Obtenir l'heure actuelle
       const now = new Date();
       const formattedTime = now.toLocaleTimeString('fr-FR', {
         hour: '2-digit',
@@ -128,35 +118,40 @@ const QRCodeScanner = () => {
       Swal.fire({
         icon: 'success',
         title: 'Statut mis à jour',
-        text: `Pointage validé à ${formattedTime}. ${data.message}`, 
+        text: `Pointage validé à ${formattedTime}. ${data.message}`, // Afficher l'heure et le message du serveur
       });
-    } catch (error: any) {
+    } catch (error) {
       console.error('Erreur lors de la validation:', error);
       Swal.fire({
         icon: 'error',
         title: 'Erreur',
-        text: error.message || 'Une erreur est survenue lors de la mise à jour du statut.',
+        text:
+          error.message ||
+          'Une erreur est survenue lors de la mise à jour du statut.',
       });
     }
   };
 
   return (
     <>
-      <Center display={'block'} bg="black" opacity="0.9" h="100vh" mt="0">
+   
+   <Center display={'block'} bg="black" opacity="0.9"  h="100vh" mt="0">
         {/* QR Code Reader Section */}
         <Center mt="12">
           <Text color="white">{`Heure d'arrivée`}</Text>
         </Center>
         <Center mt="10">
-          <Box zIndex={43}>
-            <QrReader
+          <Box   zIndex={43}>
+            <QrReader 
               delay={delay}
               style={previewStyle}
               onError={handleError}
               onScan={handleScan}
             />
-          </Box>
+            {/* <p className="mt-4">{result ? result : 'Pas encore scanné'}</p> */}
+          </Box >
         </Center>
+
         {/* Profile Card fixed at the bottom */}
         <NavbarVigile />
       </Center>
