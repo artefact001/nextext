@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
-import { ListItem, Flex, Box, Text, Image, useDisclosure, Button } from '@chakra-ui/react';
+import { ListItem, Flex, Box, Text, Image, useDisclosure } from '@chakra-ui/react';
 import JustificationModal from '../func/apprenant/JustificationModal'; // Importez la modale
 
 function AttendanceItem({ name, date, time, status, heure_depart, pointageId }) {
   const { isOpen, onOpen, onClose } = useDisclosure(); // Hook pour ouvrir/fermer la modale
-  const [showModal, setShowModal] = useState(false);
 
   // Determine which image to use based on status
   const getStatusImage = () => {

@@ -55,7 +55,7 @@ const AttendanceItem = ({ pointage }) => {
 
 
 
-const ListePointage = ({ pointages, promo }) => {
+const ListePointage = ({ pointages }) => {
   if (!pointages || pointages.length === 0) {
     return <Text>Aucun pointage disponible.</Text>;
   }
@@ -83,7 +83,7 @@ const ListePointage = ({ pointages, promo }) => {
               Date : {date}
             </Text>
           </Box>
-          <Box p={4} s  hadow="md" borderWidth="1px">
+          <Box p={4} shadow="md" borderWidth="1px">
             <List>
               {Array.isArray(pointagesDuJour) &&
                 pointagesDuJour.map((pointage) => (

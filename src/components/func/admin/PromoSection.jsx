@@ -1,6 +1,6 @@
 import React from 'react';
 import PromoCard from './PromoCard';
-import { Flex, SimpleGrid } from '@chakra-ui/react';
+import {  SimpleGrid } from '@chakra-ui/react';
 
 const promoData = [
   {

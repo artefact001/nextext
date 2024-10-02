@@ -1,4 +1,4 @@
-import { Box, Button, Center, SimpleGrid, Text } from '@chakra-ui/react';
+import { Box, Button, SimpleGrid, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import FormInput from '../../common/FormInput';
 import FormSelect from '../../common/FormSelect';

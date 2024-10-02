@@ -41,7 +41,7 @@ const MesPointagesP7 = () => {
   const [date, setDate] = useState(dayjs());
   const [selectedWeek, setSelectedWeek] = useState(date.isoWeek());
   const [selectedDay, setSelectedDay] = useState(null); // Selected day state
-  const [promo, setPromo] = useState(null); // State for promo data
+  const [setPromo] = useState(null); // State for promo data
   const router = useRouter();
   const { id: promoId } = router.query; // Access the dynamic id (promoId)
 

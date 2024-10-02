@@ -44,7 +44,7 @@ const AjouteFormateurPage = () => {
   const [role, setRole] = useState('Formateur'); // État pour le rôle
 
   // Récupération des formateurs
-  const { data: formateursData, error: formateursError } = useSWR(
+  const { data: formateursData } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/formateurs`,
     fetcher
   );

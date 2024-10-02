@@ -9,7 +9,7 @@ export default function ProfileComponent() {
 
   const [adresse, setAdresse] = useState('');
   const [telephone, setTelephone] = useState('');
-  const [photoProfile, setPhotoProfile] = useState('');
+  const [setPhotoProfile] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [imageFile, setImageFile] = useState(null);

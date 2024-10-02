@@ -48,6 +48,7 @@ const PointageHebdomadaire = () => {
           <Table variant="striped" colorScheme="teal">
             <Thead>
               <Tr>
+                {/*  eslint-disable-next-line react/no-unescaped-entities */}
                 <Th>Nom de l'élève</Th>
                 <Th>Lundi</Th>
                 <Th>Mardi</Th>

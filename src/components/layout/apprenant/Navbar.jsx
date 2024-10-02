@@ -5,7 +5,6 @@ import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 import { getUserWithRoles } from '../../../lib/utils/checkRole';
 import ThemeToggleButton from '../DarkMode';
 import ButtonDeconnexion from '../../common/ButtonDeconnexion';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 // eslint-disable-next-line react/display-name
