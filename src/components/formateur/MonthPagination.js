@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 
 const MonthPagination = ({ mois, annee, handlePreviousMonth, handleNextMonth }) => {
   return (
-    <HStack spacing={1} mx={2}  justifyContent="space-between" my={7}>
+    <HStack spacing={1} mx={2}  justifyContent="space-between" mb={6}>
       <Button onClick={handlePreviousMonth}  shadow="lg" bg={'#ce0033'}>{'<'}</Button>
       <Text  fontSize="lg" fontWeight="bold" color="">
         {dayjs(`${annee}-${mois}-01`).format('MMMM YYYY')}

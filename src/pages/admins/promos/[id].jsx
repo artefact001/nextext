@@ -1,3 +1,4 @@
+  // eslint-disable-next-line no-unused-vars
 'use client';
 
 import {
@@ -16,6 +17,7 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import ListePointage from '../../../components/func/admin/ListePointage';
 import PointageBoxPromo from '../../../components/func/admin/MesPointages';
+import CardBox from '../../../components/common/Card';
 
 dayjs.extend(isoWeek);
 dayjs.extend(isoWeeksInYear);
@@ -41,7 +43,8 @@ const MesPointagesP7 = () => {
   const [date, setDate] = useState(dayjs());
   const [selectedWeek, setSelectedWeek] = useState(date.isoWeek());
   const [selectedDay, setSelectedDay] = useState(null); // Selected day state
-  const [setPromo] = useState(null); // State for promo data
+  // eslint-disable-next-line no-unused-vars
+  const [promo, setPromo] = useState(null); // State for promo data
   const router = useRouter();
   const { id: promoId } = router.query; // Access the dynamic id (promoId)
 
@@ -132,106 +135,84 @@ const MesPointagesP7 = () => {
   }
 
   return (
-    <VStack spacing={4} maxW="100%">
-      <Suspense fallback={<Spinner />}>
-        <ProfileCardAdministrateur />
-      </Suspense>
+    <VStack  maxW="100%">
+    <Suspense fallback={<Spinner />}>
+      <ProfileCardAdministrateur />
+    </Suspense>
 
-      <SimpleGrid justifyContent="space-between" columns={[1, 2]} spacing={4}>
-        <Box
-          as="section"
-          py={8}
-          mt={7}
-          w="full"
+    <SimpleGrid spacingX={24}  columns={[1, 2]} >
+      <CardBox
           px={{ base: '12px', md: '13px', lg: '40px' }}
-          mx={{ base: '2px', md: '3px', lg: '60px' }}
-          maxW={{ base: '366px', md: '100%', lg: '80%' }}
-          borderBottom="2px solid"
-          borderTop="2px solid"
-          borderColor="red.700"
-          borderRadius="md"
-          shadow="lg"
-          bg="whiteAlpha.80"
-          fontFamily="Nunito Sans"
-          flex="2"
+          mx={{ base: '2px', md: '3px', lg: '160px' }}
+        maxW={{ base: '366px', md: '100%', lg: '100%' }}
+      >   
+        <Suspense  fallback={<Spinner />}>
+        <Text fontWeight="bold" fontSize={20}  textAlign="center">
+      Promo: {promoId}
+
+    </Text>
+          {isDailyLoading ? (
+            <Spinner></Spinner>
+          ) : dailyError ? (
+            <Text>Erreur lors de la récupération des données.</Text>
+          ) : dailyData?.apprenants_avec_pointage?.length > 0 ||
+            dailyData?.apprenants_sans_pointage?.length > 0 ? (
+            <>
+           
+              {dailyData.apprenants_avec_pointage.length > 0 && (
+                <Box>
+                  <ListePointage
+                    pointages={dailyData.apprenants_avec_pointage}
+                  />
+                </Box>
+              )}
+              {dailyData.apprenants_avec_pointage.length === 0 && (
+                <Box mt="20"   textAlign="center">
+                  <Text>Aucun pointage trouvé pour la journée sélectionnée.</Text>
+                </Box>
+              )}
+            </>
+          ) : (
+            <>
+              <Text>
+                Date:{' '}
+                {selectedDay
+                  ? selectedDay.format('DD/MM/YYYY')
+                  : 'Date non sélectionnée'}
+              </Text>
+              <Text   mt="20"   textAlign="center" >Aucun pointage trouvé pour la journée sélectionnée.</Text>
+            </>
+          )}
+        </Suspense>
+        </CardBox>
+
+        <CardBox       
+          maxW={{ base: '366px', md: '100%', lg: '90%' }}
         >
-          <Suspense fallback={<Spinner />}>
-            {isDailyLoading ? (
-              <Text>Chargement des données...</Text>
-            ) : dailyError ? (
-              <Text>Erreur lors de la récupération des données.</Text>
-            ) : dailyData?.apprenants_avec_pointage?.length > 0 ||
-              dailyData?.apprenants_sans_pointage?.length > 0 ? (
-              <>
-                <Text>
-                  Date:{' '}
-                  {selectedDay
-                    ? selectedDay.format('DD/MM/YYYY')
-                    : 'Date non sélectionnée'}
-                </Text>
-                {dailyData.apprenants_avec_pointage.length > 0 && (
-                  <Box>
-                    <Text>Apprenants présents:</Text>
-                    <ListePointage
-                      pointages={dailyData.apprenants_avec_pointage}
-                    />
-                  </Box>
-                )}
-                {dailyData.apprenants_sans_pointage.length > 0 && (
-                  <Box>
-                    <Text>Apprenants absents:</Text>
-                    <ListePointage
-                      pointages={dailyData.apprenants_sans_pointage}
-                    />
-                  </Box>
-                )}
-              </>
-            ) : (
-              <>
-                <Text>
-                  Date:{' '}
-                  {selectedDay
-                    ? selectedDay.format('DD/MM/YYYY')
-                    : 'Date non sélectionnée'}
-                </Text>
-                <Text>Aucun pointage trouvé pour la journée sélectionnée.</Text>
-              </>
-            )}
-          </Suspense>
-        </Box>
-        <Box
-          as="section"
-          px={{ base: '2px', md: '1px', lg: '40px' }}
-          mx={{ base: '2px', md: '3px', lg: '60px' }}
-          maxW={{ base: '366px', md: '100%', lg: '80%' }}
-          py={8}
-          mt={7}
-          w="full"
-          borderBottom="2px solid"
-          borderTop="2px solid"
-          borderColor="red.100"
-          borderRadius="md"
-          shadow="lg"
-          bg="whiteAlpha.80"
-          fontFamily="Nunito Sans"
-          flex="2"
-        >
-          <PointageBoxPromo
-            date={date}
-            handleMonthChange={handleMonthChange}
-            semainesDuMois={semainesDuMois}
-            selectedWeek={selectedWeek}
-            setSelectedWeek={setSelectedWeek}
-            pointagesData={pointagesData}
-            pointagesError={pointagesError}
-            attendanceSummary={attendanceSummary}
-            setSelectedDay={setSelectedDay} // Passez setSelectedDay
-            daysOfWeek={daysOfWeek}
-            dailyData={dailyData} // Données filtrées par jour
-          />
-        </Box>
-      </SimpleGrid>
-    </VStack>
+
+        <PointageBoxPromo
+          date={date}
+          handleMonthChange={handleMonthChange}
+          
+          semainesDuMois={semainesDuMois}
+
+          // carte semaine
+          selectedWeek={selectedWeek}
+
+          // carte semaine focus
+          setSelectedWeek={setSelectedWeek}
+          
+          pointagesData={pointagesData}
+          pointagesError={pointagesError}
+          attendanceSummary={attendanceSummary}
+          setSelectedDay={setSelectedDay} // Passez setSelectedDay
+          daysOfWeek={daysOfWeek}
+          dailyData={dailyData} // Données filtrées par jour
+        />
+        </CardBox>
+
+    </SimpleGrid>
+  </VStack>
   );
 };
 

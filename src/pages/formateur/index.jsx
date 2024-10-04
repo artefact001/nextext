@@ -45,13 +45,15 @@ const FormateurPage = () => {
       {error ? (
         <Text>{error.message}</Text>
       ) : qrCodeUrl ? (
-        <Center mt={20} bg="white" p={4} borderRadius="md">
+        <Center mt={20}p={4} borderRadius="md">
           <Image
             src={qrCodeUrl}
             alt="QR Code"
-            width={200}
-            height={200}
+            width={300}
+            height={300}
             objectFit="contain"
+              bg="white" 
+            p={10}
           />
         </Center>
       ) : (

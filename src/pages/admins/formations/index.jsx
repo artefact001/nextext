@@ -46,6 +46,7 @@ const AdminPage = () => {
   const [errors, setErrors] = useState({ nom: '', localisation: '' });
   const [formDataFormation, setFormDataFormation] = useState({ nom: '' });
 const [errorsFormation, setErrorsFormation] = useState({ nom: '' });
+const [isLoading, setIsLoading]= useState( false);
 const toast = useToast();
 
 const handleChangeFormation = (e) => {
@@ -56,6 +57,8 @@ const handleChangeFormation = (e) => {
 const handleSubmitFormation = async (e) => {
   e.preventDefault();
   let newErrors = {};
+  setIsLoading(true);
+
   if (!formDataFormation.nom) newErrors.nom = "Le nom est requis";
 
   if (Object.keys(newErrors).length > 0) {
@@ -286,7 +289,8 @@ const handleSubmitFormation = async (e) => {
       onChange={handleChange}
       error={errors.localisation} 
     />
-    <Button type="submit" color="white" bg="#CE0033" width="full">
+    <Button type="submit" color="white"  isLoading={isLoading}
+ bg="#CE0033" width="full">
       Ajouter
     </Button>
   </form>

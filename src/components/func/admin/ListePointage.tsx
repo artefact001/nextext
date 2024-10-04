@@ -55,7 +55,8 @@ const AttendanceItem = ({ pointage }) => {
 
 
 
-const ListePointage = ({ pointages }) => {
+// eslint-disable-next-line no-unused-vars
+const ListePointage = ({ pointages, promo }) => {
   if (!pointages || pointages.length === 0) {
     return <Text>Aucun pointage disponible.</Text>;
   }
@@ -71,7 +72,7 @@ const ListePointage = ({ pointages }) => {
   }, {});
 
   return (
-    <VStack spacing={4} align="stretch" w="100%">
+    <VStack  align="stretch" w="100%">
       {/* Affichage du nom de la promotion */}
      
       
@@ -79,7 +80,9 @@ const ListePointage = ({ pointages }) => {
       {Object.entries(pointagesParDate).map(([date, pointagesDuJour]) => (
         <React.Fragment key={date}>
           <Box display="flex" alignItems="center" justifyContent="center" mb={3}>
-            <Text fontWeight="bold" textAlign="center" mb={3}>
+         
+                
+            <Text fontWeight="bold" fontSize={20}  textAlign="center">
               Date : {date}
             </Text>
           </Box>

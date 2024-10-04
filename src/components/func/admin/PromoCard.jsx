@@ -2,7 +2,7 @@ import { Flex, Text, Box, Icon, Grid, ButtonGroup } from '@chakra-ui/react';
 import React from 'react';
 import { FaUsers } from 'react-icons/fa';
 
-const PromoCard = ({promo }) => (
+const PromoCard = ({promo, description }) => (
  
 
   <Grid
@@ -50,7 +50,7 @@ const PromoCard = ({promo }) => (
         {promo.nom}
         </Text>
         <Text fontSize="sm" maxW=""  fontFamily="Nunito Sans">
-        {promo.fabrique?.nom || 'Fabrique inconnue'}
+        {description}
         </Text>
       </Box>
       </ButtonGroup>

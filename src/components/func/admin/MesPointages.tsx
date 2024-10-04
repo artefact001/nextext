@@ -17,11 +17,14 @@ const PointageBoxPromo = ({
   daysOfWeek,
   dailyData,
 }) => (
-  <Box as="section" display="flex" 
-  px={{ base: '12px', md: '12px', lg: '42px'}} 
-  
-  
-  flexDirection="column" w="full" maxW={{ base: '366px', md: '500px', lg: '100%' }} borderBottom="2px solid" borderTop="2px solid" borderColor="red.700" borderRadius="md" shadow="lg" bg="whiteAlpha.80" fontFamily="Nunito Sans">
+  <Box
+    as="section"
+    display="flex"
+    px={{ base: '12px', md: '12px', lg: '42px' }}
+    flexDirection="column"
+    w="full"
+   
+  >
     <Suspense fallback={<Spinner />}>
       <MonthPagination
         mois={date.format('MM')}
@@ -40,25 +43,33 @@ const PointageBoxPromo = ({
     </Suspense>
 
     {pointagesError ? (
-  <Center mt={4}>
-    <Text fontSize="lg" color="gray.600">Erreur lors de la récupération des pointages.</Text>
-  </Center>
-) : (dailyData && dailyData.pointages && dailyData.pointages.length === 0) ? (
-  <Center mt={4}>
-    <Text fontSize="lg" color="gray.600">Aucun pointage trouvé pour ce jour.</Text>
-  </Center>
-) : (
-  <>
-    <Suspense fallback={<Spinner />}>
-      <DaysOfWeek daysOfWeek={daysOfWeek} setSelectedDay={setSelectedDay} retard={undefined} absent={undefined} />
-    </Suspense>
+      <Center mt={4}>
+        <Text fontSize="lg" color="gray.600">
+          Erreur lors de la récupération des pointages.
+        </Text>
+      </Center>
+    ) : dailyData && dailyData.pointages && dailyData.pointages.length === 0 ? (
+      <Center mt={4}>
+        <Text fontSize="lg" color="gray.600">
+          Aucun pointage trouvé pour ce jour.
+        </Text>
+      </Center>
+    ) : (
+      <>
+        <Suspense fallback={<Spinner />}>
+          <DaysOfWeek
+            daysOfWeek={daysOfWeek}
+            setSelectedDay={setSelectedDay}
+            retard={undefined}
+            absent={undefined}
+          />
+        </Suspense>
 
-    <Suspense fallback={<Spinner />}>
-      <AttendanceSummary summary={attendanceSummary} />
-    </Suspense>
-  </>
-)}
-
+        <Suspense fallback={<Spinner />}>
+          <AttendanceSummary summary={attendanceSummary} />
+        </Suspense>
+      </>
+    )}
   </Box>
 );
 
