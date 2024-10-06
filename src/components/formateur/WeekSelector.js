@@ -18,7 +18,7 @@ const WeekSelector = ({ semainesDuMois, selectedWeek, setSelectedWeek }) => {
           py={3}
           w="full"
           px={{ base: '0px' , md: '2px', lg: '22px'}}
-          maxW={{ base: '140px' , md: '322px', lg: '100px'}}
+          maxW={{ base: '140px' , md: '322px', lg: '180px'}}
           key={week.number}
           onClick={() => setSelectedWeek(week.number)}
           // Gestion des couleurs en fonction du mode
@@ -46,8 +46,9 @@ const WeekSelector = ({ semainesDuMois, selectedWeek, setSelectedWeek }) => {
         >
           <Icon size="xl" as={FaCalendarAlt} />
           {/* <Text ml="">Semaine</Text> */}
-          <Text fontSize={{base: '12px' , md : '12px', lg: '18px'}} ml={{base: '0' , md : '0', lg: '-10px'}}>Semaine</Text>
-
+          <Text fontSize={{ base: '12px', md: '12px', lg: '18px' }} ml={{ base: '0', md: '0', lg: '-10px' }}>
+            Semine {week.number}
+          </Text>
         </Button>
       ))}
     </HStack>

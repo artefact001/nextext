@@ -43,7 +43,7 @@ const MesPointages = () => {
   )}&annee=${date.year()}&semaine=${selectedWeek}`;
   const attendanceSummaryUrl = `${
     process.env.NEXT_PUBLIC_API_URL
-  }/pointages/moi/apprenant?mois=${date.format('MM')}&annee=${date.year()}`;
+  }/pointages/moi`;
 
   const { data: pointagesData, error: pointagesError } = useSWR(
     pointagesUrl,

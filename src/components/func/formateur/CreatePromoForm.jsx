@@ -235,6 +235,8 @@ const CreatePromoForm = () => {
                 color="white"
                 bg="#CE0033"
                 width="full"
+                _hover={{bg:"#110033"}}
+
               >
                 Créer Promotion
               </Button>

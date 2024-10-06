@@ -62,6 +62,7 @@ const PointageBoxPromo = ({
             setSelectedDay={setSelectedDay}
             retard={undefined}
             absent={undefined}
+            
           />
         </Suspense>
 

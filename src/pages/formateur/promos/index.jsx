@@ -1,4 +1,4 @@
-import { Box, Text, SimpleGrid } from '@chakra-ui/react';
+import { Box, Text, SimpleGrid ,   Collapse, Button} from '@chakra-ui/react';
 import ProfileCardFormateur from '../../../components/layout/formateur/Navbar';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
@@ -6,6 +6,7 @@ import PromoCard from '../../../components/common/PromoCard';
 import PromoHeader from '../../../components/common/PromoHeader';
 import CardBox from '../../../components/common/Card';
 import CreatePromoForm from '../../../components/func/formateur/CreatePromoForm';
+import { useState } from 'react';
 
 // Fonction de récupération des données
 const fetcher = (url) =>
@@ -30,13 +31,15 @@ const Dashboard = () => {
   );
   const router = useRouter();
 
+
   // Rediriger vers la page de la promotion sélectionnée
   const handlePromoClick = (promoId) => {
     router.push(`/formateur/promos/${promoId}`);
   };
 
   // Récupérer les pointages du jour pour une promotion
-  
+    const [isOpen, setIsOpen] = useState(false); // État pour contrôler l'ouverture de l'accordéon
+
 
   if (promosError && promosErrorTerminer) {
     return (
@@ -52,8 +55,18 @@ const Dashboard = () => {
         >
           <CardBox>
             {/* Component */}
+            <Button
+            onClick={() => setIsOpen(!isOpen)} // Toggle l'état de l'accordéon
+            width="100%"
+            mb={4} // Marge inférieure pour séparer le bouton et le formulaire
+          >
+            {isOpen ? 'Masquer le formulaire' : 'Afficher le formulaire'} {/* Texte dynamique */}
+          </Button>
+
+          {/* Accordéon pour le formulaire */}
+          <Collapse in={isOpen}>
             <CreatePromoForm />
-          </CardBox>
+          </Collapse>          </CardBox>
           <CardBox as="section">
             {' '}
             <PromoHeader />
@@ -94,22 +107,23 @@ const Dashboard = () => {
           bg="whiteAlpha.80"
           fontFamily="Nunito Sans"
           flex="2"
-          display={{ base: 'none', md: 'none', lg: 'block' }}
+          display={{ base: 'block', md: 'block', lg: 'block' }}
         >
-          {/* <ListePointage /> */}
-          {/* {selectedPromoId && (
-          <ListePointage
-            pointages={pointages}
-            promoId={selectedPromoId}
-            fetchPointages={fetchPointages}
-            isCompleted
-          />
-        )}
-        ; */}
+      
 
           {/* Component */}
-          <CreatePromoForm />
-        </CardBox>
+          <Button
+            onClick={() => setIsOpen(!isOpen)} // Toggle l'état de l'accordéon
+            width="100%"
+            mb={4} // Marge inférieure pour séparer le bouton et le formulaire
+          >
+            {isOpen ? ' Ajoute promo ' : 'Afficher le formulaire'} {/* Texte dynamique */}
+          </Button>
+
+          {/* Accordéon pour le formulaire */}
+          <Collapse in={isOpen}>
+            <CreatePromoForm />
+          </Collapse>        </CardBox>
         <CardBox as="section" flex="2">
           {' '}
           <PromoHeader />

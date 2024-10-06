@@ -5,7 +5,7 @@ const CardBox = ({children, ...attrebuts}) => {
     <Box
     as="section"
     px={{ base: '2px', md: '30px', lg: '20px' }}
-    mx={{ base: '2px', md: '1px', lg: 'auto' }}
+    mx={{ base: '2px', md: '1px', lg: '10%' }}
     ml={{ base: '2px', md: '3px', lg: '20%' }}
     py={8}
     mt={7}
@@ -16,8 +16,13 @@ const CardBox = ({children, ...attrebuts}) => {
     borderColor="red.700"
     borderRadius="md"
     shadow="lg"
-    bg="whiteAlpha.80"
-    fontFamily="Nunito Sans"
+    style={{
+      background: 'rgba(255, 255, 255, 0.2)', // Added quotes around rgba
+      borderRadius: '16px',
+      boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+      backdropFilter: 'blur(5px)',
+      WebkitBackdropFilter: 'blur(5px)',
+    }}    fontFamily="Nunito Sans"
     flex="2"
     {...attrebuts}
   >

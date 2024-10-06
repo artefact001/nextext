@@ -28,7 +28,7 @@ const PromoHeader = () => {
           fontFamily="'Nunito Sans', sans-serif"
           m
         >
-          Mes promos
+          Gestion apprenants
         </Text>
         
         <Link href="/formateur/promos/ajoute"

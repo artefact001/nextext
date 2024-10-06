@@ -1,4 +1,4 @@
-import { ListItem, Flex, Box, Text, Image, useDisclosure } from '@chakra-ui/react';
+import { ListItem, Flex, Box, Text, Image, useDisclosure, Tooltip } from '@chakra-ui/react';
 import JustificationModal from '../func/apprenant/JustificationModal'; // Importez la modale
 
 function AttendanceItem({ name, date, time, status, heure_depart, pointageId }) {
@@ -32,13 +32,15 @@ function AttendanceItem({ name, date, time, status, heure_depart, pointageId }) 
         gap={3}
         alignItems="center"
         py={3}
-        px={4}
+        px={2}
+        mx={1}
         bg="whiteAlpha.80"
         borderBottom="1px solid"
         borderColor="gray.300"
         cursor={status === 'absent' ? 'pointer' : 'default'} // Pointer pour absents
         onClick={handleItemClick} // Afficher la modale pour absents
       >
+
         <Image
           src={getStatusImage()}
           alt={`Status: ${status}`}
@@ -48,7 +50,7 @@ function AttendanceItem({ name, date, time, status, heure_depart, pointageId }) 
           h="24px"
           flexShrink={0}
         />
-        <Flex direction="column" flex="1" minW="200px">
+          <Flex direction="column" flex="1" minW="200px">
           <Text fontSize="md" fontWeight="bold" color="gray.800" isTruncated>
             {name}
           </Text>

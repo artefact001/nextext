@@ -1,10 +1,11 @@
+/* eslint-disable no-unused-vars */
 import { useState } from 'react';
 import { Box, Button, FormControl, FormLabel, Input, Textarea, Select, useToast } from '@chakra-ui/react';
 import { api } from '../../../lib/utils/api';
 
 const CongeForm = () => {
-  // eslint-disable-next-line no-unused-vars
   const [conges, setConges] = useState([]);
+  const [errors, setErrors] = useState({});
 
   const [formData, setFormData] = useState({
     type: '',
@@ -23,6 +24,8 @@ const CongeForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
+
     try {
       // Correction : envoie de formData dans le corps de la requête
       const response = await api('conges', 'POST', formData); 
@@ -46,6 +49,7 @@ const CongeForm = () => {
           motif: ''
         });
       }
+      
     } catch (error) {
       toast({
         title: 'Erreur',
@@ -64,9 +68,9 @@ const CongeForm = () => {
         <Select name="type" value={formData.type} onChange={handleChange} placeholder="Sélectionnez un type">
           <option value="congé">Congé</option>
           <option value="permission">Permission</option>
-          <option value="absence">Absence</option>
         </Select>
       </FormControl>
+
 
       <FormControl id="date_debut" mb={4} isRequired>
         <FormLabel>Date de début</FormLabel>
@@ -83,7 +87,18 @@ const CongeForm = () => {
         <Textarea name="motif" value={formData.motif} onChange={handleChange} placeholder="Optionnel" />
       </FormControl>
 
-      <Button type="submit" colorScheme="teal" width="full">Soumettre</Button>
+      
+      <Button
+                type="submit"
+                mx="auto"
+                h={14}
+                color="white"
+                bg="#CE0033"
+                width="full"
+                _hover={{bg:"#110033"}}
+              
+
+              >Soumettre</Button>
     </Box>
   );
 };

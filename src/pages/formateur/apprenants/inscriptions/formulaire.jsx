@@ -2,15 +2,20 @@ import { useState } from 'react';
 import {
   Center,
   Button,
-  Box,
   FormErrorMessage,
   useToast,
   SimpleGrid,
+  Heading,
+  FormControl,
+  FormLabel,
+  Input,
 } from '@chakra-ui/react';
 import FormInput from '../../../../components/common/FormInput';
 import FormSelect from '../../../../components/common/FormSelect';
 import useSWR from 'swr';
 import ProfileCardFormateur from '../../../../components/layout/formateur/Navbar';
+import CardBox from '../../../../components/common/Card';
+import MyPromos from '../../../../components/func/formateur/MyPromos';
 
 const fetcher = (url) =>
   fetch(url, {
@@ -59,28 +64,31 @@ const InscrireApprenantForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
-  
+
     try {
       // Prepare FormData for multipart/form-data submission
       const formDataObject = new FormData();
-      Object.keys(formData).forEach(key => {
+      Object.keys(formData).forEach((key) => {
         formDataObject.append(key, formData[key]);
       });
-  
+
       if (file) {
         formDataObject.append('photo_profile', file); // Add the file if it's selected
       }
-  
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/apprenant/inscrire`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: formDataObject, // Send FormData instead of JSON
-      });
-  
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/apprenant/inscrire`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+          body: formDataObject, // Send FormData instead of JSON
+        }
+      );
+
       const data = await response.json();
-  
+
       if (response.ok) {
         setMessage('Apprenant inscrit avec succès !');
         toast({
@@ -117,124 +125,137 @@ const InscrireApprenantForm = () => {
   return (
     <Center display={'block'}>
       <ProfileCardFormateur />
-
-      <Box
-        mt={5}
-        p={5}
-        borderRadius="lg"
-        width="100%"
-        maxW={{ base: '98%', md: '100%', lg: '40%' }}
-        borderTop="2px"
-        borderBottom="2px"
-        borderColor="#CE0033"
-        bg="rgba(255, 255, 255, 0.23)"
-        boxShadow="0 4px 30px rgba(0, 0, 0, 0.1)"
-        backdropFilter="blur(2px)"
-        WebkitBackdropFilter="blur(2px)" // For Safari support
-        // borderColor="red" // Utilisation de la couleur définie dans le thème
-
-        shadow="lg"
+      <SimpleGrid
+        mx={{ base: '2px', md: '3px', lg: '12px' }}
+        justifyContent="space-between"
+        columns={[1, 2]}
+        spacing={8}
       >
-        <form onSubmit={handleSubmit}>
-          <SimpleGrid columns={[1, 2]} spacing={4}>
-            <FormInput
-              id="nom"
-              label="Nom"
-              name="nom"
-              type="text"
-              placeholder="Nom"
-              value={formData.nom}
-              onChange={handleChange}
-              error={errors.nom}
-            />
-            <FormInput
-              id="prenom"
-              label="Prénom"
-              name="prenom"
-              type="text"
-              placeholder="Prénom"
-              value={formData.prenom}
-              onChange={handleChange}
-              error={errors.prenom}
-            />
-            <FormInput
-              id="adresse"
-              label="Adresse"
-              name="adresse"
-              type="text"
-              placeholder="Adresse"
-              value={formData.adresse}
-              onChange={handleChange}
-              error={errors.adresse}
-            />
-            <FormInput
-              id="telephone"
-              label="Téléphone"
-              name="telephone"
-              type="text"
-              placeholder="Téléphone"
-              value={formData.telephone}
-              onChange={handleChange}
-              error={errors.telephone}
-            />
-            <FormInput
-              id="email"
-              label="Email"
-              name="email"
-              type="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleChange}
-              error={errors.email}
-            />
-            <FormInput
-              id="photo_profile"
-              label="Photo de profil"
-              accept="image/png, image/jpeg"
-              name="photo_profile"
-              type="file"
-              onChange={handleFileChange} // Ensure file is selected
-              error={errors.photo_profile}
-            />
+        <CardBox
+          maxW={{ base: '98%', md: '100%', lg: '80%' }}
+          width="100%"
+          bg="rgba(255, 255, 255, 0.23)"
+          boxShadow="0 4px 30px rgba(0, 0, 0, 0.1)"
+          backdropFilter="blur(2px)"
+          WebkitBackdropFilter="blur(2px)" // For Safari support
+        >
+          <Heading as="h3">Apprenants</Heading>
 
-            <FormSelect
-              id="sexe"
-              label="Sexe"
-              name="sexe"
-              value={formData.sexe}
-              onChange={handleChange}
-              options={[
-                { value: 'homme', label: 'Homme' },
-                { value: 'femme', label: 'Femme' },
-              ]}
-              error={errors.sexe}
-            />
-            <FormSelect
-              id="promotion_id"
-              label="Promotion"
-              name="promotion_id"
-              value={formData.promotion_id}
-              onChange={handleChange}
-              options={
-                Array.isArray(promos)
-                  ? promos.map((promo) => ({
-                      value: promo.id,
-                      label: promo.nom, // ou autre champ approprié
-                    }))
-                  : []
-              }
-              error={errors.promotion_id}
-            />
-          </SimpleGrid>
+          <form onSubmit={handleSubmit}>
+            <SimpleGrid columns={[1, 2]} spacing={4}>
+              <FormInput
+                id="nom"
+                label="Nom"
+                name="nom"
+                type="text"
+                placeholder="Nom"
+                value={formData.nom}
+                onChange={handleChange}
+                error={errors.nom}
+              />
+              <FormInput
+                id="prenom"
+                label="Prénom"
+                name="prenom"
+                type="text"
+                placeholder="Prénom"
+                value={formData.prenom}
+                onChange={handleChange}
+                error={errors.prenom}
+              />
+              <FormInput
+                id="adresse"
+                label="Adresse"
+                name="adresse"
+                type="text"
+                placeholder="Adresse"
+                value={formData.adresse}
+                onChange={handleChange}
+                error={errors.adresse}
+              />
+              <FormInput
+                id="telephone"
+                label="Téléphone"
+                name="telephone"
+                type="text"
+                placeholder="Téléphone"
+                value={formData.telephone}
+                onChange={handleChange}
+                error={errors.telephone}
+              />
+              <FormInput
+                id="email"
+                label="Email"
+                name="email"
+                type="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+                error={errors.email}
+              />
 
-          <Button type="submit" color="white" bg="#CE0033" width="full">
-            Inscrire Apprenant
-          </Button>
-        </form>
+              <FormControl id={'photo_profile'} mb={4}>
+                <FormLabel>Photo de profil</FormLabel>
+                <Input
+                  shadow="lg"
+                  name={'photo_profile'}
+                  type={'file'}
+                  accept="image/png, image/jpeg"
+                  placeholder={'profile'}
+                  error={errors.photo_profile}
+                  onChange={handleFileChange} // Ensure file is selected
+                  w="100%"
+                  py={7}
+                />
+              </FormControl>
 
-        <FormErrorMessage message={message} />
-        <FormErrorMessage message={errors.general} />
-      </Box>
+              <FormSelect
+                id="sexe"
+                label="Sexe"
+                name="sexe"
+                value={formData.sexe}
+                onChange={handleChange}
+                options={[
+                  { value: 'homme', label: 'Homme' },
+                  { value: 'femme', label: 'Femme' },
+                ]}
+                error={errors.sexe}
+              />
+              <FormSelect
+                id="promotion_id"
+                label="Promotion"
+                name="promotion_id"
+                value={formData.promotion_id}
+                onChange={handleChange}
+                options={
+                  Array.isArray(promos)
+                    ? promos.map((promo) => ({
+                        value: promo.id,
+                        label: promo.nom, // ou autre champ approprié
+                      }))
+                    : []
+                }
+                error={errors.promotion_id}
+              />
+            </SimpleGrid>
+
+            <Button mt={4} mx="25%" type="submit"
+            alignItems='center'
+             _hover={{bg:"#110033"}} color="white" bg="#CE0033" width="50%" py={7}>
+              Inscrire Apprenant
+            </Button>
+          </form>
+
+          <FormErrorMessage message={message} />
+          <FormErrorMessage message={errors.general} />
+        </CardBox>
+        <CardBox>
+          {/* Component promos */}
+          <MyPromos/>
+          {/* Component promos */}
+
+        </CardBox>
+      </SimpleGrid>
     </Center>
   );
 };

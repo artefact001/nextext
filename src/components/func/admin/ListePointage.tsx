@@ -23,7 +23,7 @@ const AttendanceItem = ({ pointage }) => {
       gap={3}
       alignItems="center"
       py={3}
-      px={4}
+      px={1}
       bg="whiteAlpha.80"
       borderBottom="1px solid"
       borderColor="gray.300"

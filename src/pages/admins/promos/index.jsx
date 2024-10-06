@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Text,
@@ -8,8 +9,9 @@ import useSWR from 'swr';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import PromoCard from '../../../components/common/PromoCard';
-import ListePointage from '../../../components/func/apprenant/ListePointage';
+import PointageHebdomadaire from '../../../components/func/admin/PointageHebdomadaire';
 import PromoHeader from '../../../components/layout/admin/PromoHeader';
+import CardBox from '../../../components/common/Card';
 
 // Fonction de récupération des données
 const fetcher = (url) =>
@@ -32,6 +34,7 @@ const Dashboard = () => {
     `${process.env.NEXT_PUBLIC_API_URL}/admin/promos/terminees`,
     fetcher
   );
+  
   const [pointages, setPointages] = useState([]);
   const [selectedPromoId, setSelectedPromoId] = useState(null);
   const router = useRouter();
@@ -139,51 +142,31 @@ const Dashboard = () => {
       columns={[1, 2]}
       spacing={8}
     >
-      <Box
+      <CardBox
         as="section"
-        px={{ base: '2px', md: '3px', lg: '20px' }}
-        mx={{ base: '2px', md: '3px', lg: '10px' }}
-        py={8}
-        mt={7}
-        w="full"
-        maxW={{ base: '366px', md: '100%', lg: '100%' }}
-        borderBottom="2px solid"
-        borderTop="2px solid"
-        borderColor="red.700"
-        borderRadius="md"
-        shadow="lg"
-        bg="whiteAlpha.80"
-        fontFamily="Nunito Sans"
-        flex="2"
-        display={{ base: 'none', md: 'none', lg: 'block' }}
+       
+        maxW={{ base: '366px', md: '100%', lg: '90%' }}
+     
+        display={{ base: 'block', md: 'block', lg: 'block' }}
       >
         {/* <ListePointage /> */}
-        {selectedPromoId && (
-          <ListePointage
-            pointages={pointages}
-            promoId={selectedPromoId}
-            fetchPointages={fetchPointages}
-            isCompleted
+          <PointageHebdomadaire
+            // pointages={pointages}
+            // promoId={selectedPromoId}
+            // fetchPointages={fetchPointages}
           />
-        )}
+        
         ;
-      </Box>
-      <Box
+      </CardBox>
+      <CardBox
         as="section"
         px={{ base: '2px', md: '3px', lg: '20px' }}
         mx={{ base: '2px', md: '3px', lg: '10px' }}
         py={8}
         mt={7}
         w="full"
-        maxW={{ base: '366px', md: '100%', lg: '100%' }}
-        borderBottom="2px solid"
-        borderTop="2px solid"
-        borderColor="red.700"
-        borderRadius="md"
-        shadow="lg"
-        bg="whiteAlpha.80"
-        fontFamily="Nunito Sans"
-        flex="2"
+        maxW={{ base: '366px', md: '100%', lg: '60%' }}
+      
       >
         {' '}
         <PromoHeader />
@@ -202,7 +185,7 @@ const Dashboard = () => {
             Aucune promotion terminée.
           </Text>
         )}{' '}
-      </Box>
+      </CardBox>
     </SimpleGrid>
   </Box>
   );

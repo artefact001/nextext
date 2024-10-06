@@ -3,6 +3,7 @@ import { Center, Button, Input, FormControl, FormLabel, Box, Text, useToast } fr
 import useSWR from 'swr';
 import FormSelect from '../../../../components/common/FormSelect';
 import ProfileCardFormateur from '../../../../components/layout/formateur/Navbar';
+import Link from 'next/link';
 
 const fetcher = (url) =>
   fetch(url, {
@@ -88,10 +89,9 @@ const InscrireAppprenantExel = () => {
   shadow="lg">
         <form onSubmit={handleSubmit}>
           <FormControl id="promo_id" mb={4} isRequired>
-            <FormLabel>Promotion ID</FormLabel>
             <FormSelect
               id="promo_id"
-              label="ID de la promotion"
+              label="Promo"
               name="promo_id"
               value={promoId} // Utilisation de promoId
               onChange={(e) => setPromoId(e.target.value)} // Met à jour promoId
@@ -107,10 +107,19 @@ const InscrireAppprenantExel = () => {
             <Input type="file" accept=".xls,.xlsx" onChange={handleFileChange} />
           </FormControl>
 
-          <Button type="submit" color="white" bg="#CE0033" width="full">
+          <Button type="submit" 
+           _hover={{
+            transform: "scale(1.03)",
+            transition: "transform .15s ease-in",
+          }}
+          color="white" bg="#CE0033" width="full">
             Importer Apprenants
           </Button>
         </form>
+        {/* exemple */}
+
+        <Link href="https://docs.google.com/spreadsheets/d/1fknbtG2bOCGqpfETlsc8fMAMwH0eiA_fBhnLBw96mkI/edit?usp=sharing"  >exemple
+        </Link>
 
         {message && (
           <Text mt={4} color="green.500">

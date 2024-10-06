@@ -7,12 +7,16 @@ import {
   Center,
   Box,
   SimpleGrid,
+  Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon 
 } from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import isoWeeksInYear from 'dayjs/plugin/isoWeeksInYear';
 import useSWR from 'swr';
 import PointageBox from '../../components/common/PointageSection';
+import CongeList from '../../components/func/formateur/ListeConges';
+import CongeForm from '../../components/func/formateur/CongeForm';
+import CardBox from '../../components/common/Card';
 
 dayjs.extend(isoWeek);
 dayjs.extend(isoWeeksInYear);
@@ -21,11 +25,7 @@ dayjs.extend(isoWeeksInYear);
 const ProfileCardFormateur = lazy(() =>
   import('../../components/layout/formateur/Navbar')
 );
-
-const ProfileComponent = lazy(() =>
-  import ('../../components/common/profile')
-);
-
+  
 // Fetch function
 const fetcher = (url) =>
   fetch(url, {
@@ -49,7 +49,7 @@ const MesPointages = () => {
   )}&annee=${date.year()}&semaine=${selectedWeek}`;
   const attendanceSummaryUrl = `${
     process.env.NEXT_PUBLIC_API_URL
-  }/pointages/moi/apprenant?mois=${date.format('MM')}&annee=${date.year()}`;
+  }/pointages/moi`;
 
   const { data: pointagesData, error: pointagesError } = useSWR(
     pointagesUrl,
@@ -89,50 +89,18 @@ const MesPointages = () => {
         <ProfileCardFormateur />
       </Suspense>
       <SimpleGrid
-        mx={{ base: '2px', md: '3px', lg: '12px' }}
+        mr={{ base: '2px', md: '3px', lg: '292px' }}
         justifyContent="space-between"
         columns={[1, 2]}
-        spacing={8}
+        spacing={52}
       >
-        <Box
+       
+        <CardBox
           as="section"
-          px={{ base: '2px', md: '3px', lg: '20px' }}
-          mx={{ base: '2px', md: '3px', lg: '10px' }}
-          py={8}
-          mt={7}
-          w="full"
+          px={{ base: '12px', md: '13px', lg: '80px' }}
           maxW={{ base: '366px', md: '100%', lg: '100%' }}
-          borderBottom="2px solid"
-          borderTop="2px solid"
-          borderColor="red.700"
-          borderRadius="md"
-          shadow="lg"
-          bg="whiteAlpha.80"
-          fontFamily="Nunito Sans"
-          flex="2"
-          display={{ base: 'none', md: 'none', lg: 'block' }}
-
-        >
-          <Suspense fallback={<Spinner />}>
-            <ProfileComponent />
-          </Suspense>
-        </Box>
-        <Box
-          as="section"
-          px={{ base: '12px', md: '13px', lg: '40px' }}
-          mx={{ base: '2px', md: '3px', lg: '60px' }}
-          maxW={{ base: '366px', md: '100%', lg: '80%' }}
-          py={8}
-          mt={7}
-          w="full"
-          borderBottom="2px solid"
-          borderTop="2px solid"
-          borderColor="red.100"
-          borderRadius="md"
-          shadow="lg"
-          bg="whiteAlpha.80"
-          fontFamily="Nunito Sans"
-          flex="2"
+        
+        
         >
           <PointageBox
             date={date}
@@ -144,7 +112,44 @@ const MesPointages = () => {
             pointagesError={pointagesError}
             attendanceSummary={attendanceSummary}
           />
-        </Box>
+        </CardBox>
+        <CardBox
+          as="section"
+          px={{ base: '12px', md: '13px', lg: '40px' }}
+          mx={{ base: '2px', md: '3px', lg: '0px' }}
+          maxW={{ base: '366px', md: '100%', lg: '100%' }}
+        
+        
+        > <Accordion allowToggle>
+        <AccordionItem>
+          <AccordionButton>
+            <Box flex="1" textAlign="left">
+              Formulaire de congé
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel pb={4}>
+            <Suspense fallback={<Spinner />}>
+              <CongeForm />
+            </Suspense>
+          </AccordionPanel>
+        </AccordionItem>
+
+        <AccordionItem>
+          <AccordionButton>
+            <Box flex="1" textAlign="left">
+              Liste des congés
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel pb={4}>
+            <Suspense fallback={<Spinner />}>
+              <CongeList />
+            </Suspense>
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
+        </CardBox>
       </SimpleGrid>
     </VStack>
   );

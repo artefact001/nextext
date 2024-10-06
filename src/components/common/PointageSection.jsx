@@ -17,8 +17,7 @@ const PointageBox = ({ // Définition du composant PointageBox avec des props.
 }) => (
   <Box as="section" display="flex" flexDirection="column" // Conteneur principal avec styles.
        w="full" maxW={{ base: '366px', md: '500px', lg: '100%' }} // Largeur maximale en fonction de l'écran.
-       borderBottom="2px solid" borderTop="2px solid" borderColor="red.700" // Styles de bordure.
-       borderRadius="md" shadow="lg" bg="whiteAlpha.80" fontFamily="Nunito Sans"> 
+      >
        {/* // Autres styles. */}
 
     <Suspense mt fallback={<Spinner />}> 

@@ -1,21 +1,32 @@
 import React, { useMemo } from 'react';
-import { Box, Center, Text, Flex, useBreakpointValue, Spinner } from '@chakra-ui/react';
+import {
+  Box,
+  Center,
+  Text,
+  Flex,
+  useBreakpointValue,
+  Spinner,
+} from '@chakra-ui/react';
 import { FaUserAlt, FaQrcode, FaHistory } from 'react-icons/fa';
-import { FaUsersLine } from "react-icons/fa6";
+import { FaUsersLine } from 'react-icons/fa6';
 
 import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 import { getUserWithRoles } from '../../../lib/utils/checkRole';
 import ThemeToggleButton from '../DarkMode';
 import ButtonDeconnexion from '../../common/ButtonDeconnexion';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 // eslint-disable-next-line react/display-name
 const ProfileCardFormateur = React.memo(() => {
   const buttonSize = useBreakpointValue({ base: 'sm', md: 'md' });
   const iconSize = useBreakpointValue({ base: '20px', md: '30px' });
-  const {roles, user, loading } = useUserWithRoles(['Formateur']);
+  const { roles, user, loading } = useUserWithRoles(['Formateur']);
 
-  const fullName = useMemo(() => (user ? `${user.prenom} ${user.nom}` : ''), [user]);
+  const fullName = useMemo(
+    () => (user ? `${user.prenom} ${user.nom}` : ''),
+    [user]
+  );
 
   if (loading) {
     return (
@@ -57,20 +68,46 @@ const ProfileCardFormateur = React.memo(() => {
         shadow="lg"
         border="2px solid #CE0033"
       >
-        <NavLink href="/formateur/profile" icon={FaUserAlt} label="Profile" iconSize={iconSize} buttonSize={buttonSize} />
-        <NavLink href="/formateur" icon={FaQrcode} label="QR Code" iconSize={iconSize} />
-        <NavLink href="/formateur/promos" icon={FaUsersLine } label="Promos" iconSize={iconSize} buttonSize={buttonSize} />
-        <NavLink href="/formateur/mesPointages" icon={FaHistory} label="Historique" iconSize={iconSize} buttonSize={buttonSize} />
+        <NavLink
+          href="/formateur/profile"
+          icon={FaUserAlt}
+          label="Profile"
+          iconSize={iconSize}
+          buttonSize={buttonSize}
+        />
+        <NavLink
+          href="/formateur"
+          icon={FaQrcode}
+          label="QR Code"
+          iconSize={iconSize}
+        />
+        <NavLink
+          href="/formateur/promos"
+          icon={FaUsersLine}
+          label="Promos"
+          iconSize={iconSize}
+          buttonSize={buttonSize}
+          _active={{
+            bg: '#CE0033',
+            color: 'white',
+          }}
+        />
+        <NavLink
+          href="/formateur/mesPointages"
+          icon={FaHistory}
+          label="Historique"
+          iconSize={iconSize}
+          buttonSize={buttonSize}
+        />
       </Flex>
 
       <Center mt={4}>
         <Box color="white" px={20}>
-          <Text fontSize={{ base: '20px', lg: '35px' }} fontWeight="bold">{fullName}</Text>
-          {roles.length > 0 &&
-
-<Text>       {roles.join(', ')}
-</Text>
-}        </Box>
+          <Text fontSize={{ base: '20px', lg: '35px' }} fontWeight="bold">
+            {fullName}
+          </Text>
+          {roles.length > 0 && <Text> {roles.join(', ')}</Text>}{' '}
+        </Box>
         <Box mt={4}>
           <ButtonDeconnexion />
         </Box>
@@ -83,14 +120,34 @@ const ProfileCardFormateur = React.memo(() => {
   );
 });
 
-const NavLink = ({ href, icon: Icon, label, iconSize, buttonSize }) => (
-  <Link href={href} passHref>
-    <Flex color="white" display="flex" flexDirection="column" alignItems="center" fontSize={buttonSize}>
-      <Icon size={iconSize} />
-      <Text mt={2}>{label}</Text>
-    </Flex>
-  </Link>
-);
+
+const NavLink = ({ href, icon: Icon, label, iconSize, buttonSize }) => {
+  const router = useRouter();
+  const isActive = router.pathname === href;
+
+  return (
+    <Link href={href} passHref>
+      <Flex
+        color={isActive ? '#CE0033' : 'white'} // Active link color
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        fontSize={buttonSize}
+        // bg={isActive ? 'white' : 'transparent'} // Active background color
+        borderRadius="md"
+        _hover={{
+          bg: 'gray.700',
+          color: '#CE0033',
+        }}
+      >
+        <Icon size={iconSize} />
+        <Text mt={2}>{label}</Text>
+      </Flex>
+    </Link>
+  );
+};
+
+
 
 export async function getServerSideProps(context) {
   const result = await getUserWithRoles(context, ['Formateur']);

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Heading, List, ListItem, Text, Badge, Spinner, useToast } from '@chakra-ui/react';
 import { api } from '../../../lib/utils/api';
-import ModalComponent from './PointageHebdomadaire';
+import ModalComponent from './Conge';
 
 const CongeList = () => {
   const [conges, setConges] = useState([]);
@@ -53,8 +53,7 @@ const CongeList = () => {
                 {conge.status}
               </Badge>
               <ModalComponent congeId={conge.id} onUpdateSuccess={handleUpdateSuccess} /> {/* Pass update handler */}
-            </ListItem>
-          ))
+            </ListItem>          ))
         ) : (
           <Text>Aucun congé trouvé.</Text>
         )}

@@ -29,13 +29,14 @@ const FormateurPromotions = ({ formateur ,  isCompleted = false }) => {
       bg="whiteAlpha.80"
       borderRadius="md"
       boxShadow="2xl"
-      shadow="xl"
       p="4"
       my={2}
       display="flex"
       alignItems="center"
       cursor="pointer"
       border="1px solid"
+      shadow="1px 0px 4px 1px rgba(0,0,0,0.25)"
+
       borderColor="gray.200" // Lighter border for better UX
     >
       {/* Icon */}
@@ -56,7 +57,7 @@ const FormateurPromotions = ({ formateur ,  isCompleted = false }) => {
         <Text fontSize="lg" fontWeight="bold" fontFamily="Nunito Sans">
         {promo.nom}        </Text>
         <Text fontSize="sm" color="gray.600" fontFamily="Nunito Sans">
-        {promo.nom}         </Text>
+        {promo.date_debut} -  {promo.date_fin}     </Text>
       </Box>
 
     </Box>

@@ -13,6 +13,7 @@ function ListePointage({ pointages }) {
       display="flex"
       flexDirection="column"
       
+      
       bg="whiteAlpha.80"
       fontFamily="Nunito Sans"
     >

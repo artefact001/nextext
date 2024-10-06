@@ -39,6 +39,10 @@ const NavbarVigile = () => {
       text: "Choisissez heure de pointage",
       icon: 'question',
       showCancelButton: true,
+      confirmButtonColor:'#CE0033',
+      cancelButtonColor:'#CE0033',
+      
+
       confirmButtonText: 'Arrivée',
       cancelButtonText: 'Départ',
     }).then((result) => {

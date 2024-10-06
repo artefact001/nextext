@@ -14,7 +14,7 @@ const DaysOfWeek = ({ daysOfWeek, setSelectedDay, retard, absent }) => {
           justify="space-between"
           align="center"
           w="100%"
-          p={1}
+          p={4}
           borderWidth={1}
           borderRadius="md"
           bg="white"

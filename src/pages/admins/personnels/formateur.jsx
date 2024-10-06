@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Center,
   Flex,
@@ -8,7 +9,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 import CardBox from '../../../components/common/Card';
 import FormInput from '../../../components/common/FormInput';
 import FormSelect from '../../../components/common/FormSelect';
@@ -34,7 +35,6 @@ const AjouteFormateurPage = () => {
     telephone: '',
     email: '',
     password: '',
-    photo_profile: '',
     sexe: '',
     promotion_id: '',
   });
@@ -44,6 +44,7 @@ const AjouteFormateurPage = () => {
   const [filterType, setFilterType] = useState('Formateur');
   const [role, setRole] = useState('Formateur'); // État pour le rôle
   const [selectedFormateur, setSelectedFormateur] = useState(null); // État pour le formateur sélectionné
+  const [isLoading, setIsLoading] = useState(false);
 
   // Récupération des formateurs
   const { data: formateursData, error: formateursError } = useSWR(
@@ -61,6 +62,8 @@ const AjouteFormateurPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
+    setIsLoading(true);
+
     const endpoint =
       role === 'Formateur'
         ? `${process.env.NEXT_PUBLIC_API_URL}/formateur/inscrire`
@@ -89,6 +92,7 @@ const AjouteFormateurPage = () => {
         });
         // refresh page
         
+        setIsLoading(false);
 
 
         setFormData({
@@ -98,21 +102,28 @@ const AjouteFormateurPage = () => {
           telephone: '',
           email: '',
           password: '',
-          photo_profile: '',
           sexe: '',
           promotion_id: '',
         });
+        mutate(`${process.env.NEXT_PUBLIC_API_URL}/formateurs`); // Ajout de mutate
       } else {
         if (data.errors) {
           setErrors(data.errors);
+          setIsLoading(false);
+
         } else {
           setErrors({ general: 'Une erreur est survenue.' });
+          setIsLoading(false);
+
         }
       }
     } catch (error) {
       setErrors({ general: "Une erreur est survenue lors de l'inscription." });
+      setIsLoading(false);
+
     }
   };
+
 
   const formateurs = formateursData ? formateursData.formateurs : [];
   
@@ -131,7 +142,7 @@ const AjouteFormateurPage = () => {
 
   // console.log(setSelectedFormateur())
   return (
-    <Center bg="white" display={'block'}>
+    <Center  display={'block'}>
       <ProfileCardAdministrateur />
 
       <SimpleGrid
@@ -141,23 +152,23 @@ const AjouteFormateurPage = () => {
         spacing={2}
       >
         
-        <CardBox maxW={{ base: '100%', md: '100%', lg: '90%' }}>
+        <CardBox maxW={{ base: '100%', md: '100%', lg: '90%' }}
+        maxH='70%'
+        >
         <Heading 
         justifyContent="center"
         mx="41%"
         as="h2"
         size="md"
-        color="gray.800"
         mb={4}
           
        
         
         >{role}</Heading>
-          <form onSubmit={handleSubmit}>
-            <SimpleGrid columns={[1, 2]} spacing={4}>
-            <FormSelect
+        <Box   mx="25%" >
+        <FormSelect
+      
               id="role"
-              label="Type d'utilisateur"
               name="role"
               value={role}
               onChange={(e) => setRole(e.target.value)}
@@ -167,6 +178,10 @@ const AjouteFormateurPage = () => {
               ]}
               error={errors.role}
             />
+            </Box>
+          <form onSubmit={handleSubmit}>
+            <SimpleGrid columns={[1, 2]} spacing={4}>
+            
               <FormInput
                 id="nom"
                 label="Nom"
@@ -217,26 +232,7 @@ const AjouteFormateurPage = () => {
                 onChange={handleChange}
                 error={errors.email}
               />
-              <FormInput
-                id="password"
-                label="Mot de passe"
-                name="password"
-                type="password"
-                placeholder="Mot de passe"
-                value={formData.password}
-                onChange={handleChange}
-                error={errors.password}
-              />
-              <FormInput
-                id="photo_profile"
-                label="Photo de profil (URL)"
-                name="photo_profile"
-                type="text"
-                placeholder="URL de la photo de profil"
-                value={formData.photo_profile}
-                onChange={handleChange}
-                error={errors.photo_profile}
-              />
+          
               <FormSelect
                 id="sexe"
                 label="Sexe"
@@ -253,14 +249,18 @@ const AjouteFormateurPage = () => {
 
             {/* Ajout d'un select pour choisir le rôle */}
           
-            <Button type="submit" color="white" bg="#CE0033" width="full">
+         
+            <Button mt={4} mx="25%" type="submit"
+            alignItems='center'
+            isLoading={isLoading}
+
+             _hover={{bg:"#110033"}} color="white" bg="#CE0033" width="50%" py={7}>
               Inscrire {role}
             </Button>
           </form>
 
           {message && (
             <Text mt={4} color="green.500">
-              {message}
             </Text>
           )}
           {errors.general && (
@@ -281,20 +281,23 @@ const AjouteFormateurPage = () => {
           >
             <Button 
              px={{ base: 5, md: 10 }}
-             py={5}
+             py={6}
              fontSize="lg"
              color="white"
              bg={filterType === 'Formateur' ? '#ce0033' : 'gray.500'}
+             _hover={{   bg:  '#ce0033'} }
              borderRadius="md"
             onClick={() => setFilterType('Formateur')}>
               Formateurs
             </Button>
             <Button
              px={{ base: 5, md: 10 }}
-             py={5}
+             py={6  }
              fontSize="lg"
              color="white"
              bg={filterType === 'ChefDeProjet' ? '#ce0033' : 'gray.500'}
+             _hover={{   bg:  '#ce0033'} }
+
              borderRadius="md"
             onClick={() => setFilterType('ChefDeProjet')}>
               Chefs de projet

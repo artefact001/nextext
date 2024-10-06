@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 'use client';
 
 import {
@@ -6,6 +7,7 @@ import {
   SimpleGrid,
   Spinner,
   Text,
+  Image,
   VStack,
 } from '@chakra-ui/react';
 import dayjs from 'dayjs';
@@ -16,6 +18,8 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import ListePointage from '../../../components/func/admin/ListePointage';
 import PointageBoxPromo from '../../../components/func/admin/MesPointages';
+import CardBox from '../../../components/common/Card';
+import MarquerAbsences from '../../../components/func/formateur/MarquerAbsences';
 
 dayjs.extend(isoWeek);
 dayjs.extend(isoWeeksInYear);
@@ -40,27 +44,22 @@ const fetcher = (url) =>
 const MesPointagesP7 = () => {
   const [date, setDate] = useState(dayjs());
   const [selectedWeek, setSelectedWeek] = useState(date.isoWeek());
-  const [selectedDay, setSelectedDay] = useState(null); // Selected day state
+  const [selectedDay, setSelectedDay] = useState(null);
   // eslint-disable-next-line no-unused-vars
-  const [promo, setPromo] = useState(null); // State for promo data
+  const [promo, setPromo] = useState(null);
   const router = useRouter();
-  const { id: promoId } = router.query; // Access the dynamic id (promoId)
-  // URLs for fetching data
+  const { id: promoId } = router.query;
+
   const pointagesUrl = `${
     process.env.NEXT_PUBLIC_API_URL
-  }/pointages/promo?promo_id=${promoId}&mois=${date.format(
-    'MM'
-  )}&annee=${date.year()}&semaine=${selectedWeek}`;
+  }/pointages/promo?promo_id=${promoId}&mois=${date.format('MM')}&annee=${date.year()}&semaine=${selectedWeek}`;
+  
   const dailyAttendanceUrl = (day) =>
-    `${
-      process.env.NEXT_PUBLIC_API_URL
-    }/pointages/promo/all?promo_id=${promoId}&date=${day.format('YYYY-MM-DD')}`;
+    `${process.env.NEXT_PUBLIC_API_URL}/pointages/promo/all?promo_id=${promoId}&date=${day.format('YYYY-MM-DD')}`;
+  
   const promoUrl = `${process.env.NEXT_PUBLIC_API_URL}/promos/${promoId}`;
 
-  const { data: pointagesData, error: pointagesError } = useSWR(
-    pointagesUrl,
-    fetcher
-  );
+  const { data: pointagesData, error: pointagesError } = useSWR(pointagesUrl, fetcher);
   const {
     data: dailyData,
     error: dailyError,
@@ -72,7 +71,7 @@ const MesPointagesP7 = () => {
         absent: dailyData.pointages.filter((p) => p.type === 'absence').length,
         retard: dailyData.pointages.filter((p) => p.type === 'retard').length,
       }
-    : { absent: 0, retard: 0 }; // Default values if pointages is undefined
+    : { absent: 0, retard: 0 };
 
   const loading = !pointagesData && !pointagesError;
 
@@ -87,7 +86,6 @@ const MesPointagesP7 = () => {
     setSelectedWeek(date.isoWeek());
   }, [date]);
 
-  // Fetch promo data
   useEffect(() => {
     const fetchPromoData = async () => {
       try {
@@ -100,29 +98,17 @@ const MesPointagesP7 = () => {
         const promoData = await response.json();
         setPromo(promoData);
       } catch (error) {
-        console.error(
-          'Erreur lors de la récupération des données de la promo:',
-          error
-        );
+        console.error('Erreur lors de la récupération des données de la promo:', error);
       }
     };
     fetchPromoData();
   }, [promoId]);
 
   useEffect(() => {
-    console.log('API URL:', pointagesUrl);
-    console.log(
-      'Selected Day API URL:',
-      selectedDay ? dailyAttendanceUrl(selectedDay) : null
-    );
-    console.log('Pointages Data:', pointagesData);
-    console.log('Daily Data:', dailyData);
-  }, [pointagesUrl, selectedDay, pointagesData, dailyData]);
+   }, [pointagesUrl, selectedDay, pointagesData, dailyData]);
 
-  // Calcul des jours de la semaine
   const daysOfWeek = getDaysOfWeek(selectedWeek, date.year());
 
-  // Gérer le chargement global
   if (loading) {
     return (
       <Center h="100vh">
@@ -132,80 +118,79 @@ const MesPointagesP7 = () => {
   }
 
   return (
-    <VStack spacing={4} maxW="100%">
+    <VStack maxW="100%">
       <Suspense fallback={<Spinner />}>
         <ProfileCardAdministrateur />
       </Suspense>
 
-      <SimpleGrid justifyContent="space-between" columns={[1, 2]} spacing={4}>
-        <Box
-          as="section"
-          py={8}
-          mt={7}
-          w="full"
-          px={{ base: '12px', md: '13px', lg: '40px' }}
+      <SimpleGrid spacingX={24} columns={[1, 2]}>
+        <CardBox
+          px={{ base: '12px', md: '13px', lg: '10px' }}
           mx={{ base: '2px', md: '3px', lg: '60px' }}
-          maxW={{ base: '366px', md: '100%', lg: '80%' }}
-          borderBottom="2px solid"
-          borderTop="2px solid"
-          borderColor="red.700"
-          borderRadius="md"
-          shadow="lg"
-          bg="whiteAlpha.80"
-          fontFamily="Nunito Sans"
-          flex="2"
+          maxW={{ base: '366px', md: '100%', lg: '100%' }}
         >
           <Suspense fallback={<Spinner />}>
-          {promo && <Text fontWeight="bold" textAlign="center" mb={3}>Promotion : {promo.nom}</Text>}
+            <Text fontWeight="bold" fontSize={20} textAlign="center">
+              Promo: {promoId}
+            </Text>
+
+            <Box display="flex" justifyContent="space-around" mt={4}>
+              <StatusCard
+                src="/images/presence.png"
+                alt="Status: present"
+                label="Présents"
+                // count={dailyData?.pointages.filter((p) => p.type === 'present').length || 0}
+              />
+              <StatusCard
+                src="/images/retard.png"
+                alt="Status: retard"
+                label="Retards"
+                  // count={attendanceSummary.retard}
+              />
+              <StatusCard
+                src="/images/absent.png"
+                alt="Status: absent"
+                label="Absents"
+                // count={attendanceSummary.absent}
+              />
+            </Box>
 
             {isDailyLoading ? (
-              <Text>Chargement des données...</Text>
+              <Spinner />
             ) : dailyError ? (
               <Text>Erreur lors de la récupération des données.</Text>
             ) : dailyData?.apprenants_avec_pointage?.length > 0 ||
               dailyData?.apprenants_sans_pointage?.length > 0 ? (
               <>
-                  
                 {dailyData.apprenants_avec_pointage.length > 0 && (
                   <Box>
-     
-                    <ListePointage
-                      pointages={dailyData.apprenants_avec_pointage} promo={{ nom: 'Promotion 2024' }}
-                    />
+                    <ListePointage pointages={dailyData.apprenants_avec_pointage} />
                   </Box>
                 )}
-               
+                {dailyData.apprenants_avec_pointage.length === 0 && (
+                  <Box mt="20" textAlign="center">
+                    <Text>Aucun pointage trouvé pour la journée sélectionnée.</Text>
+                  </Box>
+                )}
               </>
             ) : (
               <>
                 <Text>
-                  Date:{' '}
-                  {selectedDay
-                    ? selectedDay.format('DD/MM/YYYY')
-                    : 'Date non sélectionnée'}
+                  Date: {selectedDay ? selectedDay.format('DD/MM/YYYY') : 'Date non sélectionnée'}
                 </Text>
-                <Text>Aucun pointage trouvé pour la journée sélectionnée.</Text>
+                <Text mt="20" textAlign="center">Aucun pointage trouvé pour la journée sélectionnée.</Text>
+
               </>
             )}
           </Suspense>
-        </Box>
-        <Box
-          as="section"
-          px={{ base: '2px', md: '1px', lg: '40px' }}
-          mx={{ base: '2px', md: '3px', lg: '60px' }}
-          maxW={{ base: '366px', md: '100%', lg: '80%' }}
-          py={8}
-          mt={7}
-          w="full"
-          borderBottom="2px solid"
-          borderTop="2px solid"
-          borderColor="red.100"
-          borderRadius="md"
-          shadow="lg"
-          bg="whiteAlpha.80"
-          fontFamily="Nunito Sans"
-          flex="2"
-        >
+          <Suspense>
+          <MarquerAbsences/>
+
+          </Suspense>
+
+        </CardBox>
+
+        <CardBox maxW={{ base: '366px', md: '100%', lg: '90%' }}>
           <PointageBoxPromo
             date={date}
             handleMonthChange={handleMonthChange}
@@ -215,15 +200,33 @@ const MesPointagesP7 = () => {
             pointagesData={pointagesData}
             pointagesError={pointagesError}
             attendanceSummary={attendanceSummary}
-            setSelectedDay={setSelectedDay} // Passez setSelectedDay
+            setSelectedDay={setSelectedDay}
             daysOfWeek={daysOfWeek}
-            dailyData={dailyData} // Données filtrées par jour
+            dailyData={dailyData}
           />
-        </Box>
+
+        </CardBox>
       </SimpleGrid>
     </VStack>
   );
 };
+
+// StatusCard component to display attendance status
+const StatusCard = ({ src, alt, label, count }) => (
+  <VStack>
+    <Image
+      src={src}
+      alt={alt}
+      loading="lazy"
+      objectFit="contain"
+      w="24px"
+      h="24px"
+      flexShrink={0}
+    />
+    <Text fontWeight="bold">{label}</Text>
+    <Text>{count}</Text>
+  </VStack>
+);
 
 // Helper functions to get weeks and days of the week
 const getWeeksOfMonth = (mois, annee) => {
@@ -246,7 +249,7 @@ const getWeeksOfMonth = (mois, annee) => {
 
 const getDaysOfWeek = (week, year) => {
   const startOfWeek = dayjs().isoWeek(week).year(year).startOf('isoWeek');
-  return Array.from({ length: 7 }, (_, index) => startOfWeek.add(index, 'day')); // Limité à 7 jours pour la semaine
+  return Array.from({ length: 7 }, (_, index) => startOfWeek.add(index, 'day'));
 };
 
 export default MesPointagesP7;
