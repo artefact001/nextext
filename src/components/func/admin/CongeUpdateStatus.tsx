@@ -46,7 +46,7 @@ const CongeUpdateStatus = ({ congeId, onClose, onUpdateSuccess }) => {
         </Select>
       </FormControl>
 
-      <Button type="submit" colorScheme="teal" width="full">Mettre à jour</Button>
+      <Button type="submit" color="white"  bg="#CE0033" _hover={{ bg:"gray.600"}} my={5} width="full">Mettre à jour</Button>
     </Box>
   );
 };

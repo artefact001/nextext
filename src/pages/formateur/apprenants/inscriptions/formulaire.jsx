@@ -139,7 +139,7 @@ const InscrireApprenantForm = () => {
           backdropFilter="blur(2px)"
           WebkitBackdropFilter="blur(2px)" // For Safari support
         >
-          <Heading as="h3">Apprenants</Heading>
+          <Heading mx="35%" as="h3">Apprenant</Heading>
 
           <form onSubmit={handleSubmit}>
             <SimpleGrid columns={[1, 2]} spacing={4}>
@@ -255,6 +255,7 @@ const InscrireApprenantForm = () => {
           {/* Component promos */}
 
         </CardBox>
+      
       </SimpleGrid>
     </Center>
   );

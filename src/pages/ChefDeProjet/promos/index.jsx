@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import PromoCard from '../../../components/common/PromoCard';
 import ListePointage from '../../../components/func/apprenant/ListePointage';
 import PromoHeader from '../../../components/layout/chefDeProjet/PromoHeader';
+import CardBox from '../../../components/common/Card';
 
 
 // Fonction de récupération des données
@@ -77,19 +78,19 @@ const Dashboard = () => {
       <ProfileCardFormateur />
 
       <SimpleGrid
-        mx={{ base: '2px', md: '3px', lg: '12px' }}
+        mx={{ base: '2px', md: '3px', lg: '92px' }}
         justifyContent="space-between"
         columns={[1, 2]}
-        spacing={8}
+        spacing={48}
       >
         <Box
           as="section"
-          px={{ base: '2px', md: '3px', lg: '20px' }}
-          mx={{ base: '2px', md: '3px', lg: '10px' }}
+          px={{ base: '2px', md: '3px', lg: '120px' }}
+          mx={{ base: '2px', md: '3px', lg: '110px' }}
           py={8}
           mt={7}
           w="full"
-          maxW={{ base: '366px', md: '100%', lg: '100%' }}
+          maxW={{ base: '366px', md: '100%', lg: '70%' }}
           borderBottom="2px solid"
           borderTop="2px solid"
           borderColor="red.700"
@@ -140,24 +141,11 @@ const Dashboard = () => {
       columns={[1, 2]}
       spacing={8}
     >
-      <Box
-        as="section"
-        px={{ base: '2px', md: '3px', lg: '20px' }}
-        mx={{ base: '2px', md: '3px', lg: '10px' }}
-        py={8}
-        mt={7}
-        w="full"
-        maxW={{ base: '366px', md: '100%', lg: '100%' }}
-        borderBottom="2px solid"
-        borderTop="2px solid"
-        borderColor="red.700"
-        borderRadius="md"
-        shadow="lg"
-        bg="whiteAlpha.80"
-        fontFamily="Nunito Sans"
-        flex="2"
-        display={{ base: 'none', md: 'none', lg: 'block' }}
-      >
+       <CardBox
+          as="section"
+          px={{ base: '12px', md: '13px', lg: '40px' }}
+          maxW={{ base: '366px', md: '100%', lg: '60%' }}
+         >
         {/* <ListePointage /> */}
         {selectedPromoId && (
           <ListePointage
@@ -168,24 +156,12 @@ const Dashboard = () => {
           />
         )}
         ;
-      </Box>
-      <Box
-        as="section"
-        px={{ base: '2px', md: '3px', lg: '20px' }}
-        mx={{ base: '2px', md: '3px', lg: '10px' }}
-        py={8}
-        mt={7}
-        w="full"
-        maxW={{ base: '366px', md: '100%', lg: '100%' }}
-        borderBottom="2px solid"
-        borderTop="2px solid"
-        borderColor="red.700"
-        borderRadius="md"
-        shadow="lg"
-        bg="whiteAlpha.80"
-        fontFamily="Nunito Sans"
-        flex="2"
-      >
+      </CardBox>
+      <CardBox
+          as="section"
+          px={{ base: '12px', md: '13px', lg: '80px' }}
+          maxW={{ base: '366px', md: '100%', lg: '60%' }}
+         >
         {' '}
         <PromoHeader />
         {promos.length > 0 ? (
@@ -203,7 +179,7 @@ const Dashboard = () => {
             Aucune promotion terminée.
           </Text>
         )}{' '}
-      </Box>
+      </CardBox>
     </SimpleGrid>
   </Box>
   );

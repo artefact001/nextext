@@ -1,67 +1,212 @@
-import React from 'react';
-import { useUserWithRoles } from '../../lib/utils/hooks/useUserWithRoles';
-import { Center, Image, Spinner, Text } from '@chakra-ui/react';
-import ProfileCard from '../../components/layout/chefDeProjet/Navbar';
+import {
+  Box,
+  Text,
+  SimpleGrid,
+} from '@chakra-ui/react';
+import ProfileCardFormateur from '../../components/layout/chefDeProjet/Navbar';
 import useSWR from 'swr';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import PromoCard from '../../components/common/PromoCard';
+import ListePointage from '../../components/func/apprenant/ListePointage';
+import PromoHeader from '../../components/layout/chefDeProjet/PromoHeader';
 
-const fetcher = (url) => fetch(url).then((res) => {
-  if (!res.ok) throw new Error('Failed to fetch QR Code');
-  return res.blob();
-});
 
-const ChefDeProjetPage = () => {
-  const { user, loading } = useUserWithRoles(['ChefDeProjet']);
-  
-  // Fetch QR code using SWR
-  const { data: qrCodeBlob, error } = useSWR(
-    user ? `${process.env.NEXT_PUBLIC_API_URL}/qr/${user.matricule}` : null,
+// Fonction de récupération des données
+const fetcher = (url) =>
+  fetch(url, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  }).then((res) => {
+    if (!res.ok) throw new Error('Erreur lors de la récupération des données.');
+    return res.json();
+  });
+
+const Dashboard = () => {
+  // Récupérer les promos en cours et terminées
+  const { data: promosData, error: promosError } = useSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/promos/encours`,
     fetcher
   );
+  const { data: promosDataTerminer, error: promosErrorTerminer } = useSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/promos/terminer`,
+    fetcher
+  );
+  const [pointages, setPointages] = useState([]);
+  const [selectedPromoId, setSelectedPromoId] = useState(null);
+  const router = useRouter();
 
-  // Handle loading state
-  if (loading) {
+  // Rediriger vers la page de la promotion sélectionnée
+  const handlePromoClick = (promoId) => {
+    router.push(`/ChefDeProjet/promos/${promoId}`);
+  };
+
+  // Récupérer les pointages du jour pour une promotion
+  const fetchPointages = async (promoId) => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/promos/${promoId}/pointages-aujourdhui`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data.success) {
+        setPointages(data.pointages);
+        setSelectedPromoId(promoId);
+      } else {
+        console.error(
+          data.message || 'Erreur lors de la récupération des pointages.'
+        );
+      }
+    } else {
+      console.error('Erreur lors de la récupération des pointages.');
+    }
+  };
+
+  if (promosError || promosErrorTerminer) {
     return (
-      <Center>
-        <Spinner size="lg" color="red.500" />
-      </Center>
+      <Box p={0}>
+      {/* Profil Formateur et Header */}
+      <ProfileCardFormateur />
+
+      <SimpleGrid
+        mx={{ base: '2px', md: '3px', lg: '12px' }}
+        justifyContent="space-between"
+        columns={[1, 2]}
+        spacing={8}
+      >
+        <Box
+          as="section"
+          px={{ base: '2px', md: '3px', lg: '20px' }}
+          mx={{ base: '2px', md: '3px', lg: '10px' }}
+          py={8}
+          mt={7}
+          w="full"
+          maxW={{ base: '366px', md: '100%', lg: '100%' }}
+          borderBottom="2px solid"
+          borderTop="2px solid"
+          borderColor="red.700"
+          borderRadius="md"
+          shadow="lg"
+          bg="whiteAlpha.80"
+          fontFamily="Nunito Sans"
+          flex="2"
+          display={{ base: 'none', md: 'none', lg: 'block' }}
+        ></Box>
+        <Box
+          as="section"
+          px={{ base: '2px', md: '3px', lg: '20px' }}
+          mx={{ base: '2px', md: '3px', lg: '10px' }}
+          py={8}
+          mt={7}
+          w="full"
+          maxW={{ base: '366px', md: '100%', lg: '100%' }}
+          borderBottom="2px solid"
+          borderTop="2px solid"
+          borderColor="red.700"
+          borderRadius="md"
+          shadow="lg"
+          bg="whiteAlpha.80"
+          fontFamily="Nunito Sans"
+          flex="2"
+        >
+          {' '}
+          <PromoHeader />
+          <Text color="red.500">Aucune promotion</Text>{' '}
+        </Box>
+      </SimpleGrid>
+    </Box>
     );
   }
 
-  // Handle user not available
-  if (!user) {
-    return <Text>Une erreur est survenue. Veuillez vous reconnecter.</Text>;
-  }
-
-  // Create a URL for the QR code blob
-  const qrCodeUrl = qrCodeBlob ? URL.createObjectURL(qrCodeBlob) : null;
+  const promos = promosData ? promosData.promos : [];
+  const promosTerminer = promosDataTerminer ? promosDataTerminer.promos : [];
 
   return (
-    <Center display="block">
-      {/* ProfileCard */}
-      <ProfileCard />
+    <Box p={0}>
+    {/* Profil Formateur et Header */}
+    <ProfileCardFormateur />
 
-      {/* QR Code */}
-      {error ? (
-        <Text>{error.message}</Text>
-      ) : qrCodeUrl ? (
-        <Center mt={20} bg="white" p={4} borderRadius="md">
-          <Image
-            src={qrCodeUrl}
-            alt="QR Code"
-            width={200}
-            height={200}
-            objectFit="contain"
+    <SimpleGrid
+      mx={{ base: '2px', md: '3px', lg: '12px' }}
+      justifyContent="space-between"
+      columns={[1, 2]}
+      spacing={8}
+    >
+      <Box
+        as="section"
+        px={{ base: '2px', md: '3px', lg: '20px' }}
+        mx={{ base: '2px', md: '3px', lg: '10px' }}
+        py={8}
+        mt={7}
+        w="full"
+        maxW={{ base: '366px', md: '100%', lg: '100%' }}
+        borderBottom="2px solid"
+        borderTop="2px solid"
+        borderColor="red.700"
+        borderRadius="md"
+        shadow="lg"
+        bg="whiteAlpha.80"
+        fontFamily="Nunito Sans"
+        flex="2"
+        display={{ base: 'none', md: 'none', lg: 'block' }}
+      >
+        {/* <ListePointage /> */}
+        {selectedPromoId && (
+          <ListePointage
+            pointages={pointages}
+            promoId={selectedPromoId}
+            fetchPointages={fetchPointages}
+            isCompleted
           />
-        </Center>
-      ) : (
-<Center mt={20} flexDirection="column">
-    <Spinner size="lg" color="red.500" />
-    <Text mt={4} fontSize="lg" color="gray.600">
-      Chargement du QR Code, veuillez patienter...
-    </Text>
-  </Center>      )}
-    </Center>
+        )}
+        ;
+      </Box>
+      <Box
+        as="section"
+        px={{ base: '2px', md: '3px', lg: '20px' }}
+        mx={{ base: '2px', md: '3px', lg: '10px' }}
+        py={8}
+        mt={7}
+        w="full"
+        maxW={{ base: '366px', md: '100%', lg: '100%' }}
+        borderBottom="2px solid"
+        borderTop="2px solid"
+        borderColor="red.700"
+        borderRadius="md"
+        shadow="lg"
+        bg="whiteAlpha.80"
+        fontFamily="Nunito Sans"
+        flex="2"
+      >
+        {' '}
+        <PromoHeader />
+        {promos.length > 0 ? (
+          <PromoCard promos={promos} handlePromoClick={handlePromoClick} />
+        ) : (
+          <Text fontSize="lg" color="red.500">
+            Aucune promotion en cours.
+          </Text>
+        )}{' '}
+        {/* Liste des Promos terminées */}
+        {promosTerminer.length > 0 ? (
+          <PromoCard promos={promosTerminer} isCompleted handlePromoClick={handlePromoClick} />
+        ) : (
+          <Text fontSize="lg" color="red.500">
+            Aucune promotion terminée.
+          </Text>
+        )}{' '}
+      </Box>
+    </SimpleGrid>
+  </Box>
   );
 };
 
-export default ChefDeProjetPage;
+export default Dashboard;

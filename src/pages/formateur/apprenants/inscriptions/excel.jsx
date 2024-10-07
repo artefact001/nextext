@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Center, Button, Input, FormControl, FormLabel, Box, Text, useToast } from '@chakra-ui/react';
+import { Center, Button, Input, FormControl, FormLabel, Text, useToast, SimpleGrid } from '@chakra-ui/react';
 import useSWR from 'swr';
 import FormSelect from '../../../../components/common/FormSelect';
 import ProfileCardFormateur from '../../../../components/layout/formateur/Navbar';
 import Link from 'next/link';
+import MyPromos from '../../../../components/func/formateur/MyPromos';
+import CardBox from '../../../../components/common/Card';
 
 const fetcher = (url) =>
   fetch(url, {
@@ -81,17 +83,24 @@ const InscrireAppprenantExel = () => {
   return (
     <Center display={'block'}>
       <ProfileCardFormateur />
+      <SimpleGrid columns={[1, 2]} spacing={24}>
 
-      <Box mt={5} p={5}borderRadius="lg" width="100%" maxW={{ base:"98%",md: "100%", lg:"40%" }}  borderTop="2px" 
-  borderBottom="2px"
+      <CardBox
+      mt={5} p={5}borderRadius="lg" width="100%"
+       maxW={{ base:"98%",md: "100%", lg:"100%" }}  
+       px={{ base:"98%",md: "8%", lg:"20%" }}  
+       mx={{ base:"98%",md: "8%", lg:"55%" }}  
+       borderTop="2px" 
+       borderBottom="2px"
     borderColor="#CE0033" 
     // borderColor="red" // Utilisation de la couleur définie dans le thème
   shadow="lg">
         <form onSubmit={handleSubmit}>
-          <FormControl id="promo_id" mb={4} isRequired>
+          <FormControl   id="promo_id" mb={4} isRequired>
             <FormSelect
               id="promo_id"
               label="Promo"
+               border="  1px #CE0033"
               name="promo_id"
               value={promoId} // Utilisation de promoId
               onChange={(e) => setPromoId(e.target.value)} // Met à jour promoId
@@ -112,14 +121,24 @@ const InscrireAppprenantExel = () => {
             transform: "scale(1.03)",
             transition: "transform .15s ease-in",
           }}
-          color="white" bg="#CE0033" width="full">
+          color="white" bg="#CE0033" py={6} width="full">
             Importer Apprenants
           </Button>
         </form>
         {/* exemple */}
-
-        <Link href="https://docs.google.com/spreadsheets/d/1fknbtG2bOCGqpfETlsc8fMAMwH0eiA_fBhnLBw96mkI/edit?usp=sharing"  >exemple
-        </Link>
+        <CardBox>
+  {/* Example Link */}
+  <Text mb={2}>
+    Pour vous aider à préparer votre fichier Excel, vous pouvez télécharger un  
+    <Link href="https://docs.google.com/spreadsheets/d/1fknbtG2bOCGqpfETlsc8fMAMwH0eiA_fBhnLBw96mkI/edit?usp=sharing" 
+          isExternal color="#CE0033" fontWeight="bold" textDecoration="underline">
+       exemple ici
+    </Link>.
+  </Text>
+  <Text fontSize="sm" color="gray.500">
+    Assurez-vous que votre fichier respecte le format spécifié dans l'exemple pour un import réussi.
+  </Text>
+</CardBox>
 
         {message && (
           <Text mt={4} color="green.500">
@@ -131,7 +150,14 @@ const InscrireAppprenantExel = () => {
             {error}
           </Text>
         )}
-      </Box>
+      </CardBox>
+      <CardBox>
+          {/* Component promos */}
+          <MyPromos/>
+          {/* Component promos */}
+
+        </CardBox>
+        </SimpleGrid>
     </Center>
   );
 };

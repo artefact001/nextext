@@ -15,6 +15,7 @@ import { getUserWithRoles } from '../../../lib/utils/checkRole';
 import ThemeToggleButton from '../DarkMode';
 import ButtonDeconnexion from '../../common/ButtonDeconnexion';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 // eslint-disable-next-line react/display-name
 const ProfileCardChefDeProjet = React.memo(() => {
@@ -109,20 +110,31 @@ const ProfileCardChefDeProjet = React.memo(() => {
   );
 });
 
-const NavLink = ({ href, icon: Icon, label, iconSize, buttonSize }) => (
-  <Link href={href} passHref>
-    <Flex
-      color="white"
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      fontSize={buttonSize}
-    >
-      <Icon size={iconSize} />
-      <Text mt={2}>{label}</Text>
-    </Flex>
-  </Link>
-);
+const NavLink = ({ href, icon: Icon, label, iconSize, buttonSize }) => {
+  const router = useRouter();
+  const isActive = router.pathname === href;
+
+  return (
+    <Link href={href} passHref>
+      <Flex
+        color={isActive ? '#CE0033' : 'white'} // Active link color
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        fontSize={buttonSize}
+        // bg={isActive ? 'white' : 'transparent'} // Active background color
+        borderRadius="md"
+        _hover={{
+          bg: 'gray.700',
+          color: '#CE0033',
+        }}
+      >
+        <Icon size={iconSize} />
+        <Text mt={2}>{label}</Text>
+      </Flex>
+    </Link>
+  );
+};
 
 export async function getServerSideProps(context) {
   const result = await getUserWithRoles(context, ['ChefDeProjet']);

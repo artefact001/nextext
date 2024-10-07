@@ -1,20 +1,31 @@
-import { Box, Center } from '@chakra-ui/react';
+import {  Center, SimpleGrid } from '@chakra-ui/react';
 import ProfileCard from '../../components/layout/apprenant/Navbar';
 import ProfileComponent from '../../components/common/profile';
+import CardBox from '../../components/common/Card';
 
 const Profile = () => {
   return (
     <Center display={'block'}>
       <ProfileCard></ProfileCard>
-      <Box
+      <SimpleGrid columns={[1,1]}   >
+      <CardBox
         mt={6}
         bg="whiteAlpha.80"
-        p={4}
         borderRadius="md"
         shadow="md"
+        mx={10 }
+        w={{ base: '366px', md: '100%', lg: '100%' }}
+        h="95%"
       >
-        <ProfileComponent></ProfileComponent>
-      </Box>
+        {/*  ProfileComponent*/}
+        <ProfileComponent/>
+        {/*  */}
+      </CardBox>
+
+
+     
+
+      </SimpleGrid>
     </Center>
   );
 };

@@ -2,8 +2,6 @@ import {  Center, SimpleGrid } from '@chakra-ui/react';
 import ProfileCardFormateur from '../../components/layout/formateur/Navbar';
 import ProfileComponent from '../../components/common/profile';
 import CardBox from '../../components/common/Card';
-import CongeForm from '../../components/func/formateur/CongeForm';
-import CongeList from '../../components/func/formateur/ListeConges';
 
 const Profile = () => {
   return (

@@ -40,7 +40,7 @@ const CongeList = () => {
 
   return (
     <Box maxW="md" mx="auto" p={5} borderWidth={1} borderRadius="md" boxShadow="md">
-      <Heading as="h2" size="lg" mb={5}>Liste des congés</Heading>
+      <Heading as="h2" size="lg" mb={5}>Liste demande des congés</Heading>
       <List spacing={3}>
         {conges.length > 0 ? (
           conges.map((conge) => (
