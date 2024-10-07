@@ -19,7 +19,7 @@ import useSWR from 'swr';
 import ListePointage from '../../../components/func/admin/ListePointage';
 import PointageBoxPromo from '../../../components/func/admin/MesPointages';
 import CardBox from '../../../components/common/Card';
-import MarquerAbsences from '../../../components/func/formateur/MarquerAbsences';
+// import MarquerAbsences from '../../../components/func/formateur/MarquerAbsences';
 
 dayjs.extend(isoWeek);
 dayjs.extend(isoWeeksInYear);
@@ -184,7 +184,7 @@ const MesPointagesP7 = () => {
             )}
           </Suspense>
           <Suspense>
-          <MarquerAbsences/>
+          {/* <MarquerAbsences/> */}
 
           </Suspense>
 
@@ -249,7 +249,7 @@ const getWeeksOfMonth = (mois, annee) => {
 
 const getDaysOfWeek = (week, year) => {
   const startOfWeek = dayjs().isoWeek(week).year(year).startOf('isoWeek');
-  return Array.from({ length: 7 }, (_, index) => startOfWeek.add(index, 'day'));
+  return Array.from({ length: 5 }, (_, index) => startOfWeek.add(index, 'day'));
 };
 
 export default MesPointagesP7;

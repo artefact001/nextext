@@ -246,7 +246,7 @@ const getWeeksOfMonth = (mois, annee) => {
 
 const getDaysOfWeek = (week, year) => {
   const startOfWeek = dayjs().isoWeek(week).year(year).startOf('isoWeek');
-  return Array.from({ length: 7 }, (_, index) => startOfWeek.add(index, 'day'));
+  return Array.from({ length: 5 }, (_, index) => startOfWeek.add(index, 'day'));
 };
 
 export default MesPointagesP7;

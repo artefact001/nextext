@@ -165,7 +165,8 @@ const CreatePromoForm = () => {
           borderWidth="1px"
           borderRadius="lg"
           width="100%"
-          mx={{ base:'3px', md: '2px', lg:'32px' }}
+
+          mx={{ base:'3px', md: '2px', lg:'82px' }}
         >
           <form onSubmit={handleSubmit}>
             <SimpleGrid columns={[1, 2]} spacing={4}>
@@ -245,10 +246,10 @@ const CreatePromoForm = () => {
 
               <Button
                 type="submit"
-                mx="auto"
-                color="white"
-                bg="red.700"
                 width="full"
+                mx="50%"
+                py={6}
+                _hover={{ bg:'gray.600' }} bg='#CE0033' my={4} color="white"
               >
                 Créer Promotion
               </Button>
@@ -272,8 +273,8 @@ const CreatePromoForm = () => {
           shadow="md"
           borderWidth="1px"
           borderRadius="lg"
-          width="97%"
-          mx={2}
+          width="57%"
+          mx={48}
         >
           <VStack spacing={0}>
             <PromoHeader />
@@ -283,14 +284,14 @@ const CreatePromoForm = () => {
               Ajouter des Apprenants :
             </Text>
             <SimpleGrid  justifyContent="center" spacing={2} mt={2}  >
-              <Link  href="/formateur/apprenants/inscriptions/excel" isExternal>
-                <Button bg='#CE0033' my={4} color="white">Ajouter par Excel</Button>
+              <Link   href="/formateur/apprenants/inscriptions/excel" isExternal>
+                <Button w="220px" _hover={{ bg:'gray.600' }} bg='#CE0033' my={4} color="white">Ajouter par Excel</Button>
               </Link>
               <Link
                 href="/formateur/apprenants/inscriptions/formulaire"
                 isExternal
               >
-                <Button  bg='#CE0033' color="white">Ajouter par Formulaire</Button>
+                <Button w="220px" _hover={{ bg:'gray.600' }} bg='#CE0033' my={4} color="white">Ajouter par Formulaire</Button>
               </Link>
             </SimpleGrid>
           </VStack>
