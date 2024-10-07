@@ -45,6 +45,8 @@ const ProfileCardAdministrateur = React.memo(() => {
       width="100%"
       px={{ base: '4%', lg: '25%' }}
       shadow="lg"
+      pt={12}
+
       textAlign="center"
     >
 
@@ -73,7 +75,7 @@ const ProfileCardAdministrateur = React.memo(() => {
       <ButtonDeconnexion />
       </Box>
 
-        <Box color="white" px={36}>
+        <Box color="white" px={{ base: '8px',md: '8px', lg: '180px' }}>
           <Text fontSize={{ base: '20px', lg: '35px' }} fontWeight="bold">{fullName}</Text>
           
           {roles.length > 0 &&

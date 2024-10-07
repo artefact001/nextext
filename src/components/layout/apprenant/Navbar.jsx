@@ -37,6 +37,8 @@ const ProfileCardApprenant = React.memo(() => {
       px={{ base: '5%', md: '5%', lg: '25%' }}
       shadow="lg"
       textAlign="center"
+      pt={12}
+
     >
 
       <Flex
@@ -60,7 +62,7 @@ const ProfileCardApprenant = React.memo(() => {
       <Box mt={4}>
       <ThemeToggleButton />
       </Box>
-        <Box color="white" px={32}>
+        <Box color="white" px={{ base: '8px',md: '10px', lg: '140px' }}>
           <Text fontSize={{ base: '20px', md: '20px', lg: '35px' }} fontWeight="bold">{fullName}</Text>
           {roles.length > 0 && <Text>{roles.join(', ')}</Text>}
         </Box>

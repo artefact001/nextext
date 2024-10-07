@@ -53,6 +53,8 @@ const ProfileCardFormateur = React.memo(() => {
       px={{ base: '5%', lg: '25%' }}
       shadow="lg"
       textAlign="center"
+      pt={12}
+
     >
 
       <Flex
@@ -104,7 +106,7 @@ const ProfileCardFormateur = React.memo(() => {
       <Box mt={4}>
       <ThemeToggleButton />
       </Box>
-        <Box color="white" px={20}>
+        <Box color="white" px={{ base: '8px',md: '15px', lg: '90px' }}>
           <Text fontSize={{ base: '20px', lg: '35px' }} fontWeight="bold">
             {fullName}
           </Text>

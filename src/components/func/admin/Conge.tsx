@@ -19,7 +19,7 @@ const ModalComponent = ({ congeId, onUpdateSuccess }) => {
 
   return (
     <div>
-      <Button onClick={openModal}>Mettre à jour le statut du congé</Button>
+      <Button onClick={openModal}>Mettre à jour</Button>
       <Modal isOpen={isOpen} onClose={closeModal}>
         <ModalOverlay />
         <ModalContent>

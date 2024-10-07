@@ -14,7 +14,9 @@ const Profile = () => {
         bg="whiteAlpha.80"
         borderRadius="md"
         shadow="md"
-        mx={10 }
+        mx={{ base: '12px', md: '13px', lg: '2180px' }}
+        px={{ base: '12px', md: '13px', lg: '10px' }}
+
         w={{ base: '366px', md: '100%', lg: '100%' }}
         h="95%"
       >
@@ -25,14 +27,17 @@ const Profile = () => {
 
 
      
-<CardBox
-        mt={6}
-        bg="whiteAlpha.80"
-        borderRadius="md"
-        shadow="md"
-        mx={10 }
-        w={{ base: '366px', md: '100%', lg: '100%' }}
-        h="95%"
+       <CardBox
+       as="section"
+       px={{ base: '2px', md: '3px', lg: '20px' }}
+       mx={{ base: '2px', md: '3px', lg: '10px' }}
+       w="full" 
+       maxW={{ base: '366px', md: '100%', lg: '70%' }}
+       borderBottom="2px solid"
+
+      
+       display={{ base: 'block', md: 'block', lg: 'block' }}
+    
       >
         {/*  ProfileComponent*/}
         <CongeList/>

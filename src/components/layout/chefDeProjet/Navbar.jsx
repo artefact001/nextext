@@ -52,6 +52,8 @@ const ProfileCardChefDeProjet = React.memo(() => {
       width="100%"
       px={{ base: '4%', lg: '25%' }}
       shadow="lg"
+      pt={12}
+
       textAlign="center"
     >
       <Flex
@@ -92,7 +94,7 @@ const ProfileCardChefDeProjet = React.memo(() => {
         <Box mt={4}>
           <ThemeToggleButton />
         </Box>
-        <Box color="white" px={20}>
+        <Box color="white"px={{ base: '8px',md: '8px', lg: '20px' }}>
           <Text fontSize={{ base: '20px', lg: '35px' }} fontWeight="bold">
             {fullName}
           </Text>
