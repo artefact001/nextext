@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { useState, useEffect } from 'react';
 import {
   Center,
@@ -61,7 +62,6 @@ const CreatePromoForm = () => {
 
   const fetchOptions = async () => {
     try {
-      // eslint-disable-next-line no-undef
       const [fabriquesRes, chefsProjetsRes, formationsRes] = await Promise.all([
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/fabriques`),
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/chefs-projet`),
@@ -155,9 +155,7 @@ const CreatePromoForm = () => {
     <Center display="block">
       <ProfileCardFormateur />
 
-      <SimpleGrid columns={{ sm: 1, md: 2 }}
-          mx={{ base:'3px', md: '2px', lg:'42px' }}
-          spacing={0} mt={10}>
+      <SimpleGrid columns={{ sm: 1, md: 2 }} spacing={8} mt={10}>
         <Box
           mt={5}
           p={5}
@@ -165,11 +163,10 @@ const CreatePromoForm = () => {
           borderWidth="1px"
           borderRadius="lg"
           width="100%"
-
-          mx={{ base:'3px', md: '2px', lg:'82px' }}
+          mx="auto"
         >
           <form onSubmit={handleSubmit}>
-            <SimpleGrid columns={[1, 2]} spacing={4}>
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
               {/* Champ Nom */}
               <FormInput
                 id="nom"
@@ -247,9 +244,11 @@ const CreatePromoForm = () => {
               <Button
                 type="submit"
                 width="full"
-                mx="50%"
                 py={6}
-                _hover={{ bg:'gray.600' }} bg='#CE0033' my={4} color="white"
+                _hover={{ bg: 'gray.600' }}
+                bg="#CE0033"
+                my={4}
+                color="white"
               >
                 Créer Promotion
               </Button>
@@ -273,16 +272,15 @@ const CreatePromoForm = () => {
           shadow="md"
           borderWidth="1px"
           borderRadius="lg"
-          width="57%"
-          mx={48}
+          width={{ base: '100%', md: '70%' }}
+          mx="auto"
         >
-          <VStack spacing={0}>
+          <VStack spacing={5} align="center">
             <PromoHeader />
-
-            {/* Choix d'ajout d'apprenants */}
-            <Text mt={4} fontWeight="bold">
-              Ajouter des Apprenants :
+            <Text fontSize="lg" fontWeight="bold" color="#CE0033">
+              Consulter la liste des Promotions
             </Text>
+
             <SimpleGrid  justifyContent="center" spacing={2} mt={2}  >
               <Link   href="/formateur/apprenants/inscriptions/excel" isExternal>
                 <Button w="220px" _hover={{ bg:'gray.600' }} bg='#CE0033' my={4} color="white">Ajouter par Excel</Button>
