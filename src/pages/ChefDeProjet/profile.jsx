@@ -1,4 +1,4 @@
-import { Box, Center, SimpleGrid } from '@chakra-ui/react';
+import {  Center, SimpleGrid } from '@chakra-ui/react';
 import ProfileComponent from '../../components/common/profile';
 import ProfileCardChefDeProjet from '../../components/layout/chefDeProjet/Navbar';
 import CardBox from '../../components/common/Card';

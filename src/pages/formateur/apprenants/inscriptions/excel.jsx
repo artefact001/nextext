@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { useState } from 'react';
 import { Center, Button, Input, FormControl, FormLabel, Text, useToast, SimpleGrid } from '@chakra-ui/react';
 import useSWR from 'swr';
