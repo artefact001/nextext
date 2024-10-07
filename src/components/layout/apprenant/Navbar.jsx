@@ -1,29 +1,22 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Box, Center, Text, Flex, useBreakpointValue, Spinner } from '@chakra-ui/react';
 import { FaUserAlt, FaQrcode, FaHistory } from 'react-icons/fa';
 import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 import { getUserWithRoles } from '../../../lib/utils/checkRole';
 import ThemeToggleButton from '../DarkMode';
 import ButtonDeconnexion from '../../common/ButtonDeconnexion';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 // eslint-disable-next-line react/display-name
 const ProfileCardApprenant = React.memo(() => {
-  const router = useRouter();
   const buttonSize = useBreakpointValue({ base: 'sm', md: 'md' });
   const iconSize = useBreakpointValue({ base: '20px', md: '30px' });
   const { roles, user, loading } = useUserWithRoles(['Apprenant']);
-  const [isLoading, setIsLoading] = useState(false);
 
   const fullName = useMemo(() => (user ? `${user.prenom} ${user.nom}` : ''), [user]);
 
-  const handleNavigation = async (href) => {
-    setIsLoading(true);
-    await router.push(href);
-    setIsLoading(false); // Gérer le chargement après la navigation
-  };
-
-  if (loading || isLoading) {
+  if (loading) {
     return (
       <Center h="100vh">
         <Spinner size="lg" color="red.500" />
@@ -45,7 +38,6 @@ const ProfileCardApprenant = React.memo(() => {
       shadow="lg"
       textAlign="center"
     >
-      <ThemeToggleButton />
 
       <Flex
         justify="space-between"
@@ -59,24 +51,16 @@ const ProfileCardApprenant = React.memo(() => {
         shadow="lg"
         border="2px solid #CE0033"
       >
-        <Box as="button" onClick={() => handleNavigation('/apprenant/profile')} display="flex" flexDirection="column" alignItems="center" fontSize={buttonSize}>
-          <FaUserAlt size={iconSize} />
-          <Text mt={2}>Profile</Text>
-        </Box>
-        
-        <Box as="button" onClick={() => handleNavigation('/apprenant')} display="flex" flexDirection="column" alignItems="center">
-          <FaQrcode size={iconSize} />
-          <Text mt={2}>QR Code</Text>
-        </Box>
-
-        <Box as="button" onClick={() => handleNavigation('/apprenant/mesPointages')} display="flex" flexDirection="column" alignItems="center" fontSize={buttonSize}>
-          <FaHistory size={iconSize} />
-          <Text mt={2}>Historique</Text>
-        </Box>
+        <NavLink href="/apprenant/profile" icon={FaUserAlt} label="Profile" iconSize={iconSize} buttonSize={buttonSize} />
+        <NavLink href="/apprenant" icon={FaQrcode} label="QR Code" iconSize={iconSize} />
+        <NavLink href="/apprenant/mesPointages" icon={FaHistory} label="Historique" iconSize={iconSize} buttonSize={buttonSize} />
       </Flex>
 
       <Center display='flex' mt={4} textAlign="center">
-        <Box color="white" px={20}>
+      <Box mt={4}>
+      <ThemeToggleButton />
+      </Box>
+        <Box color="white" px={32}>
           <Text fontSize={{ base: '20px', md: '20px', lg: '35px' }} fontWeight="bold">{fullName}</Text>
           {roles.length > 0 && <Text>{roles.join(', ')}</Text>}
         </Box>
@@ -91,6 +75,31 @@ const ProfileCardApprenant = React.memo(() => {
     </Box>
   );
 });
+
+const NavLink = ({ href, icon: Icon, label, iconSize, buttonSize }) => {
+  const router = useRouter();
+  const isActive = router.pathname === href;
+
+  return (
+    <Link href={href} passHref>
+      <Flex
+        as="a"
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        fontSize={buttonSize}
+        color={isActive ? '#CE0033' : 'white'}
+        p={isActive ? 2 : 0}
+        borderRadius={isActive ? 'md' : 'none'}
+        transition="background-color 0.3s"
+        _hover={{ bg: isActive ? undefined : 'rgba(255, 255, 255, 0.1)' }}
+      >
+        <Icon size={iconSize} />
+        <Text mt={2}>{label}</Text>
+      </Flex>
+    </Link>
+  );
+};
 
 export async function getServerSideProps(context) {
   const result = await getUserWithRoles(context, ['Apprenant']);

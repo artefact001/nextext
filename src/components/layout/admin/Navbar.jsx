@@ -8,6 +8,8 @@ import ThemeToggleButton from '../DarkMode';
 import ButtonDeconnexion from '../../common/ButtonDeconnexion';
 import Link from 'next/link';
 import { useAuthToken } from '../../../lib/utils/token';
+import { useRouter } from 'next/router';
+import { MdDashboard } from "react-icons/md";
 
 // eslint-disable-next-line react/display-name
 const ProfileCardAdministrateur = React.memo(() => {
@@ -45,7 +47,6 @@ const ProfileCardAdministrateur = React.memo(() => {
       shadow="lg"
       textAlign="center"
     >
-      <ThemeToggleButton />
 
       <Flex
         justify="space-between"
@@ -59,13 +60,19 @@ const ProfileCardAdministrateur = React.memo(() => {
         shadow="lg"
         border="2px solid #CE0033"
       >
+        <NavLink href="/admins/" icon={MdDashboard } label="Dashboard" iconSize={iconSize} buttonSize={buttonSize} />
         <NavLink href="/admins/promos" icon={FaUsersLine } label="Promos" iconSize={iconSize} buttonSize={buttonSize} />
         <NavLink href="/admins/personnels" icon={FaUsers} label="Personnels" iconSize={iconSize} />
         <NavLink href="/admins/formations" icon={FaSchool} label="Formation" iconSize={iconSize} buttonSize={buttonSize} />
       </Flex>
 
       <Center mt={4}>
-        <Box color="white" px={20}>
+      <Box mt={4}>
+
+      <ButtonDeconnexion />
+      </Box>
+
+        <Box color="white" px={36}>
           <Text fontSize={{ base: '20px', lg: '35px' }} fontWeight="bold">{fullName}</Text>
           
           {roles.length > 0 &&
@@ -75,7 +82,8 @@ const ProfileCardAdministrateur = React.memo(() => {
           }
         </Box>
         <Box mt={4}>
-          <ButtonDeconnexion />
+          <ThemeToggleButton />
+
         </Box>
       </Center>
 
@@ -86,14 +94,27 @@ const ProfileCardAdministrateur = React.memo(() => {
   );
 });
 
-const NavLink = ({ href, icon: Icon, label, iconSize, buttonSize }) => (
-  <Link href={href} passHref>
-    <Flex color="white" display="flex" flexDirection="column" alignItems="center" fontSize={buttonSize}>
-      <Icon size={iconSize} />
-      <Text mt={2}>{label}</Text>
-    </Flex>
-  </Link>
-);
+const NavLink = ({ href, icon: Icon, label, iconSize, buttonSize }) => {
+  const router = useRouter();
+  const isActive = router.pathname === href;
+
+  return (
+    <Link href={href} passHref>
+      <Flex
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        fontSize={buttonSize}
+        color={isActive ? '#CE0033' : 'white'}  // Active state
+        p={isActive ? 2 : 0}
+        borderRadius={isActive ? 'md' : 'none'}
+      >
+        <Icon size={iconSize} />
+        <Text mt={2}>{label}</Text>
+      </Flex>
+    </Link>
+  );
+};
 
 export async function getServerSideProps(context) {
   const result = await getUserWithRoles(context, ['Administrateur']);

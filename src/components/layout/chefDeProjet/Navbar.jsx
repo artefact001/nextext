@@ -1,7 +1,14 @@
 import React, { useMemo } from 'react';
-import { Box, Center, Text, Flex, useBreakpointValue, Spinner } from '@chakra-ui/react';
+import {
+  Box,
+  Center,
+  Text,
+  Flex,
+  useBreakpointValue,
+  Spinner,
+} from '@chakra-ui/react';
 import { FaUserAlt, FaQrcode } from 'react-icons/fa';
-import { FaUsersLine } from "react-icons/fa6";
+import { FaUsersLine } from 'react-icons/fa6';
 
 import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 import { getUserWithRoles } from '../../../lib/utils/checkRole';
@@ -13,9 +20,12 @@ import Link from 'next/link';
 const ProfileCardChefDeProjet = React.memo(() => {
   const buttonSize = useBreakpointValue({ base: 'sm', md: 'md' });
   const iconSize = useBreakpointValue({ base: '20px', md: '30px' });
-  const {roles, user, loading } = useUserWithRoles(['ChefDeProjet']);
+  const { roles, user, loading } = useUserWithRoles(['ChefDeProjet']);
 
-  const fullName = useMemo(() => (user ? `${user.prenom} ${user.nom}` : ''), [user]);
+  const fullName = useMemo(
+    () => (user ? `${user.prenom} ${user.nom}` : ''),
+    [user]
+  );
 
   if (loading) {
     return (
@@ -43,8 +53,6 @@ const ProfileCardChefDeProjet = React.memo(() => {
       shadow="lg"
       textAlign="center"
     >
-      <ThemeToggleButton />
-
       <Flex
         justify="space-between"
         align="center"
@@ -57,19 +65,38 @@ const ProfileCardChefDeProjet = React.memo(() => {
         shadow="lg"
         border="2px solid #CE0033"
       >
-        <NavLink href="/ChefDeProjet/profile" icon={FaUserAlt} label="Profile" iconSize={iconSize} buttonSize={buttonSize} />
-        <NavLink href="/ChefDeProjet" icon={FaQrcode} label="QR Code" iconSize={iconSize} />
-        <NavLink href="/ChefDeProjet/promos" icon={FaUsersLine } label="Promos" iconSize={iconSize} buttonSize={buttonSize} />
+        <NavLink
+          href="/ChefDeProjet/profile"
+          icon={FaUserAlt}
+          label="Profile"
+          iconSize={iconSize}
+          buttonSize={buttonSize}
+        />
+        <NavLink
+          href="/ChefDeProjet"
+          icon={FaQrcode}
+          label="QR Code"
+          iconSize={iconSize}
+        />
+        <NavLink
+          href="/ChefDeProjet/promos"
+          icon={FaUsersLine}
+          label="Promos"
+          iconSize={iconSize}
+          buttonSize={buttonSize}
+        />
       </Flex>
 
       <Center mt={4}>
+        <Box mt={4}>
+          <ThemeToggleButton />
+        </Box>
         <Box color="white" px={20}>
-          <Text fontSize={{ base: '20px', lg: '35px' }} fontWeight="bold">{fullName}</Text>
-          {roles.length > 0 &&
-
-<Text>       {roles.join(', ')}
-</Text>
-}        </Box>
+          <Text fontSize={{ base: '20px', lg: '35px' }} fontWeight="bold">
+            {fullName}
+          </Text>
+          {roles.length > 0 && <Text> {roles.join(', ')}</Text>}{' '}
+        </Box>
         <Box mt={4}>
           <ButtonDeconnexion />
         </Box>
@@ -84,7 +111,13 @@ const ProfileCardChefDeProjet = React.memo(() => {
 
 const NavLink = ({ href, icon: Icon, label, iconSize, buttonSize }) => (
   <Link href={href} passHref>
-    <Flex color="white" display="flex" flexDirection="column" alignItems="center" fontSize={buttonSize}>
+    <Flex
+      color="white"
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      fontSize={buttonSize}
+    >
       <Icon size={iconSize} />
       <Text mt={2}>{label}</Text>
     </Flex>

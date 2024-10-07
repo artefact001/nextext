@@ -129,7 +129,6 @@ const handleSubmitFormation = async (e) => {
     });
 
     if (response.ok) {
-      console.log("Fabrique ajoutée :", formData);
       setMessage(``);
 
       toast({
@@ -142,7 +141,7 @@ const handleSubmitFormation = async (e) => {
       setFormData({ nom: '', localisation: '' });
       setErrors({ nom: '', localisation: '' });
       // Optionally refresh the list of fabriques here
-    } else {
+    } else {false
       console.error('Erreur lors de l’ajout de la fabrique');
       toast({
         title: 'error !',
@@ -159,7 +158,6 @@ const handleSubmitFormation = async (e) => {
   // const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
   const openModal = () => {
-    console.log("Modal opened");
     setIsOpen(true);
   };
   
@@ -169,7 +167,6 @@ const handleSubmitFormation = async (e) => {
     fetcher
   );
   const formations = FormationsData ? FormationsData : [];
-  console.log('Formations', formations);
 
   const handleSelectFormation = (formation) => {
     setSelectedFormation(formation);
@@ -198,8 +195,7 @@ const handleSubmitFormation = async (e) => {
   
       if (response.ok) {
         // Remove the deleted formation from the state
-        console.log('Formation supprimée');
-      } else {
+        } else {
         console.error('Erreur lors de la suppression de la formation');
       }
     } catch (error) {
@@ -289,7 +285,7 @@ const handleSubmitFormation = async (e) => {
       onChange={handleChange}
       error={errors.localisation} 
     />
-    <Button type="submit" color="white"  isLoading={isLoading}
+    <Button type="submit" color="white" _hover={{  bg:"gray.600" }}  isLoading={isLoading}
  bg="#CE0033" width="full">
       Ajouter
     </Button>
@@ -322,7 +318,7 @@ const handleSubmitFormation = async (e) => {
                   onChange={handleChangeFormation}
                   error={errorsFormation.nom} 
                 />
-                <Button type="submit" color="white" bg="#CE0033" width="full">
+                <Button type="submit" _hover={{  bg:"gray.600" }} color="white" bg="#CE0033" width="full">
                   Ajouter
                 </Button>
               </form>
