@@ -5,26 +5,25 @@ import {
 import { useUserWithRoles } from '../../lib/utils/hooks/useUserWithRoles';
 import { FiCamera } from 'react-icons/fi';
 import Swal from 'sweetalert2';
-import { mutate } from 'swr';
 
 export default function ProfileComponent() {
   const { user } = useUserWithRoles(['Formateur', 'ChefDeProjet', 'Apprenant', 'Vigile', 'Administrateur']);
   
   const [adresse, setAdresse] = useState('');
   const [telephone, setTelephone] = useState('');
+  // eslint-disable-next-line no-unused-vars
   const [photoProfile, setPhotoProfile] = useState('');
-  const [password, setPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState(''); // New state for current password
   const [confirmPassword, setConfirmPassword] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [errors, setErrors] = useState({});
-
+  const [password, setPassword] = useState('');
+  
   useEffect(() => {
     if (user) {
       setAdresse(user.adresse || '');
       setTelephone(user.telephone || '');
       setPhotoProfile(user.photo_profile || '');
-      setPassword('');
-      setConfirmPassword('');
     }
   }, [user]);
 
@@ -35,70 +34,56 @@ export default function ProfileComponent() {
   const handleImageClick = () => {
     document.getElementById('image-upload').click();
   };
+  const validateInputs = () => {
+    const newErrors = {};
+    if (!adresse) newErrors.adresse = "L'adresse est requise.";
+    if (!telephone) newErrors.telephone = "Le téléphone est requis.";
+    if (password && password.length < 8) newErrors.password = "Le mot de passe doit contenir au moins 8 caractères.";
+    if (password !== confirmPassword) newErrors.confirmPassword = "Les mots de passe ne correspondent pas.";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // return true if no errors
+};
+
+
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    setErrors({});
+    if (!validateInputs()) return; // Validate before proceeding
 
-    if (password && password !== confirmPassword) {
-      setErrors((prev) => ({
-        ...prev,
-        confirmPassword: ['Les mots de passe ne correspondent pas.'],
-      }));
-      return;
-    }
+    setErrors({}); // Clear previous errors
 
     const formData = new FormData();
     formData.append('adresse', adresse);
     formData.append('telephone', telephone);
-    if (password) formData.append('password', password);
-    if (imageFile) formData.append('photo_profile', imageFile);
+    if (password) {
+        formData.append('current_password', currentPassword);
+        formData.append('password', password);
+    }
+    if (imageFile) {
+        formData.append('photo_profile', imageFile);
+    }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/update/information`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        Swal.fire({
-          title: 'Succès!',
-          text: 'Profil mis à jour avec succès!',
-          icon: 'success',
-          timer: 2000,
-          showConfirmButton: false,
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/update/information`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+            body: formData,
         });
 
-        if (data.updated_photo_profile_url) {
-          setPhotoProfile(data.updated_photo_profile_url);
+        const data = await response.json();
+        if (data.success) {
+            Swal.fire('Success', 'Profile updated successfully!', 'success');
+            // Optionally, refresh the user data or redirect
+        } else {
+            setErrors(data.errors || {});
         }
-        mutate(`${process.env.NEXT_PUBLIC_API_URL}/user/me`);
-      } else {
-        setErrors(data.errors || {});
-        Swal.fire({
-          title: 'Erreur!',
-          text: 'Erreur lors de la mise à jour',
-          icon: 'error',
-          timer: 2000,
-          showConfirmButton: false,
-        });
-      }
     } catch (error) {
-      console.error('Erreur lors de la mise à jour', error);
-      Swal.fire({
-        title: 'Erreur!',
-        text: 'Une erreur est survenue lors de la mise à jour.',
-        icon: 'error',
-        timer: 2000,
-        showConfirmButton: false,
-      });
+        console.error('Error during update:', error);
     }
-  };
+};
+
 
   if (!user) {
     return <Center>Chargement des informations utilisateur...</Center>;
@@ -185,8 +170,24 @@ export default function ProfileComponent() {
               <AccordionIcon />
             </AccordionButton>
             <AccordionPanel pb={4}>
+              {/* Current Password */}
               <Box bg="whiteAlpha.80" p={4} mt={4}>
-                <Text fontWeight="bold">Mot de passe</Text>
+                <Text fontWeight="bold">Mot de passe actuel</Text>
+                <Input
+                  type="password"
+                  placeholder="Entrez votre mot de passe actuel"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  focusBorderColor="#CE0033"
+                  border="0"
+                  borderBottom="2px"
+                />
+                {errors.currentPassword && <Text color="#CE0033">{errors.currentPassword[0]}</Text>}
+              </Box>
+
+              {/* New Password */}
+              <Box bg="whiteAlpha.80" p={4} mt={4}>
+                <Text fontWeight="bold">Nouveau mot de passe</Text>
                 <Input
                   type="password"
                   placeholder="Entrez un nouveau mot de passe (facultatif)"
@@ -199,8 +200,9 @@ export default function ProfileComponent() {
                 {errors.password && <Text color="#CE0033">{errors.password[0]}</Text>}
               </Box>
 
+              {/* Confirm Password */}
               <Box bg="whiteAlpha.80" p={4} mt={4}>
-                <Text fontWeight="bold">Confirmer le mot de passe</Text>
+                <Text fontWeight="bold">Confirmer le nouveau mot de passe</Text>
                 <Input
                   type="password"
                   placeholder="Confirmez votre mot de passe"

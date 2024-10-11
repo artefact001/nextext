@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { api } from '../../../lib/utils/api';
 import { FaSignOutAlt } from 'react-icons/fa';
 import Swal from 'sweetalert2';
+import { Button, Icon, Spinner, Text } from '@chakra-ui/react';
 
 const ButtonDeconnexion = () => {
   const router = useRouter();
@@ -42,16 +43,24 @@ const ButtonDeconnexion = () => {
   };
 
   return (
-    <div>
-      <button
+    <>
+      <Button
         onClick={handleLogout}
-        disabled={isLoading}
-        className="flex items-center space-x-2 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 disabled:opacity-50"
+        isLoading={isLoading} // Chakra's loading state support
+        colorScheme="red"
+        leftIcon={!isLoading && <Icon as={FaSignOutAlt} />}
+        loadingText="Déconnexion..."
+        size="md"
+        isDisabled={isLoading}
       >
-        <FaSignOutAlt className="h-5 w-5" /> {/* Icône de déconnexion */}
-      </button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-    </div>
+        {isLoading ? <Spinner size="sm" /> : 'Déconnexion'}
+      </Button>
+      {error && (
+        <Text mt={2} color="red.500">
+          {error}
+        </Text>
+      )}
+    </>
   );
 };
 

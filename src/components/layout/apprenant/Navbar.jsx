@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import React, { useMemo } from 'react';
 import { Box, Center, Text, Flex, useBreakpointValue, Spinner } from '@chakra-ui/react';
 import { FaUserAlt, FaQrcode, FaHistory } from 'react-icons/fa';
@@ -8,10 +9,10 @@ import ButtonDeconnexion from '../../common/ButtonDeconnexion';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-// eslint-disable-next-line react/display-name
 const ProfileCardApprenant = React.memo(() => {
   const buttonSize = useBreakpointValue({ base: 'sm', md: 'md' });
   const iconSize = useBreakpointValue({ base: '20px', md: '30px' });
+  const isMobile = useBreakpointValue({ base: true, md: false }); // Nouveau point de rupture
   const { roles, user, loading } = useUserWithRoles(['Apprenant']);
 
   const fullName = useMemo(() => (user ? `${user.prenom} ${user.nom}` : ''), [user]);
@@ -34,40 +35,73 @@ const ProfileCardApprenant = React.memo(() => {
       roundedBottomEnd="3xl"
       roundedBottomStart="3xl"
       width="100%"
-      px={{ base: '5%', md: '5%', lg: '25%' }}
+      px={{ base: '1%', md: '1%', lg: '5%' }}
       shadow="lg"
       textAlign="center"
-      pt={12}
-
+      pt={8}
     >
-
       <Flex
         justify="space-between"
         align="center"
-        bg="black"
         width="100%"
         rounded="xl"
         py={2}
-        px={{ base: '10%', md: '40px', lg: '80px' }}
-        color="white"
-        shadow="lg"
-        border="2px solid #CE0033"
+        px={{ base: '1%', md: '0px', lg: '10px' }}
       >
-        <NavLink href="/apprenant/profile" icon={FaUserAlt} label="Profile" iconSize={iconSize} buttonSize={buttonSize} />
-        <NavLink href="/apprenant" icon={FaQrcode} label="QR Code" iconSize={iconSize} />
-        <NavLink href="/apprenant/mesPointages" icon={FaHistory} label="Historique" iconSize={iconSize} buttonSize={buttonSize} />
+
+        {/* Menu de navigation, en colonne si mobile */}
+        <Flex
+          justify="space-between"
+          align="center"
+          bg="white"
+          width={{ base: '100%', md: '90%' }}
+          rounded="xl"
+          py={2}
+          px={{ base: '10%', md: '10px', lg: '180px' }}
+          color="black"
+          shadow="lg"
+          border="2px solid #CE0033"
+          ml={{ base: '0%', md: '20px', lg: '23%' }}
+          mr={{ base: '0%', md: '20px', lg: '10%' }}
+        >
+          <NavLink href="/apprenant/profile" icon={FaUserAlt} label="Profile" iconSize={iconSize} buttonSize={buttonSize} />
+          <NavLink href="/apprenant" icon={FaQrcode} label="QR Code" iconSize={iconSize} />
+          <NavLink href="/apprenant/mesPointages" icon={FaHistory} label="Historique" iconSize={iconSize} buttonSize={buttonSize} />
+        </Flex>
+
+        {/* Boutons de déconnexion et bascule de thème */}
+        {!isMobile && (
+          <Flex>
+          
+            <Box my={7} px={2}>
+              <ThemeToggleButton />
+            </Box>
+            <Box my={7} px={2}>
+              <ButtonDeconnexion />
+            </Box>
+          </Flex>
+        )}
       </Flex>
 
-      <Center display='flex' mt={4} textAlign="center">
-      <Box mt={4}>
-      <ThemeToggleButton />
-      </Box>
-        <Box color="white" px={{ base: '8px',md: '10px', lg: '140px' }}>
-          <Text fontSize={{ base: '20px', md: '20px', lg: '35px' }} fontWeight="bold">{fullName}</Text>
+      {isMobile && (
+        <Flex justify="center" mt={4} width="100%">
+          {/* Affichage des boutons sur mobile en haut */}
+         
+          <Box mx={2} my={4} px={2} >
+            <ThemeToggleButton />
+          </Box>
+          <Box mx={6} my={7} px={2}>
+            <ButtonDeconnexion />
+          </Box>  
+        </Flex>
+      )}
+
+      <Center display="flex" mt={4} textAlign="center">
+        <Box color="white" px={{ base: '8px', md: '10px', lg: '140px' }}>
+          <Text fontSize={{ base: '20px', md: '20px', lg: '35px' }} fontWeight="bold">
+            {fullName}
+          </Text>
           {roles.length > 0 && <Text>{roles.join(', ')}</Text>}
-        </Box>
-        <Box mt={4}>
-          <ButtonDeconnexion />
         </Box>
       </Center>
 
@@ -90,7 +124,7 @@ const NavLink = ({ href, icon: Icon, label, iconSize, buttonSize }) => {
         flexDirection="column"
         alignItems="center"
         fontSize={buttonSize}
-        color={isActive ? '#CE0033' : 'white'}
+        color={isActive ? '#CE0033' : 'black'}
         p={isActive ? 2 : 0}
         borderRadius={isActive ? 'md' : 'none'}
         transition="background-color 0.3s"
@@ -105,7 +139,6 @@ const NavLink = ({ href, icon: Icon, label, iconSize, buttonSize }) => {
 
 export async function getServerSideProps(context) {
   const result = await getUserWithRoles(context, ['Apprenant']);
-  console.log('Server-side props:', result);
   return result;
 }
 
