@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { api } from '../../lib/utils/api'; // Appel de l'API pour l'authentification
+import { api } from '../../lib/utils/api';
 import { PiLockKeyOpenFill } from 'react-icons/pi';
 import {
   Box,
@@ -19,65 +19,68 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [attempts, setAttempts] = useState(0);  // Initialiser à 0 par défaut
+  const maxAttempts = 5;
+  const [retryAfter, setRetryAfter] = useState(null);  // Initialiser à null par défaut
   const router = useRouter();
   const toast = useToast();
 
-  // Vérifie si l'utilisateur est déjà connecté et redirige en fonction de son rôle
+  // Accéder à localStorage après que le composant est monté côté client
   useEffect(() => {
-    const checkUserRole = async () => {
-      const token = localStorage.getItem('token'); // Utiliser localStorage ou sessionStorage
-      if (token) {
-        try {
-          const roleResponse = await api('user/role', 'GET', null, token);
-          if (roleResponse.role) {
-            // Redirection en fonction du rôle
-            switch (roleResponse.role) {
-              case 'Formateur':
-                router.push('/formateur');
-                break;
-              case 'Apprenant':
-                router.push('/apprenant');
-                break;
-              case 'Vigile':
-                router.push('/vigile/scanner');
-                break;
-              case 'ChefDeProjet':
-                router.push('/ChefDeProjet');
-                break;
-              case 'Administrateur':
-                router.push('/admins');
-                break;
-              default:
-                setError(
-                  "Rôle non reconnu. Veuillez contacter l'administrateur."
-                );
-            }
-          }
-        } catch (err) {
-          console.error('Erreur lors de la récupération du rôle', err);
-        }
-      }
-    };
+    // Vérifier si on est côté client
+    if (typeof window !== 'undefined') {
+      const savedAttempts = parseInt(localStorage.getItem('loginAttempts')) || 0;
+      const savedRetryAfter = parseInt(localStorage.getItem('retryAfter')) || null;
 
-    checkUserRole();
-  }, [router]);
+      setAttempts(savedAttempts);
+      setRetryAfter(savedRetryAfter);
+    }
+  }, []);
 
+  // Sauvegarder les tentatives dans localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('loginAttempts', attempts);
+    }
+  }, [attempts]);
+
+  // Sauvegarder le délai avant réessai dans localStorage
+  useEffect(() => {
+    if (retryAfter !== null && typeof window !== 'undefined') {
+      localStorage.setItem('retryAfter', retryAfter);
+    }
+  }, [retryAfter]);
+
+  // Fonction de soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+
+    if (!email || !password) {
+      setError('Veuillez remplir les deux champs.');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       const response = await api('login', 'POST', { email, password });
 
       if (response.errors || response.message || response.error) {
-        setError(
-          response.errors?.email?.[0] || response.message || response.error
-        );
-      } else if (response.access_token) {
-        localStorage.setItem('token', response.access_token); // Stocke le token
+        setError(response.errors?.email?.[0] || response.message || response.error);
 
-        document.cookie = `refresh_token=${response.refresh_token}; HttpOnly; Secure`; // Stocke le refresh token
+        // Incrémenter les tentatives seulement si les champs sont remplis
+        if (email && password) {
+          setAttempts((prevAttempts) => prevAttempts + 1);
+        }
+      } else if (response.access_token) {
+        // Connexion réussie
+        setAttempts(0);
+        localStorage.removeItem('loginAttempts'); // Réinitialiser les tentatives
+        localStorage.removeItem('retryAfter'); // Réinitialiser le délai
+
+        localStorage.setItem('token', response.access_token);
+        document.cookie = `refresh_token=${response.refresh_token}; HttpOnly; Secure`;
 
         toast({
           title: 'Connexion réussie.',
@@ -87,7 +90,6 @@ const Login = () => {
           isClosable: true,
         });
 
-        // Récupère le rôle de l'utilisateur après la connexion
         const roleResponse = await api('user/role', 'GET', null, response.access_token);
         if (roleResponse.role) {
           switch (roleResponse.role) {
@@ -111,19 +113,45 @@ const Login = () => {
                 "Rôle non reconnu. Veuillez contacter l'administrateur."
               );
           }
-        } else {
-          setError('Impossible de récupérer le rôle utilisateur.');
         }
-      } else {
-        setError("Une erreur inattendue s'est produite. Veuillez réessayer.");
       }
     } catch (err) {
-      console.error('Erreur lors de la requête', err);
       setError('Erreur lors de la connexion. Veuillez vérifier vos informations.');
     } finally {
       setIsLoading(false);
     }
   };
+
+  // Décompte du temps de réessai
+  useEffect(() => {
+    if (retryAfter > 0) {
+      const intervalId = setInterval(() => {
+        setRetryAfter((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(intervalId);
+    } else if (retryAfter === 0) {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('retryAfter'); // Supprimer le délai une fois écoulé
+      }
+    }
+  }, [retryAfter]);
+
+  // Gestion des tentatives échouées
+  useEffect(() => {
+    if (attempts >= maxAttempts) {
+      setRetryAfter(60); // Attendre 60 secondes avant de réessayer
+      const timer = setTimeout(() => {
+        setAttempts(0); // Réinitialiser après 60 secondes
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('loginAttempts'); // Réinitialiser les tentatives
+          localStorage.removeItem('retryAfter'); // Réinitialiser le délai
+        }
+        setRetryAfter(null);
+      }, 60000); // 1 minute d'attente
+
+      return () => clearTimeout(timer);
+    }
+  }, [attempts]);
 
   return (
     <div
@@ -140,8 +168,7 @@ const Login = () => {
       <Heading as="h3" size="md" py={20} textAlign="center">
         Bienvenue dans la page de connexion
       </Heading>
-      <Image src='/logo.png'
-      alt='logo simplon '/>
+      <Image src='/logo.png' alt='logo simplon '/>
 
       <Center h="100%" mx={5} bg="whiteAlpha.80">
         <Box
@@ -160,7 +187,7 @@ const Login = () => {
           </Center>
 
           <form onSubmit={handleSubmit}>
-            <FormControl id="email" mb={4}>
+            <FormControl id="email" mb={4} isRequired>
               <FormLabel>Email</FormLabel>
               <Input
                 type="email"
@@ -172,7 +199,7 @@ const Login = () => {
               />
             </FormControl>
 
-            <FormControl id="password" mb={6}>
+            <FormControl id="password" mb={6} isRequired>
               <FormLabel>Mot de passe</FormLabel>
               <Input
                 type="password"
@@ -186,18 +213,39 @@ const Login = () => {
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
 
-            <Button
-              type="submit"
-              w="full"
-              bg="red.600"
-              color="white"
-              size="lg"
-              mt={4}
-              isLoading={isLoading}
-              _hover={{ bg: 'red.600' }}
-            >
-              Connexion
-            </Button>
+           
+
+            <Center mb={4}>
+              {attempts >= maxAttempts ? ( // Vérifier si le nombre de tentatives est dépassé
+                <Box color="red.500" fontSize="sm">
+                  {/* Trop de tentatives. Réessayez dans {retryAfter || 60} secondes. */}
+                </Box>
+              ) : (
+                <Button
+                  isLoading={isLoading} // Afficher le bouton de chargement
+                  loadingText="Connexion..."
+                  type="submit"
+                  colorScheme="red"
+                  w="full"
+                
+                  bg="red.600"
+                  color="white"
+                  size="lg"
+                  mt={4}
+                  isDisabled={isLoading || !email || !password || attempts >= maxAttempts || retryAfter > 0}
+                  _hover={{ bg: 'red.600' }}
+              
+                >
+                  Se connecter
+                </Button>
+              )}
+            </Center>
+
+            {retryAfter > 0 && (
+              <p style={{ color: 'red' }}>
+                Veuillez patienter encore {retryAfter} secondes avant de réessayer.
+              </p>
+            )}
           </form>
         </Box>
       </Center>
