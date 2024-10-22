@@ -1,4 +1,4 @@
-import { Box, Flex, Icon, Text } from '@chakra-ui/react';
+import { Box, Flex, Icon, SimpleGrid, Text } from '@chakra-ui/react';
 import Link from 'next/link';
 import { FaUsers } from 'react-icons/fa';
 
@@ -15,11 +15,20 @@ const FormateurPromotions = ({ formateur ,  isCompleted = false }) => {
     <>
     <Box shadow="md" borderWidth="1px" borderRadius="lg" p={5} mt={5}>
     <Text fontSize="2xl" fontWeight="bold" mb={5}>
-      {isCompleted ? 'Terminées' : 'En cours'}
+      {/* {isCompleted ? 'Terminées' : 'En cours'} */}
+      Promos
     </Text>
+    <SimpleGrid
+      mx={{ base: '2px', md: '13px', lg: '12px' }}
+      justifyContent="space-between"
+      columns={[1, 2]}
+      spacing={2}
+    >
     {promotions && promotions.length > 0 ? (
 
     promotions.map((promo) => (
+
+     
       <Link href={`/admins/promos/${promo.id}`} key={promo.id}>
 
     <Box
@@ -66,6 +75,8 @@ const FormateurPromotions = ({ formateur ,  isCompleted = false }) => {
 ) : (
   <Text>Aucune promotion disponible.</Text>
 )}
+    </SimpleGrid>
+
     </Box>
    
     </>

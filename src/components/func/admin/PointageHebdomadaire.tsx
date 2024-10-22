@@ -1,212 +1,306 @@
-import { api } from '../../../lib/utils/api';
-import { useState, useEffect } from 'react';
+/* eslint-disable no-unused-vars */
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import {
-  Button,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-  Text,
-  Box,
-  Select,
-  Input,
-  FormControl,
-  FormLabel,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
-  Spinner,
-  Heading,
+    Box,
+    Button,
+    FormControl,
+    FormLabel,
+    Input,
+    Table,
+    Thead,
+    Tbody,
+    Tr,
+    Th,
+    Td,
+    TableCaption,
+    Alert,
+    AlertIcon,
+    Spinner,
+    Heading,
+    Text,
+    Select,
+    Flex,
+    HStack,
 } from '@chakra-ui/react';
+import { format, eachDayOfInterval, parseISO, isWeekend } from 'date-fns';
+import { api } from '../../../lib/utils/api';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
-const PointageHebdomadaire = () => {
-  const [pointages, setPointages] = useState([]);
-  const [error, setError] = useState('');
-  const [promoId, setPromoId] = useState('');
-  const [date, setDate] = useState('');
-  const [promos, setPromos] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+const Pointages = () => {
+    const [promoId, setPromoId] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [result, setResult] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [promos, setPromos] = useState([]);
 
-  // Fetch promotions when the component mounts
-  useEffect(() => {
-    const fetchPromos = async () => {
-      try {
-        const responses = await api('promos', 'GET');
-        if (responses) {
-          setPromos(responses);
-        } else {
-          setError('Impossible de récupérer les promotions');
+    useEffect(() => {
+        const fetchPromos = async () => {
+            try {
+                const responses = await api('promos', 'GET');
+                if (responses) {
+                    setPromos(responses);
+                } else {
+                    setError('Impossible de récupérer les promotions');
+                }
+            } catch (error) {
+                setError('Erreur lors de la récupération des promotions');
+            }
+        };
+
+        fetchPromos();
+    }, []);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
+
+        // Validation des dates
+        if (new Date(startDate) > new Date(endDate)) {
+            setError("La date de fin doit être postérieure à la date de début.");
+            setLoading(false);
+            return;
         }
-      } catch (error) {
-        setError('Erreur lors de la récupération des promotions');
+
+        try {
+            const response = await api('pointages/periode', 'POST', {
+                promo_id: promoId,
+                start_date: startDate,
+                end_date: endDate,
+            });
+            console.log(response)
+            setResult(response.pointages);
+        } catch (error) {
+            setError(error.response?.message || 'Une erreur est survenue');
+        } finally {
+            setLoading(false);
+        }
+    };
+    const handleExportPDF = () => {
+      if (window.confirm('Voulez-vous vraiment exporter ces données en PDF ?')) {
+          const input = document.getElementById('attendance-table');
+          if (!input) {
+              alert("Erreur : l'élément à exporter n'a pas été trouvé.");
+              return;
+          }
+  
+          html2canvas(input).then((canvas) => {
+              const imgData = canvas.toDataURL('image/png');
+              const pdf = new jsPDF('p', 'mm', 'a4');
+              const pdfWidth = pdf.internal.pageSize.getWidth();
+              const pdfHeight = pdf.internal.pageSize.getHeight();
+  
+              // Calculate image width and height to fit into the PDF
+              const imgWidth = pdfWidth;
+              const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+  
+              // Check if the content height is larger than the PDF height to add pages if necessary
+              let position = 0;
+              while (position < imgHeight) {
+                  pdf.addImage(
+                      imgData,
+                      'PNG',
+                      0,
+                      position > 0 ? 0 : 10, // Adjust for margin on the first page
+                      imgWidth,
+                      imgHeight > pdfHeight ? pdfHeight : imgHeight
+                  );
+                  position += pdfHeight;
+                  if (position < imgHeight) {
+                      pdf.addPage();
+                  }
+              }
+  
+              pdf.save('pointages.pdf');
+          }).catch((error) => {
+              console.error('Erreur lors de la génération du PDF :', error);
+              alert('Une erreur est survenue lors de la génération du PDF.');
+          });
       }
+  };
+  
+
+    const getDaysInRange = () => {
+        if (!startDate || !endDate) return [];
+        try {
+            const start = parseISO(startDate);
+            const end = parseISO(endDate);
+            return eachDayOfInterval({ start, end })
+                .filter((date) => !isWeekend(date))
+                .map((date) => format(date, 'yyyy-MM-dd'));
+        } catch (error) {
+            return [];
+        }
     };
 
-    fetchPromos();
-  }, []);
+    const days = getDaysInRange();
 
-  // Fetch pointages by week and promo
-  const fetchPointages = async () => {
-    setIsLoading(true);
-    setError('');
-    try {
-      const response = await api('pointages/semaines', 'POST', {
-        promo_id: promoId,
-        date,
-      });
-
-      if (response.success) {
-        setPointages(response.pointages);
-      } else {
-        setError(response.message);
-      }
-    } catch (err) {
-      setError('Erreur lors de la récupération des pointages');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Function to calculate total absences and tardies by day
-  const calculerRecapitulatifParJour = () => {
-    const recap = {
-      Monday: { absents: 0, retards: 0 },
-      Tuesday: { absents: 0, retards: 0 },
-      Wednesday: { absents: 0, retards: 0 },
-      Thursday: { absents: 0, retards: 0 },
-      Friday: { absents: 0, retards: 0 },
+    const getUniqueDaysWithPointages = () => {
+        if (!result) return [];
+        const uniqueDays = new Set();
+        result.forEach((user) => {
+            Object.keys(user.dates).forEach((day) => {
+                uniqueDays.add(day);
+            });
+        });
+        return Array.from(uniqueDays);
     };
 
-    pointages.forEach(pointage => {
-      Object.keys(recap).forEach(day => {
-        if (!pointage.date[day]) {
-          recap[day].absents += 1; // Si absent
-        } else {
-          recap[day].retards += pointage.retard; // Si en retard
-        }
-      });
-    });
+    const uniqueDays = getUniqueDaysWithPointages();
 
-    return recap;
-  };
+    return (
+        <Box  p={5}>
+            <Heading as="h1" mb={6}>
+                Pointage par Période
+            </Heading>
+            <form  onSubmit={handleSubmit}>
+                <HStack >
 
-  const recapitulatif = calculerRecapitulatifParJour();
 
-  return (
-    <Box p={5}>
-      <Heading mx="25%">Rapport Hebdomadaire</Heading>
-      <FormControl mb={4}>
-        <FormLabel>Choisir la promotion</FormLabel>
-        <Select
-          placeholder="Sélectionnez une promotion"
-          value={promoId}
-          onChange={(e) => setPromoId(e.target.value)}
-        >
-          {promos.length > 0 ? (
-            promos.map((promo) => (
-              <option key={promo.id} value={promo.id}>
-                {promo.nom}
-              </option>
-            ))
-          ) : (
-            <option disabled>Aucune promotion disponible</option>
-          )}
-        </Select>
-      </FormControl>
-
-      <FormControl mb={4}>
-        <FormLabel>Choisir la date</FormLabel>
-        <Input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
-      </FormControl>
-
-      <Button 
-        onClick={() => { 
-            fetchPointages();
-          onOpen();
-        }} 
-        colorScheme="red" 
-        mb={5}
-        isDisabled={!promoId || !date} // Disable button if promo or date is not selected
-      >
-        Récupérer les pointages de cette semaine
-      </Button>
-
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent maxW="90%">
-          <ModalHeader>Détails du pointage</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {isLoading ? (
-              <Spinner />
-            ) : (
-              <>
-                {error && (
-                  <Text color="red.500" mb={4}>
-                    {error}
-                  </Text>
-                )}
-
-                {pointages.length > 0 ? (
-                  <TableContainer>
-                    <Table variant="simple" size={{ base: 'sm', md: 'md', lg: 'lg' }}>
-                      <Thead>
-                        <Tr>
-                          <Th>Apprenant</Th>
-                          <Th>Lundi</Th>
-                          <Th>Mardi</Th>
-                          <Th>Mercredi</Th>
-                          <Th>Jeudi</Th>
-                          <Th>Vendredi</Th>
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        {pointages.map((pointage) => (
-                          <Tr key={pointage.user.id}>
-                            <Td>{pointage.user.nom} {pointage.user.prenom}</Td>
-                            <Td>{pointage.date['Monday'] || 'Absent'}</Td>
-                            <Td>{pointage.date['Tuesday'] || 'Absent'}</Td>
-                            <Td>{pointage.date['Wednesday'] || 'Absent'}</Td>
-                            <Td>{pointage.date['Thursday'] || 'Absent'}</Td>
-                            <Td>{pointage.date['Friday'] || 'Absent'}</Td>
-                          </Tr>
-                        ))}
-                        {recapitulatif && (
-                          <Tr>
-                            <Td><strong>Récapitulatif</strong></Td>
-                            <Td>{recapitulatif.Monday.absents} absents, {recapitulatif.Monday.retards} retards</Td>
-                            <Td>{recapitulatif.Tuesday.absents} absents, {recapitulatif.Tuesday.retards} retards</Td>
-                            <Td>{recapitulatif.Wednesday.absents} absents, {recapitulatif.Wednesday.retards} retards</Td>
-                            <Td>{recapitulatif.Thursday.absents} absents, {recapitulatif.Thursday.retards} retards</Td>
-                            <Td>{recapitulatif.Friday.absents} absents, {recapitulatif.Friday.retards} retards</Td>
-                          </Tr>
+                <FormControl mb={4}>
+                    <FormLabel>Choisir la promotion</FormLabel>
+                    <Select
+                        placeholder="Sélectionnez une promotion"
+                        value={promoId}
+                        onChange={(e) => setPromoId(e.target.value)}
+                    >
+                        {promos.length > 0 ? (
+                            promos.map((promo) => (
+                                <option key={promo.id} value={promo.id}>
+                                    {promo.nom}
+                                </option>
+                            ))
+                        ) : (
+                            <option disabled>Aucune promotion disponible</option>
                         )}
-                      </Tbody>
-                    </Table>
-                  </TableContainer>
-                ) : (
-                  <Text>Aucun pointage disponible pour cette date.</Text>
-                )}
-              </>
+                    </Select>
+                </FormControl>
+                <FormControl mb={4}>
+                    <FormLabel>Date de début:</FormLabel>
+                    <Input
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        required
+                    />
+                </FormControl>
+                <FormControl mb={4}>
+                    <FormLabel>Date de fin:</FormLabel>
+                    <Input
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        required
+                    />
+                </FormControl>
+                <FormControl mt={3}>
+
+                <Button type="submit" isLoading={loading}   _hover={{ bg: '#110033' }}
+              color="white"
+              bg="#CE0033">
+                    Obtenir Pointages
+                </Button>
+                </FormControl>
+
+                </HStack>
+
+            </form>
+
+            {loading && (
+                <Box textAlign="center" mt={4}>
+                    <Spinner size="xl" />
+                    <Text mt={2}>Chargement des données...</Text>
+                </Box>
             )}
-          </ModalBody>
-        
-        </ModalContent>
-      </Modal>
-    </Box>
-  );
+
+            {error && (
+                <Alert status="error" mt={4} aria-live="assertive">
+                    <AlertIcon />
+                    {error}
+                </Alert>
+            )}
+
+            {result && (
+                <Box mt={5} overflowX="auto" id="attendance-table">
+                    <Heading as="h2" size="lg" mb={4}>
+                        Résultats
+                    </Heading>
+                    <Button onClick={handleExportPDF}   _hover={{ bg: '#110033' }}
+              color="white"
+              bg="#CE0033"mb={4}>
+                        Exporter en PDF
+                    </Button>
+                    <Table variant="simple" size="sm">
+                        <TableCaption placement="top">
+                            Liste des pointages par période (sans week-ends)
+                        </TableCaption>
+                        <Thead>
+                            <Tr>
+                                <Th>Nom</Th>
+                                <Th>Prénom</Th>
+                                {uniqueDays.map((day) => (
+                                    <Th key={day} textAlign="center">
+                                        {day}
+                                    </Th>
+                                ))}
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                            {result.map((user) => (
+                                <Tr key={user.user.id}>
+                                    <Td>{user.user.nom}</Td>
+                                    <Td>{user.user.prenom}</Td>
+                                    {uniqueDays.map((day) => {
+                                        const status = user.dates[day] || 'Absent';
+
+                                        return (
+                                            <Td key={day} textAlign="center">
+                                                {status === 'Présent' ? (
+                                                    <Box
+                                                        bg="green.400"
+                                                        color="white"
+                                                        p={1}
+                                                        borderRadius="md"
+                                                        textAlign="center"
+                                                    >
+                                                        P
+                                                    </Box>
+                                                ) : status === 'Retard' ? (
+                                                    <Box
+                                                        bg="orange.400"
+                                                        color="white"
+                                                        p={1}
+                                                        borderRadius="md"
+                                                        textAlign="center"
+                                                    >
+                                                        R
+                                                    </Box>
+                                                ) : (
+                                                    <Box
+                                                        bg="red.400"
+                                                        color="white"
+                                                        p={1}
+                                                        borderRadius="md"
+                                                        textAlign="center"
+                                                    >
+                                                        A
+                                                    </Box>
+                                                )}
+                                            </Td>
+                                        );
+                                    })}
+                                </Tr>
+                            ))}
+                        </Tbody>
+                    </Table>
+                </Box>
+            )}
+        </Box>
+    );
 };
 
-export default PointageHebdomadaire;
+export default Pointages;

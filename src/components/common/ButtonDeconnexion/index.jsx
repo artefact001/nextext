@@ -47,16 +47,16 @@ const ButtonDeconnexion = () => {
       <Button
         onClick={handleLogout}
         isLoading={isLoading} // Chakra's loading state support
-        colorScheme="red"
+        colorScheme="gray"
         leftIcon={!isLoading && <Icon as={FaSignOutAlt} />}
         loadingText="Déconnexion..."
         size="md"
         isDisabled={isLoading}
       >
-        {isLoading ? <Spinner size="sm" /> : 'Déconnexion'}
+        {isLoading ? <Spinner size="sm" /> : ''}
       </Button>
       {error && (
-        <Text mt={2} color="red.500">
+        <Text mt={2} color="gray.500">
           {error}
         </Text>
       )}

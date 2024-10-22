@@ -9,7 +9,7 @@ const PromoHeader = () => {
         top="0"
         left="0"
         h="14"
-        bg="gray.900"
+        bg="gray.300"
         opacity="0.8"
         rounded="md"
         justifyContent="space-between"
@@ -18,7 +18,7 @@ const PromoHeader = () => {
         {/* Texte centré */}
         <Text
           textAlign="center"
-          color="white"
+          color="black"
           fontSize="lg"
           fontWeight="bold"
           justifyContent="center"

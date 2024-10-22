@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Box, Center, Text, Flex, useBreakpointValue, Spinner, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverCloseButton, PopoverHeader, PopoverBody, Button } from '@chakra-ui/react';
+import { Box, Center, Text, Flex, useBreakpointValue, Spinner } from '@chakra-ui/react';
 import { FaSchool, FaUsers, FaUser, FaUsersLine } from "react-icons/fa6";
 
 import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
@@ -11,15 +11,13 @@ import { useAuthToken } from '../../../lib/utils/token';
 import { useRouter } from 'next/router';
 import { MdDashboard } from "react-icons/md";
 import { FaHome } from 'react-icons/fa';
-import { IoSettingsOutline } from "react-icons/io5";
+
 // eslint-disable-next-line react/display-name
 const ProfileCardAdministrateur = React.memo(() => {
   useAuthToken();
 
   const buttonSize = useBreakpointValue({ base: 'sm', md: 'md' });
   const iconSize = useBreakpointValue({ base: '20px', md: '30px' });
-  const isMobile = useBreakpointValue({ base: true, md: false }); // Nouveau point de rupture
-
   const {roles,  user, loading } = useUserWithRoles(['Administrateur']);
 
   const fullName = useMemo(() => (user ? `${user.prenom} ${user.nom}` : ''), [user]);
@@ -52,10 +50,11 @@ const ProfileCardAdministrateur = React.memo(() => {
 
       textAlign="center"
     >
-  <Flex
+
+      <Flex
         justify="space-between"
         align="center"
-        bg="white"
+        bg="black"
         width="100%"
         rounded="xl"
         py={2}
@@ -64,14 +63,19 @@ const ProfileCardAdministrateur = React.memo(() => {
         shadow="lg"
         border="2px solid #CE0033"
       >
+        <NavLink href="/admins/profile" icon={FaUser } label="Profile" iconSize={iconSize} buttonSize={buttonSize} />
         <NavLink href="/admins/dashboard" icon={MdDashboard } label="Dashboard" iconSize={iconSize} buttonSize={buttonSize} />
         <NavLink href="/admins/" icon={FaHome } label="Home" iconSize={iconSize} buttonSize={buttonSize} />
         <NavLink href="/admins/promos" icon={FaUsersLine } label="Promos" iconSize={iconSize} buttonSize={buttonSize} />
         <NavLink href="/admins/personnels" icon={FaUsers} label="Personnels" iconSize={iconSize} />
         <NavLink href="/admins/formations" icon={FaSchool} label="Formation" iconSize={iconSize} buttonSize={buttonSize} />
       </Flex>
+
       <Center mt={4}>
-      
+      <Box mt={4}>
+
+      <ButtonDeconnexion />
+      </Box>
 
         <Box color="white" px={{ base: '8px',md: '8px', lg: '180px' }}>
           <Text fontSize={{ base: '20px', lg: '35px' }} fontWeight="bold">{fullName}</Text>
@@ -82,23 +86,10 @@ const ProfileCardAdministrateur = React.memo(() => {
           </Text>
           }
         </Box>
-        
-      <Popover>
-  <PopoverTrigger>
-    <Button><IoSettingsOutline /></Button>
-  </PopoverTrigger>
-  <PopoverContent>
-    <PopoverArrow />
-    <PopoverCloseButton />
-    <PopoverHeader>profile</PopoverHeader>
-    <Flex p={4}>
-    <NavLink href="/admins/profile" icon={FaUser } label="Profile" iconSize={iconSize} buttonSize={buttonSize} />
+        <Box mt={4}>
+          <ThemeToggleButton />
 
-    <PopoverBody><ThemeToggleButton /></PopoverBody>
-    <PopoverBody><ButtonDeconnexion /></PopoverBody>
-    </Flex>
-  </PopoverContent>
-</Popover>
+        </Box>
       </Center>
 
       <Center mt={4}>
@@ -119,7 +110,7 @@ const NavLink = ({ href, icon: Icon, label, iconSize, buttonSize }) => {
         flexDirection="column"
         alignItems="center"
         fontSize={buttonSize}
-        color={isActive ? '#CE0033' : 'black'}  // Active state
+        color={isActive ? '#CE0033' : 'white'}  // Active state
         p={isActive ? 2 : 0}
         borderRadius={isActive ? 'md' : 'none'}
       >

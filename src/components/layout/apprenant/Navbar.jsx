@@ -1,13 +1,15 @@
 /* eslint-disable react/display-name */
 import React, { useMemo } from 'react';
-import { Box, Center, Text, Flex, useBreakpointValue, Spinner } from '@chakra-ui/react';
-import { FaUserAlt, FaQrcode, FaHistory } from 'react-icons/fa';
+import { FaUserAlt, FaQrcode, FaHistory, FaUser } from 'react-icons/fa';
 import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 import { getUserWithRoles } from '../../../lib/utils/checkRole';
 import ThemeToggleButton from '../DarkMode';
 import ButtonDeconnexion from '../../common/ButtonDeconnexion';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { Box, Center, Text, Flex, useBreakpointValue, Spinner, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverCloseButton, PopoverHeader, PopoverBody, Button } from '@chakra-ui/react';
+import { IoSettingsOutline } from 'react-icons/io5';
+
 
 const ProfileCardApprenant = React.memo(() => {
   const buttonSize = useBreakpointValue({ base: 'sm', md: 'md' });
@@ -73,12 +75,22 @@ const ProfileCardApprenant = React.memo(() => {
         {!isMobile && (
           <Flex>
           
-            <Box my={7} px={2}>
-              <ThemeToggleButton />
-            </Box>
-            <Box my={7} px={2}>
-              <ButtonDeconnexion />
-            </Box>
+          <Popover>
+  <PopoverTrigger>
+    <Button><IoSettingsOutline /></Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverArrow />
+    <PopoverCloseButton />
+    <PopoverHeader>profile</PopoverHeader>
+    <Flex p={4}>
+    <NavLink href="/admins/profile" icon={FaUser } label="Profile" iconSize={iconSize} buttonSize={buttonSize} />
+
+    <PopoverBody><ThemeToggleButton /></PopoverBody>
+    <PopoverBody><ButtonDeconnexion /></PopoverBody>
+    </Flex>
+  </PopoverContent>
+</Popover>
           </Flex>
         )}
       </Flex>
@@ -87,12 +99,22 @@ const ProfileCardApprenant = React.memo(() => {
         <Flex justify="center" mt={4} width="100%">
           {/* Affichage des boutons sur mobile en haut */}
          
-          <Box mx={2} my={4} px={2} >
-            <ThemeToggleButton />
-          </Box>
-          <Box mx={6} my={7} px={2}>
-            <ButtonDeconnexion />
-          </Box>  
+          <Popover>
+  <PopoverTrigger>
+    <Button><IoSettingsOutline /></Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverArrow />
+    <PopoverCloseButton />
+    <PopoverHeader>profile</PopoverHeader>
+    <Flex p={4}>
+    <NavLink href="/admins/profile" icon={FaUser } label="Profile" iconSize={iconSize} buttonSize={buttonSize} />
+
+    <PopoverBody><ThemeToggleButton /></PopoverBody>
+    <PopoverBody><ButtonDeconnexion /></PopoverBody>
+    </Flex>
+  </PopoverContent>
+</Popover>  
         </Flex>
       )}
 

@@ -171,7 +171,7 @@ export default function ProfileComponent() {
             </AccordionButton>
             <AccordionPanel pb={4}>
               {/* Current Password */}
-              <Box bg="whiteAlpha.80" p={4} mt={4}>
+              {/* <Box bg="whiteAlpha.80" p={4} mt={4}>
                 <Text fontWeight="bold">Mot de passe actuel</Text>
                 <Input
                   type="password"
@@ -183,7 +183,7 @@ export default function ProfileComponent() {
                   borderBottom="2px"
                 />
                 {errors.currentPassword && <Text color="#CE0033">{errors.currentPassword[0]}</Text>}
-              </Box>
+              </Box> */}
 
               {/* New Password */}
               <Box bg="whiteAlpha.80" p={4} mt={4}>

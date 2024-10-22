@@ -16,7 +16,6 @@ import FormSelect from '../../../components/common/FormSelect';
 import UserList from '../../../components/common/UserList';
 import ProfileCardAdministrateur from '../../../components/layout/admin/Navbar';
 import FormateurPromotions from '../../../components/common/FormateurPromotions';
-
 const fetcher = (url) =>
   fetch(url, {
     headers: {
@@ -43,13 +42,13 @@ const AjouteFormateurPage = () => {
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState({});
   const [filterType, setFilterType] = useState('Formateur');
-  const [role, setRole] = useState('Formateur'); // State for role
-  const [selectedFormateur, setSelectedFormateur] = useState(null); // State for selected formateur
+  const [role, setRole] = useState('Formateur'); // État pour le rôle
+  const [selectedFormateur, setSelectedFormateur] = useState(null); // État pour le formateur sélectionné
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch formateurs
+  // Récupération des formateurs
   const { data: formateursData, error: formateursError } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_URL}/personnels/listes`,
+    `${process.env.NEXT_PUBLIC_API_URL}/formateurs`,
     fetcher
   );
 
@@ -65,15 +64,14 @@ const AjouteFormateurPage = () => {
     setErrors({});
     setIsLoading(true);
 
-    // Role-based endpoint selection
-    let endpoint = '';
-    if (role === 'Formateur') {
-      endpoint = `${process.env.NEXT_PUBLIC_API_URL}/formateur/inscrire`;
-    } else if (role === 'ChefDeProjet') {
-      endpoint = `${process.env.NEXT_PUBLIC_API_URL}/chef-de-projet/inscrire`;
-    } else if (role === 'Vigile') {
-      endpoint = `${process.env.NEXT_PUBLIC_API_URL}/vigile/inscrire`;
-    }
+    const endpoint =
+      role === 'Formateur'
+        ? `${process.env.NEXT_PUBLIC_API_URL}/formateur/inscrire`
+        role === 'ChefDeProjet'
+        : `${process.env.NEXT_PUBLIC_API_URL}/chef-de-projet/inscrire`
+        role === 'Vigile'
+
+        :`${process.env.NEXT_PUBLIC_API_URL}/vigile/inscrire`;
 
     try {
       const response = await fetch(endpoint, {
@@ -96,7 +94,11 @@ const AjouteFormateurPage = () => {
           duration: 3000,
           isClosable: true,
         });
+        // refresh page
+        
         setIsLoading(false);
+
+
         setFormData({
           nom: '',
           prenom: '',
@@ -107,42 +109,44 @@ const AjouteFormateurPage = () => {
           sexe: '',
           promotion_id: '',
         });
-        mutate(`${process.env.NEXT_PUBLIC_API_URL}/formateurs`); // Add mutate to refresh data
+        mutate(`${process.env.NEXT_PUBLIC_API_URL}/formateurs`); // Ajout de mutate
       } else {
         if (data.errors) {
           setErrors(data.errors);
+          setIsLoading(false);
+
         } else {
           setErrors({ general: 'Une erreur est survenue.' });
+          setIsLoading(false);
+
         }
-        setIsLoading(false);
       }
     } catch (error) {
       setErrors({ general: "Une erreur est survenue lors de l'inscription." });
       setIsLoading(false);
+
     }
   };
 
+
   const formateurs = formateursData ? formateursData.formateurs : [];
-
-  // Filter users based on role
+  
+  // Filtrer les utilisateurs selon le rôle
   const filteredUsers = formateurs.filter((user) =>
-    filterType === 'Formateur'
-      ? user.role === 'Formateur'
-      : filterType === 'ChefDeProjet'
-      ? user.role === 'ChefDeProjet'
-      : user.role === 'Vigile'
+    filterType === 'Formateur' ? user.role === 'Formateur' : user.role === 'ChefDeProjet' : user.role === 'Vigile'
   );
-
   const handleSelectFormateur = (formateur) => {
-    setSelectedFormateur(formateur); // Update selected formateur
+    setSelectedFormateur(formateur); // Met à jour le formateur sélectionné
   };
-
   if (formateursError) {
     return <p>Erreur lors de la récupération des formateurs.</p>;
   }
+    
+  
 
+  // console.log(setSelectedFormateur())
   return (
-    <Center display={'block'}>
+    <Center  display={'block'}>
       <ProfileCardAdministrateur />
 
       <SimpleGrid
@@ -151,12 +155,23 @@ const AjouteFormateurPage = () => {
         columns={[1, 2]}
         spacing={2}
       >
-        <CardBox maxW={{ base: '100%', md: '100%', lg: '90%' }}>
-          <Heading justifyContent="center" mx="41%" as="h2" size="md" mb={4}>
-            {role}
-          </Heading>
-          <Box mx="25%">
-            <FormSelect
+        
+        <CardBox maxW={{ base: '100%', md: '100%', lg: '90%' }}
+        maxH='70%'
+        >
+        <Heading 
+        justifyContent="center"
+        mx="41%"
+        as="h2"
+        size="md"
+        mb={4}
+          
+       
+        
+        >{role}</Heading>
+        <Box   mx="25%" >
+        <FormSelect
+      
               id="role"
               name="role"
               value={role}
@@ -164,13 +179,13 @@ const AjouteFormateurPage = () => {
               options={[
                 { value: 'Formateur', label: 'Formateur' },
                 { value: 'ChefDeProjet', label: 'Chef de Projet' },
-                { value: 'Vigile', label: 'Vigile' }, // Added role Vigile
               ]}
               error={errors.role}
             />
-          </Box>
+            </Box>
           <form onSubmit={handleSubmit}>
             <SimpleGrid columns={[1, 2]} spacing={4}>
+            
               <FormInput
                 id="nom"
                 label="Nom"
@@ -221,6 +236,7 @@ const AjouteFormateurPage = () => {
                 onChange={handleChange}
                 error={errors.email}
               />
+          
               <FormSelect
                 id="sexe"
                 label="Sexe"
@@ -235,25 +251,20 @@ const AjouteFormateurPage = () => {
               />
             </SimpleGrid>
 
-            <Button
-              mt={4}
-              mx="25%"
-              type="submit"
-              alignItems="center"
-              isLoading={isLoading}
-              _hover={{ bg: '#110033' }}
-              color="white"
-              bg="#CE0033"
-              width="50%"
-              py={7}
-            >
+            {/* Ajout d'un select pour choisir le rôle */}
+          
+         
+            <Button mt={4} mx="25%" type="submit"
+            alignItems='center'
+            isLoading={isLoading}
+
+             _hover={{bg:"#110033"}} color="white" bg="#CE0033" width="50%" py={7}>
               Inscrire {role}
             </Button>
           </form>
 
           {message && (
             <Text mt={4} color="green.500">
-              {message}
             </Text>
           )}
           {errors.general && (
@@ -266,60 +277,40 @@ const AjouteFormateurPage = () => {
         <CardBox>
           <Flex
             flex="auto"
-            gap={4}
+            gap={20}
             px={4}
             py={1.5}
             fontWeight="bold"
             justifyContent="space-between"
           >
-            <Button
-              px={{ base: 2, md: 3, lg: 10 }}
-              w="100%"
-              py={6}
-              fontSize="lg"
-              color="white"
-              bg={filterType === 'Formateur' ? '#ce0033' : 'gray.500'}
-              _hover={{ bg: '#ce0033' }}
-              borderRadius="md"
-              onClick={() => setFilterType('Formateur')}
-            >
+            <Button 
+             px={{ base: 5, md: 10 }}
+             py={6}
+             fontSize="lg"
+             color="white"
+             bg={filterType === 'Formateur' ? '#ce0033' : 'gray.500'}
+             _hover={{   bg:  '#ce0033'} }
+             borderRadius="md"
+            onClick={() => setFilterType('Formateur')}>
               Formateurs
             </Button>
             <Button
-              px={{ base: 2, md: 3, lg: 10 }}
-              w="100%"
-              py={6}
-              fontSize="lg"
-              color="white"
-              bg={filterType === 'ChefDeProjet' ? '#ce0033' : 'gray.500'}
-              _hover={{ bg: '#ce0033' }}
-              borderRadius="md"
-              onClick={() => setFilterType('ChefDeProjet')}
-            >
-              Chefs de Projet
-            </Button>
-            <Button
-              px={{ base: 2, md: 3, lg: 10 }}
-              w="100%"
-              py={6}
-              fontSize="lg"
-              color="white"
-              bg={filterType === 'Vigile' ? '#ce0033' : 'gray.500'}
-              _hover={{ bg: '#ce0033' }}
-              borderRadius="md"
-              onClick={() => setFilterType('Vigile')}
-            >
-              Vigiles
+             px={{ base: 5, md: 10 }}
+             py={6  }
+             fontSize="lg"
+             color="white"
+             bg={filterType === 'ChefDeProjet' ? '#ce0033' : 'gray.500'}
+             _hover={{   bg:  '#ce0033'} }
+
+             borderRadius="md"
+            onClick={() => setFilterType('ChefDeProjet')}>
+              Chefs de projet
             </Button>
           </Flex>
 
-          <UserList
-            users={filteredUsers}
-            formateurs={formateurs}
-            onSelectFormateur={handleSelectFormateur}
-            filterType={filterType}
-          />
-          {/* <FormateurPromotions formateur={selectedFormateur} /> */}
+          <UserList users={filteredUsers} formateurs={formateurs} onSelectFormateur={handleSelectFormateur}  filterType={filterType} />
+          <FormateurPromotions formateur={selectedFormateur} />
+
         </CardBox>
       </SimpleGrid>
     </Center>

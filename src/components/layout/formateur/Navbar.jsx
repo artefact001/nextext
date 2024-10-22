@@ -60,7 +60,7 @@ const ProfileCardFormateur = React.memo(() => {
       <Flex
         justify="space-between"
         align="center"
-        bg="black"
+        bg="white"
         width="100%"
         rounded="xl"
         py={2}
@@ -132,7 +132,7 @@ const NavLink = ({ href, icon: Icon, label, iconSize, buttonSize }) => {
   return (
     <Link href={href} passHref>
       <Flex
-        color={isActive ? '#CE0033' : 'white'} // Active link color
+        color={isActive ? '#CE0033' : 'black'} // Active link color
         display="flex"
         flexDirection="column"
         alignItems="center"

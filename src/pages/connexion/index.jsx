@@ -168,7 +168,7 @@ const Login = () => {
       <Heading as="h3" size="md" py={20} textAlign="center">
         Bienvenue dans la page de connexion
       </Heading>
-      <Image src='/logo.png' alt='logo simplon '/>
+      {/* <Image w='32' src='/images/logo.png' alt='logo simplon '/> */}
 
       <Center h="100%" mx={5} bg="whiteAlpha.80">
         <Box
