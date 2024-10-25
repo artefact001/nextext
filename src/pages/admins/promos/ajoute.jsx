@@ -22,6 +22,7 @@ const CreatePromoForm = () => {
     chef_projet_id: '',
     formation_id: '',
     formateur_id: '',
+    
   });
 
   const [message, setMessage] = useState('');
@@ -213,6 +214,17 @@ const CreatePromoForm = () => {
                 value={formData.date_fin}
                 onChange={handleChange}
                 error={errors.date_fin} // Ajout de l'erreur ici
+              />
+
+              {/* Champ Date de fin */}
+              <FormInput
+                id="horaire"
+                label="horaire"
+                name="horaire"
+                type="time"
+                value={formData.horaire}
+                onChange={handleChange}
+                error={errors.horaire} // Ajout de l'erreur ici
               />
 
               {/* Sélection de la Fabrique */}

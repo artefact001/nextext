@@ -92,10 +92,11 @@ const ProfileCardAdministrateur = React.memo(() => {
     <PopoverCloseButton />
     <PopoverHeader>profile</PopoverHeader>
     <Flex p={4}>
-    <NavLink href="/admins/profile" icon={FaUser } label="Profile" iconSize={iconSize} buttonSize={buttonSize} />
+    {/* <NavLink href="/admins/profile" icon={FaUser } label="Profile" iconSize={iconSize} buttonSize={buttonSize} /> */}
 
     <PopoverBody><ThemeToggleButton /></PopoverBody>
     <PopoverBody><ButtonDeconnexion /></PopoverBody>
+    <PopoverBody><NavLink href="/admins/profile" icon={FaUser } iconSize={iconSize} buttonSize={buttonSize} /></PopoverBody>
     </Flex>
   </PopoverContent>
 </Popover>

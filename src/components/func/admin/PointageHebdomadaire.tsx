@@ -36,7 +36,11 @@ const Pointages = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [promos, setPromos] = useState([]);
+    const [selectedUser, setSelectedUser] = useState(null);
 
+    const handleUserClick = (user) => {
+        setSelectedUser(user);
+    };
     useEffect(() => {
         const fetchPromos = async () => {
             try {
@@ -105,7 +109,7 @@ const Pointages = () => {
                       imgData,
                       'PNG',
                       0,
-                      position > 0 ? 0 : 10, // Adjust for margin on the first page
+                      position > 0 ? 3 : 0, // Adjust for margin on the first page
                       imgWidth,
                       imgHeight > pdfHeight ? pdfHeight : imgHeight
                   );
@@ -250,52 +254,40 @@ const Pointages = () => {
                             </Tr>
                         </Thead>
                         <Tbody>
-                            {result.map((user) => (
-                                <Tr key={user.user.id}>
-                                    <Td>{user.user.nom}</Td>
-                                    <Td>{user.user.prenom}</Td>
-                                    {uniqueDays.map((day) => {
-                                        const status = user.dates[day] || 'Absent';
-
-                                        return (
-                                            <Td key={day} textAlign="center">
-                                                {status === 'Présent' ? (
-                                                    <Box
-                                                        bg="green.400"
-                                                        color="white"
-                                                        p={1}
-                                                        borderRadius="md"
-                                                        textAlign="center"
-                                                    >
-                                                        P
-                                                    </Box>
-                                                ) : status === 'Retard' ? (
-                                                    <Box
-                                                        bg="orange.400"
-                                                        color="white"
-                                                        p={1}
-                                                        borderRadius="md"
-                                                        textAlign="center"
-                                                    >
-                                                        R
-                                                    </Box>
-                                                ) : (
-                                                    <Box
-                                                        bg="red.400"
-                                                        color="white"
-                                                        p={1}
-                                                        borderRadius="md"
-                                                        textAlign="center"
-                                                    >
-                                                        A
-                                                    </Box>
-                                                )}
-                                            </Td>
-                                        );
-                                    })}
-                                </Tr>
-                            ))}
-                        </Tbody>
+    {result.map((user) => (
+        <Tr key={user.user.id} onClick={() => handleUserClick(user)}>
+            <Td>{user.user.nom}</Td>
+            <Td>{user.user.prenom}</Td>
+            {uniqueDays.map((day) => {
+                const status = user.dates[day] || 'Absent';
+                return (
+                    <Td key={day} textAlign="center">
+                        {status === 'Présent' ? (
+                            <Box bg="green.400" color="white" p={1} borderRadius="md">
+                                P
+                            </Box>
+                        ) : status === 'Retard' ? (
+                            <Box bg="orange.400" color="white" p={1} borderRadius="md">
+                                R
+                            </Box>
+                        ) : (
+                            <Box bg="red.400" color="white" p={1} borderRadius="md">
+                                A
+                            </Box>
+                        )}
+                    </Td>
+                );
+            })}
+        </Tr>
+    ))}
+</Tbody>
+{selectedUser && (
+    <Box mt={5}>
+        <Text w="100%">
+            {selectedUser.user.nom} {selectedUser.user.prenom} a  {selectedUser.absences} absences et {selectedUser.tardies} retards.
+        </Text>
+    </Box>
+)}
                     </Table>
                 </Box>
             )}

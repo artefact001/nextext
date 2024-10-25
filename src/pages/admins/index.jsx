@@ -7,6 +7,7 @@ import {
   Flex,
   Center,
   Spinner,
+  Image,
 } from '@chakra-ui/react';
 import ProfileCardAdministrateur from '../../components/layout/admin/Navbar';
 import useSWR from 'swr';
@@ -95,7 +96,7 @@ const Dashboard = () => {
 
         // Fetch pointages with the token included in the headers
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/pointages/aujourdhui/tous`,
+          `${process.env.NEXT_PUBLIC_API_URL}/pointages/aujourdhui`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -235,7 +236,7 @@ const Dashboard = () => {
        
         >
           <Box>
-            <Flex
+            {/* <Flex
               justifyContent="space-between"
               alignItems="center"
               overflow="hidden"
@@ -247,14 +248,14 @@ const Dashboard = () => {
               {selectedFabriques?.length > 0 ? (
                 selectedFabriques.map((fabrique) => (
                   <Box key={fabrique.id} mx={4} textAlign="center">
-                    {/* <Image
+                    <Image
                       loading="lazy"
                       src="https://cdn.builder.io/api/v1/image/assets/TEMP/4ab18d4eb620294560328c98d7834f71abf167307ffbe85a4a9b42def28b575c?placeholderIfAbsent=true&apiKey=5a4129e8dacc4e7b95518ebfcb6a026b"
                       alt={fabrique.nom}
                       boxSize="50px"
                       borderRadius="md"
                       mx={8}
-                    /> */}
+                    />
                     <Text mt={2}>{fabrique.nom}</Text>
                   </Box>
                 ))
@@ -267,7 +268,7 @@ const Dashboard = () => {
               >
                 Suivant
               </Button>
-            </Flex>
+            </Flex> */}
           </Box>
           <SimpleGrid columns={[1]} spacing={4}>
             {/* Add Fabrique Form */}
