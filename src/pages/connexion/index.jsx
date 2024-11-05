@@ -11,7 +11,6 @@ import {
   Input,
   Heading,
   useToast,
-  Image,
 } from '@chakra-ui/react';
 
 const Login = () => {

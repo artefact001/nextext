@@ -6,13 +6,10 @@ import {
   Box,
   Text,
   SimpleGrid,
-  VStack,
 } from '@chakra-ui/react';
 import FormInput from '../../../components/common/FormInput';
 import FormSelect from '../../../components/common/FormSelect';
 import ProfileCardFormateur from '../../../components/layout/formateur/Navbar';
-import PromoHeader from '../../../components/common/PromoHeader';
-import Link from 'next/link';
 import useSWR from 'swr';
 
 const fetcher = (url) =>

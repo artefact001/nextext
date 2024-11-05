@@ -44,6 +44,7 @@ const AjouteFormateurPage = () => {
   const [filterType, setFilterType] = useState('Formateur');
   const [role, setRole] = useState('Formateur'); // State for role
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedFormateur, setSelectedFormateur] = useState(null); // Add this line
 
   // Fetch formateurs
   const { data: formateursData, error: formateursError } = useSWR(

@@ -145,9 +145,11 @@ const Pointages = () => {
 
   const days = getDaysInRange();
 
-  const getUniqueDaysWithPointages = () => {
+
+
+  const getUniqueDaysWithPointages = (): string[] => {
     if (!result) return [];
-    const uniqueDays = new Set();
+    const uniqueDays = new Set<string>(); // Explicitly declare the Set as a Set of strings
     result.forEach((user) => {
       Object.keys(user.dates).forEach((day) => {
         uniqueDays.add(day);
