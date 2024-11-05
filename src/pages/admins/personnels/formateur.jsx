@@ -15,7 +15,6 @@ import FormInput from '../../../components/common/FormInput';
 import FormSelect from '../../../components/common/FormSelect';
 import UserList from '../../../components/common/UserList';
 import ProfileCardAdministrateur from '../../../components/layout/admin/Navbar';
-import FormateurPromotions from '../../../components/common/FormateurPromotions';
 
 const fetcher = (url) =>
   fetch(url, {
@@ -44,7 +43,6 @@ const AjouteFormateurPage = () => {
   const [errors, setErrors] = useState({});
   const [filterType, setFilterType] = useState('Formateur');
   const [role, setRole] = useState('Formateur'); // State for role
-  const [selectedFormateur, setSelectedFormateur] = useState(null); // State for selected formateur
   const [isLoading, setIsLoading] = useState(false);
 
   // Fetch formateurs

@@ -14,7 +14,6 @@ import UserList from '../../../components/common/UserList';
 import ProfileCardAdministrateur from '../../../components/layout/admin/Navbar';
 import FormateurPromotions from '../../../components/common/FormateurPromotions';
 import Link from 'next/link';
-import PromoHeader from '../../../components/layout/admin/PromoHeader';
 const fetcher = (url) =>
   fetch(url, {
     headers: {

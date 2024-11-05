@@ -13,6 +13,17 @@ import FormSelect from '../../../components/common/FormSelect';
 import ProfileCardFormateur from '../../../components/layout/formateur/Navbar';
 import PromoHeader from '../../../components/common/PromoHeader';
 import Link from 'next/link';
+import useSWR from 'swr';
+
+const fetcher = (url) =>
+  fetch(url, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  }).then((res) => {
+    if (!res.ok) throw new Error('Erreur lors de la récupération des données.');
+    return res.json();
+  });
 
 const CreatePromoForm = () => {
   const [formData, setFormData] = useState({
@@ -28,9 +39,10 @@ const CreatePromoForm = () => {
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState({});
   const [user, setUser] = useState(null);
-  const [fabriques, setFabriques] = useState([]);
-  const [chefsProjets, setChefsProjets] = useState([]);
-  const [formations, setFormations] = useState([]);
+
+  const { data: fabriques } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/fabriques`, fetcher);
+  const { data: chefsProjets } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/chefs-projet`, fetcher);
+  const { data: formations } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/formations`, fetcher);
 
   const getCurrentUser = async () => {
     try {
@@ -60,25 +72,8 @@ const CreatePromoForm = () => {
     }
   };
 
-  const fetchOptions = async () => {
-    try {
-      const [fabriquesRes, chefsProjetsRes, formationsRes] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/fabriques`),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/chefs-projet`),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/formations`),
-      ]);
-
-      if (fabriquesRes.ok) setFabriques(await fabriquesRes.json());
-      if (chefsProjetsRes.ok) setChefsProjets(await chefsProjetsRes.json());
-      if (formationsRes.ok) setFormations(await formationsRes.json());
-    } catch (error) {
-      setErrors({ general: 'Erreur lors de la récupération des options.' });
-    }
-  };
-
   useEffect(() => {
     getCurrentUser();
-    fetchOptions();
   }, []);
 
   const validateForm = () => {
@@ -176,7 +171,7 @@ const CreatePromoForm = () => {
                 placeholder="Nom de la promotion"
                 value={formData.nom}
                 onChange={handleChange}
-                error={errors.nom} // Ajout de l'erreur ici
+                error={errors.nom}
               />
               {/* Sélection de la Formation */}
               <FormSelect
@@ -185,11 +180,11 @@ const CreatePromoForm = () => {
                 name="formation_id"
                 value={formData.formation_id}
                 onChange={handleChange}
-                options={formations.map((formation) => ({
+                options={formations ? formations.map((formation) => ({
                   value: formation.id,
                   label: formation.nom,
-                }))}
-                error={errors.formation_id} // Ajout de l'erreur ici
+                })) : []}
+                error={errors.formation_id}
               />
               {/* Champ Date de début */}
               <FormInput
@@ -199,9 +194,8 @@ const CreatePromoForm = () => {
                 type="date"
                 value={formData.date_debut}
                 onChange={handleChange}
-                error={errors.date_debut} // Ajout de l'erreur ici
+                error={errors.date_debut}
               />
-
               {/* Champ Date de fin */}
               <FormInput
                 id="date_fin"
@@ -210,9 +204,8 @@ const CreatePromoForm = () => {
                 type="date"
                 value={formData.date_fin}
                 onChange={handleChange}
-                error={errors.date_fin} // Ajout de l'erreur ici
+                error={errors.date_fin}
               />
-
               {/* Sélection de la Fabrique */}
               <FormSelect
                 id="fabrique_id"
@@ -220,13 +213,12 @@ const CreatePromoForm = () => {
                 name="fabrique_id"
                 value={formData.fabrique_id}
                 onChange={handleChange}
-                options={fabriques.map((fabrique) => ({
+                options={fabriques ? fabriques.map((fabrique) => ({
                   value: fabrique.id,
                   label: fabrique.nom,
-                }))}
-                error={errors.fabrique_id} // Ajout de l'erreur ici
+                })) : []}
+                error={errors.fabrique_id}
               />
-
               {/* Sélection du Chef de projet */}
               <FormSelect
                 id="chef_projet_id"
@@ -234,13 +226,12 @@ const CreatePromoForm = () => {
                 name="chef_projet_id"
                 value={formData.chef_projet_id}
                 onChange={handleChange}
-                options={chefsProjets.map((chef) => ({
+                options={chefsProjets ? chefsProjets.map((chef) => ({
                   value: chef.id,
                   label: chef.nom,
-                }))}
-                error={errors.chef_projet_id} // Ajout de l'erreur ici
+                })) : []}
+                error={errors.chef_projet_id}
               />
-
               <Button
                 type="submit"
                 width="full"
@@ -254,7 +245,6 @@ const CreatePromoForm = () => {
               </Button>
             </SimpleGrid>
           </form>
-
           {message && (
             <Text mt={4} color="green.500">
               {message}
@@ -265,34 +255,6 @@ const CreatePromoForm = () => {
               {errors.general}
             </Text>
           )}
-        </Box>
-        <Box
-          mt={5}
-          p={5}
-          shadow="md"
-          borderWidth="1px"
-          borderRadius="lg"
-          width={{ base: '100%', md: '70%' }}
-          mx="auto"
-        >
-          <VStack spacing={5} align="center">
-            <PromoHeader />
-            <Text fontSize="lg" fontWeight="bold" color="#CE0033">
-              Consulter la liste des Promotions
-            </Text>
-
-            <SimpleGrid  justifyContent="center" spacing={2} mt={2}  >
-              <Link   href="/formateur/apprenants/inscriptions/excel" isExternal>
-                <Button w="220px" _hover={{ bg:'gray.600' }} bg='#CE0033' my={4} color="white">Ajouter par Excel</Button>
-              </Link>
-              <Link
-                href="/formateur/apprenants/inscriptions/formulaire"
-                isExternal
-              >
-                <Button w="220px" _hover={{ bg:'gray.600' }} bg='#CE0033' my={4} color="white">Ajouter par Formulaire</Button>
-              </Link>
-            </SimpleGrid>
-          </VStack>
         </Box>
       </SimpleGrid>
     </Center>

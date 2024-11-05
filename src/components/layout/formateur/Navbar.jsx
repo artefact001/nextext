@@ -140,7 +140,6 @@ const NavLink = ({ href, icon: Icon, label, iconSize, buttonSize }) => {
         // bg={isActive ? 'white' : 'transparent'} // Active background color
         borderRadius="md"
         _hover={{
-          bg: 'gray.700',
           color: '#CE0033',
         }}
       >

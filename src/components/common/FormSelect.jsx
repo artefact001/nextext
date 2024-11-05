@@ -4,7 +4,8 @@ const FormSelect = ({ id, label, name, value, onChange, options, error }) => {
   return (
     <FormControl id={id} mb={4} isRequired isInvalid={!!error}>
       <FormLabel>{label}</FormLabel>
-      <Select shadow="lg"  name={name} placeholder="Sélectionner"  h={14} value={value} onChange={onChange}>
+      <Select  name={name} placeholder="Sélectionner"        shadow="0px 0px 0px 1px #ce0033"
+        _focus={{ border: 'red' }} h={14} value={value} onChange={onChange}>
         {options.map((option) => (
           <option key={option.value} value={option.value} py={7}>
             {option.label}

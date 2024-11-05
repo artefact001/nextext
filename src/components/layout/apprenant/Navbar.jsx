@@ -77,14 +77,13 @@ const ProfileCardApprenant = React.memo(() => {
           
           <Popover>
   <PopoverTrigger>
-    <Button><IoSettingsOutline /></Button>
+    <Button w='24' h='24'><IoSettingsOutline size={32} /></Button>
   </PopoverTrigger>
   <PopoverContent>
     <PopoverArrow />
     <PopoverCloseButton />
     <PopoverHeader>profile</PopoverHeader>
     <Flex p={4}>
-    <NavLink href="/admins/profile" icon={FaUser } label="Profile" iconSize={iconSize} buttonSize={buttonSize} />
 
     <PopoverBody><ThemeToggleButton /></PopoverBody>
     <PopoverBody><ButtonDeconnexion /></PopoverBody>

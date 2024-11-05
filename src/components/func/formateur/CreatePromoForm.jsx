@@ -2,12 +2,24 @@ import { Box, Button, SimpleGrid, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import FormInput from '../../common/FormInput';
 import FormSelect from '../../common/FormSelect';
+import useSWR from 'swr';
+
+const fetcher = (url) =>
+  fetch(url, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  }).then((res) => {
+    if (!res.ok) throw new Error('Erreur lors de la récupération des données.');
+    return res.json();
+  });
 
 const CreatePromoForm = () => {
   const [formData, setFormData] = useState({
     nom: '',
     date_debut: '',
     date_fin: '',
+    horaire:'',
     fabrique_id: '',
     chef_projet_id: '',
     formation_id: '',
@@ -17,9 +29,10 @@ const CreatePromoForm = () => {
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState({});
   const [user, setUser] = useState(null);
-  const [fabriques, setFabriques] = useState([]);
-  const [chefsProjets, setChefsProjets] = useState([]);
-  const [formations, setFormations] = useState([]);
+
+  const { data: fabriques } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/fabriques`, fetcher);
+  const { data: chefsProjets } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/chefs-projet`, fetcher);
+  const { data: formations } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/formations`, fetcher);
 
   const getCurrentUser = async () => {
     try {
@@ -49,26 +62,8 @@ const CreatePromoForm = () => {
     }
   };
 
-  const fetchOptions = async () => {
-    try {
-      // eslint-disable-next-line no-undef
-      const [fabriquesRes, chefsProjetsRes, formationsRes] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/fabriques`),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/chefs-projet`),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/formations`),
-      ]);
-
-      if (fabriquesRes.ok) setFabriques(await fabriquesRes.json());
-      if (chefsProjetsRes.ok) setChefsProjets(await chefsProjetsRes.json());
-      if (formationsRes.ok) setFormations(await formationsRes.json());
-    } catch (error) {
-      setErrors({ general: 'Erreur lors de la récupération des options.' });
-    }
-  };
-
   useEffect(() => {
     getCurrentUser();
-    fetchOptions();
   }, []);
 
   const validateForm = () => {
@@ -125,6 +120,7 @@ const CreatePromoForm = () => {
         setFormData({
           nom: '',
           date_debut: '',
+          horaire: '',
           date_fin: '',
           fabrique_id: '',
           chef_projet_id: '',
@@ -152,8 +148,8 @@ const CreatePromoForm = () => {
           borderRadius="lg"
           width="100%"
         >
-          <form onSubmit={handleSubmit}>
-            <SimpleGrid columns={[1, 2]} spacing={4}>
+            <form onSubmit={handleSubmit}>
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
               {/* Champ Nom */}
               <FormInput
                 id="nom"
@@ -163,7 +159,7 @@ const CreatePromoForm = () => {
                 placeholder="Nom de la promotion"
                 value={formData.nom}
                 onChange={handleChange}
-                error={errors.nom} // Ajout de l'erreur ici
+                error={errors.nom}
               />
               {/* Sélection de la Formation */}
               <FormSelect
@@ -172,11 +168,11 @@ const CreatePromoForm = () => {
                 name="formation_id"
                 value={formData.formation_id}
                 onChange={handleChange}
-                options={formations.map((formation) => ({
+                options={formations ? formations.map((formation) => ({
                   value: formation.id,
                   label: formation.nom,
-                }))}
-                error={errors.formation_id} // Ajout de l'erreur ici
+                })) : []}
+                error={errors.formation_id}
               />
               {/* Champ Date de début */}
               <FormInput
@@ -186,9 +182,8 @@ const CreatePromoForm = () => {
                 type="date"
                 value={formData.date_debut}
                 onChange={handleChange}
-                error={errors.date_debut} // Ajout de l'erreur ici
+                error={errors.date_debut}
               />
-
               {/* Champ Date de fin */}
               <FormInput
                 id="date_fin"
@@ -197,9 +192,18 @@ const CreatePromoForm = () => {
                 type="date"
                 value={formData.date_fin}
                 onChange={handleChange}
-                error={errors.date_fin} // Ajout de l'erreur ici
+                error={errors.date_fin}
               />
-
+              {/* Champ Horaire Pointage */}
+                 <FormInput
+                id="horaire"
+                label="Horaire Pointage"
+                name="horaire"
+                type="time"
+                value={formData.horaire}
+                onChange={handleChange}
+                error={errors.horaire} // Ajout de l'erreur ici
+              />
               {/* Sélection de la Fabrique */}
               <FormSelect
                 id="fabrique_id"
@@ -207,13 +211,12 @@ const CreatePromoForm = () => {
                 name="fabrique_id"
                 value={formData.fabrique_id}
                 onChange={handleChange}
-                options={fabriques.map((fabrique) => ({
+                options={fabriques ? fabriques.map((fabrique) => ({
                   value: fabrique.id,
                   label: fabrique.nom,
-                }))}
-                error={errors.fabrique_id} // Ajout de l'erreur ici
+                })) : []}
+                error={errors.fabrique_id}
               />
-
               {/* Sélection du Chef de projet */}
               <FormSelect
                 id="chef_projet_id"
@@ -221,22 +224,20 @@ const CreatePromoForm = () => {
                 name="chef_projet_id"
                 value={formData.chef_projet_id}
                 onChange={handleChange}
-                options={chefsProjets.map((chef) => ({
+                options={chefsProjets ? chefsProjets.map((chef) => ({
                   value: chef.id,
                   label: chef.nom,
-                }))}
-                error={errors.chef_projet_id} // Ajout de l'erreur ici
+                })) : []}
+                error={errors.chef_projet_id}
               />
-
               <Button
                 type="submit"
-                mx="auto"
-                h={14}
-                color="white"
-                bg="#CE0033"
                 width="full"
-                _hover={{bg:"#110033"}}
-
+                py={6}
+                _hover={{ bg: 'gray.600' }}
+                bg="#CE0033"
+                my={4}
+                color="white"
               >
                 Créer Promotion
               </Button>

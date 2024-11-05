@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import { api } from '../../../lib/utils/api'; // Assurez-vous que 'api' est bien défini dans vos utils
 import { Box, Button, Text } from '@chakra-ui/react';
 import { mutate } from 'swr';

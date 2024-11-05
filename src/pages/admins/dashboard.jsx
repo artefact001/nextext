@@ -27,6 +27,8 @@ import {
   Pie,
   Cell,
   Legend,
+  AreaChart,
+  Area,
 } from 'recharts';
 import { api } from '../../lib/utils/api';
 import { useUserWithRoles } from '../../lib/utils/hooks/useUserWithRoles';
@@ -48,8 +50,8 @@ const AdminPage = () => {
   useUserWithRoles(['Administrateur']);
   const [promoId, setPromoId] = useState(null);
   const [promotions, setPromotions] = useState([]);
-  const [dateDebut, setDateDebut] = useState('2024-02-10');
-  const [dateFin, setDateFin] = useState('2024-10-10');
+  const [dateDebut, setDateDebut] = useState('2024-01-10');
+  const [dateFin, setDateFin] = useState('2024-11-10');
   const [weeklyData, setWeeklyData] = useState([]);
   const [monthlyData, setMonthlyData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -78,10 +80,15 @@ const AdminPage = () => {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ promo_id: promoId, date_debut: dateDebut, date_fin: dateFin }),
+        body: JSON.stringify({
+          promo_id: promoId,
+          date_debut: dateDebut,
+          date_fin: dateFin,
+        }),
       });
 
-      if (!response.ok) throw new Error('Erreur lors du chargement des statistiques');
+      if (!response.ok)
+        throw new Error('Erreur lors du chargement des statistiques');
 
       const result = await response.json();
 
@@ -122,12 +129,17 @@ const AdminPage = () => {
     return (
       <Center>
         <Text color="red.500">{error}</Text>
-        <Button onClick={() => setError(null)} mt={4}>Réessayer</Button>
+        <Button onClick={() => setError(null)} mt={4}>
+          Réessayer
+        </Button>
       </Center>
     );
   }
 
-  const totalAbsences = weeklyData.reduce((acc, item) => acc + item.absences, 0);
+  const totalAbsences = weeklyData.reduce(
+    (acc, item) => acc + item.absences,
+    0
+  );
   const totalDelays = weeklyData.reduce((acc, item) => acc + item.retards, 0);
   const pieData = [
     { name: 'Absences', value: totalAbsences },
@@ -140,7 +152,11 @@ const AdminPage = () => {
     <Center display="block" py={8}>
       <ProfileCardAdministrateur />
 
-      <SimpleGrid mx={{ base: '4px', md: '10px', lg: '20px' }} columns={[1, null, 3]} spacing={10}>
+      <SimpleGrid
+        mx={{ base: '4px', md: '10px', lg: '20px' }}
+        columns={[1, null, 3]}
+        spacing={10}
+      >
         <MotionBox
           as="section"
           p={{ base: 4, md: 8 }}
@@ -155,9 +171,7 @@ const AdminPage = () => {
           </Heading>
 
           {loading ? (
-            <Center>
-              <Spinner size="xl" />
-            </Center>
+            <Skeleton height="400px" />
           ) : promoId ? (
             <ResponsiveContainer width="100%" height={400}>
               <BarChart data={weeklyData}>
@@ -205,14 +219,41 @@ const AdminPage = () => {
             <Skeleton height="400px" />
           ) : (
             <ResponsiveContainer width="100%" height={400}>
-              <LineChart data={monthlyData}>
-                <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+              <AreaChart
+                width={730}
+                height={250}
+                data={monthlyData}
+                margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+              >
+                <defs>
+                  <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
                 <XAxis dataKey="name" />
                 <YAxis />
+                <CartesianGrid strokeDasharray="3 3" />
                 <Tooltip />
-                <Line type="monotone" dataKey="absences" stroke="#ce0033" />
-                <Line type="monotone" dataKey="retards" stroke="#3182ce" />
-              </LineChart>
+                <Area
+                  type="monotone"
+                  dataKey="absences"
+                  stroke="#8884d8"
+                  fillOpacity={1}
+                  fill="url(#colorUv)"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="retards"
+                  stroke="#82ca9d"
+                  fillOpacity={1}
+                  fill="url(#colorPv)"
+                />
+              </AreaChart>
             </ResponsiveContainer>
           )}
         </MotionBox>
@@ -231,20 +272,38 @@ const AdminPage = () => {
           </Heading>
 
           {loading ? (
-            <Center>
-              <Spinner size="xl" />
-            </Center>
+            <Skeleton height="400px" />
           ) : (
             <ResponsiveContainer width="100%" height={400}>
               <PieChart>
-                <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={80} fill="#8884d8" paddingAngle={5}>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  paddingAngle={5}
+                >
                   {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
                   ))}
                 </Pie>
                 <Tooltip />
                 <Legend />
               </PieChart>
+
+              <PieChart width={730} height={250}>
+  <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={50} fill="#8884d8" />
+  
+  <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={60} outerRadius={80} fill="#82ca9d" label />
+
+  <Tooltip />
+  <Legend />
+</PieChart>
             </ResponsiveContainer>
           )}
         </MotionBox>

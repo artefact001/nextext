@@ -35,7 +35,44 @@ const Login = () => {
       setAttempts(savedAttempts);
       setRetryAfter(savedRetryAfter);
     }
-  }, []);
+
+    const checkUserRole = async () => {
+      const token = localStorage.getItem('token'); // Utiliser localStorage ou sessionStorage
+      if (token) {
+        try {
+          const roleResponse = await api('user/role', 'GET', null, token);
+          if (roleResponse.role) {
+            // Redirection en fonction du rôle
+            switch (roleResponse.role) {
+              case 'Formateur':
+                router.push('/formateur');
+                break;
+              case 'Apprenant':
+                router.push('/apprenant');
+                break;
+              case 'Vigile':
+                router.push('/vigile/scanner');
+                break;
+              case 'ChefDeProjet':
+                router.push('/ChefDeProjet');
+                break;
+              case 'Administrateur':
+                router.push('/admins');
+                break;
+              default:
+                setError(
+                  "Rôle non reconnu. Veuillez contacter l'administrateur."
+                );
+            }
+          }
+        } catch (err) {
+          console.error('Erreur lors de la récupération du rôle', err);
+        }
+      }
+    };
+
+    checkUserRole();
+  }, [router]);
 
   // Sauvegarder les tentatives dans localStorage
   useEffect(() => {

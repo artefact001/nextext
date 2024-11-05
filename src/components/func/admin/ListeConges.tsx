@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { api } from '../../../lib/utils/api';
 import ModalComponent from './Conge';
-import { FaRegCalendarAlt, FaInfoCircle } from 'react-icons/fa';
+import { FaRegCalendarAlt } from 'react-icons/fa';
 
 const CongeList = () => {
   const [conges, setConges] = useState([]);
