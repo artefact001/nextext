@@ -122,15 +122,14 @@ const AjouteFormateurPage = () => {
   };
 
   const formateurs = formateursData ? formateursData.formateurs : [];
-
-  // Filter users based on role
-  const filteredUsers = formateurs.filter((user) =>
-    filterType === 'Formateur'
-      ? user.role === 'Formateur'
-      : filterType === 'ChefDeProjet'
-      ? user.role === 'ChefDeProjet'
-      : user.role === 'Vigile'
-  );
+const filteredUsers = Array.isArray(formateurs)
+  ? formateurs.filter((user) =>
+      filterType === 'Formateur'
+        ? user.role === 'Formateur'
+        : filterType === 'ChefDeProjet'
+        ? user.role === 'ChefDeProjet'
+        : user.role === 'Vigile'
+    ) : [];
 
   const handleSelectFormateur = (formateur) => {
     setSelectedFormateur(formateur); // Update selected formateur

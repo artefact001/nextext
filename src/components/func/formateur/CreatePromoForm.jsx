@@ -230,18 +230,21 @@ const CreatePromoForm = () => {
                 })) : []}
                 error={errors.chef_projet_id}
               />
-              <Button
+             
+            </SimpleGrid>
+            <Button
                 type="submit"
                 width="full"
-                py={6}
+                py={7}
                 _hover={{ bg: 'gray.600' }}
                 bg="#CE0033"
-                my={4}
+                my={8}
                 color="white"
+                w="50%"
+                mx="25%"
               >
                 Créer Promotion
               </Button>
-            </SimpleGrid>
           </form>
 
           {message && (

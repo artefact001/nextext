@@ -6,11 +6,14 @@ import {
   Box,
   Text,
   SimpleGrid,
+  VStack,
 } from '@chakra-ui/react';
 import FormInput from '../../../components/common/FormInput';
 import FormSelect from '../../../components/common/FormSelect';
 import ProfileCardFormateur from '../../../components/layout/formateur/Navbar';
 import useSWR from 'swr';
+import PromoHeader from '../../../components/common/PromoHeader';
+import Link from 'next/link';
 
 const fetcher = (url) =>
   fetch(url, {
@@ -147,7 +150,10 @@ const CreatePromoForm = () => {
     <Center display="block">
       <ProfileCardFormateur />
 
-      <SimpleGrid columns={{ sm: 1, md: 2 }} spacing={8} mt={10}>
+      <SimpleGrid columns={{ sm: 1, md: 2 }} spacing={8} mt={10}
+          mx={{ base: '2px', md: '3px', lg: '142px' }}
+      
+      >
         <Box
           mt={5}
           p={5}
@@ -252,6 +258,35 @@ const CreatePromoForm = () => {
               {errors.general}
             </Text>
           )}
+        </Box>
+        <Box
+          mt={5}
+          p={5}
+          shadow="md"
+          borderWidth="1px"
+          borderRadius="lg"
+          width="97%"
+          mx={2}
+        >
+          <VStack spacing={0}>
+            <PromoHeader />
+
+            {/* Choix d'ajout d'apprenants */}
+            <Text mt={4} fontWeight="bold">
+              Ajouter des Apprenants :
+            </Text>
+            <SimpleGrid w  justifyContent="center" spacing={2} mt={2}  >
+              <Link  href="/formateur/apprenants/inscriptions/excel" isExternal>
+                <Button bg='#CE0033' my={4} color="white">Ajouter par Excel</Button>
+              </Link>
+              <Link
+                href="/formateur/apprenants/inscriptions/formulaire"
+                isExternal
+              >
+                <Button  bg='#CE0033' color="white">Ajouter par Formulaire</Button>
+              </Link>
+            </SimpleGrid>
+          </VStack>
         </Box>
       </SimpleGrid>
     </Center>

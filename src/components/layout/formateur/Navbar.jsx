@@ -6,9 +6,19 @@ import {
   Flex,
   useBreakpointValue,
   Spinner,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
+  Button,
+  SimpleGrid,
 } from '@chakra-ui/react';
-import { FaUserAlt, FaQrcode, FaHistory } from 'react-icons/fa';
+import { FaUserAlt, FaQrcode, FaHistory,  FaUser } from 'react-icons/fa';
 import { FaUsersLine } from 'react-icons/fa6';
+import { IoSettingsOutline } from 'react-icons/io5';
 
 import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 import { getUserWithRoles } from '../../../lib/utils/checkRole';
@@ -22,6 +32,7 @@ const ProfileCardFormateur = React.memo(() => {
   const buttonSize = useBreakpointValue({ base: 'sm', md: 'md' });
   const iconSize = useBreakpointValue({ base: '20px', md: '30px' });
   const { roles, user, loading } = useUserWithRoles(['Formateur']);
+  const isMobile = useBreakpointValue({ base: true, md: false }); // Nouveau point de rupture
 
   const fullName = useMemo(
     () => (user ? `${user.prenom} ${user.nom}` : ''),
@@ -50,25 +61,42 @@ const ProfileCardFormateur = React.memo(() => {
       roundedBottomEnd="3xl"
       roundedBottomStart="3xl"
       width="100%"
-      px={{ base: '5%', lg: '25%' }}
+      px={{ base: '5%', lg: '15%' }}
       shadow="lg"
       textAlign="center"
       pt={12}
 
     >
 
-      <Flex
+<Flex
         justify="space-between"
         align="center"
-        bg="white"
         width="100%"
         rounded="xl"
         py={2}
-        px={{ base: '10%', md: '40px', lg: '80px' }}
-        color="white"
-        shadow="lg"
-        border="2px solid #CE0033"
-      >
+        px={{ base: '1%', md: '0px', lg: '10px' }}
+      ><Flex
+      justify="space-between"
+      align="center"
+      bg="white"
+      width="100%"
+      rounded="xl"
+      py={2}
+      px={{ base: '10%', md: '40px', lg: '80px' }}
+      color="white"
+      shadow="lg"
+      border="2px solid #CE0033"
+    >
+      <SimpleGrid
+          overflow="hidden"
+          columns={[3, 4]}
+          spacingX={6}
+          px={1}
+          py={2}
+          w="full"
+          borderRadius="md"
+          mt={{ base: 2.5, md: 0 }}
+        >
         <NavLink
           href="/formateur/profile"
           icon={FaUserAlt}
@@ -100,21 +128,88 @@ const ProfileCardFormateur = React.memo(() => {
           iconSize={iconSize}
           buttonSize={buttonSize}
         />
+         </SimpleGrid>
+      </Flex>
+      {!isMobile && (
+          <Flex
+            ml={{ base: '0%', md: '20px', lg: '10%' }}
+            mr={{ base: '0%', md: '20px', lg: '0%' }}
+          >
+            <Popover>
+              <PopoverTrigger>
+                <Button w="24" rounded="xl" h="24" bg="white">
+                  <IoSettingsOutline size={32} />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>profile</PopoverHeader>
+                <Flex p={4}>
+                  <PopoverBody>
+                    <ThemeToggleButton />
+                  </PopoverBody>
+                  <PopoverBody>
+                    <ButtonDeconnexion />
+                  </PopoverBody>
+                </Flex>
+              </PopoverContent>
+            </Popover>
+          </Flex>
+        )}
       </Flex>
 
+      {isMobile && (
+        <Flex justify="center" mt={4} width="100%">
+          {/* Affichage des boutons sur mobile en haut */}
+
+          <Popover>
+            <PopoverTrigger>
+              <Button>
+                <IoSettingsOutline />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverCloseButton />
+              <PopoverHeader>profile</PopoverHeader>
+              <Flex p={4}>
+                <NavLink
+                  href="/formateur/profile"
+                  icon={FaUser}
+                  label="Profile"
+                  iconSize={iconSize}
+                  buttonSize={buttonSize}
+                />
+
+                <PopoverBody>
+                  <ThemeToggleButton />
+                </PopoverBody>
+                <PopoverBody>
+                  <ButtonDeconnexion />
+                </PopoverBody>
+                <PopoverBody>
+                  <NavLink
+                    href="/formateur/profile"
+                    icon={FaUser}
+                    iconSize={iconSize}
+                    buttonSize={buttonSize}
+                  />
+                </PopoverBody>
+              </Flex>
+            </PopoverContent>
+          </Popover>
+        </Flex>
+      )}
       <Center mt={4}>
-      <Box mt={4}>
-      <ThemeToggleButton />
-      </Box>
+      
         <Box color="white" px={{ base: '8px',md: '15px', lg: '90px' }}>
           <Text fontSize={{ base: '20px', lg: '35px' }} fontWeight="bold">
             {fullName}
           </Text>
           {roles.length > 0 && <Text> {roles.join(', ')}</Text>}{' '}
         </Box>
-        <Box mt={4}>
-          <ButtonDeconnexion />
-        </Box>
+        
       </Center>
 
       <Center mt={4}>

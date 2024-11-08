@@ -19,14 +19,13 @@ import useSWR from 'swr';
 import ListePointage from '../../../components/func/admin/ListePointage';
 import PointageBoxPromo from '../../../components/func/admin/MesPointages';
 import CardBox from '../../../components/common/Card';
-// import MarquerAbsences from '../../../components/func/formateur/MarquerAbsences';
 
 dayjs.extend(isoWeek);
 dayjs.extend(isoWeeksInYear);
 
 // Dynamic component imports
 const ProfileCardAdministrateur = lazy(() =>
-  import('../../../components/layout/formateur/Navbar')
+  import('../../../components/layout/admin/Navbar')
 );
 
 // Fetch function
@@ -44,6 +43,7 @@ const fetcher = (url) =>
 const MesPointagesP7 = () => {
   const [date, setDate] = useState(dayjs());
   const [selectedWeek, setSelectedWeek] = useState(date.isoWeek());
+  
   const [selectedDay, setSelectedDay] = useState(null);
   // eslint-disable-next-line no-unused-vars
   const [promo, setPromo] = useState(null);
@@ -105,7 +105,11 @@ const MesPointagesP7 = () => {
   }, [promoId]);
 
   useEffect(() => {
-   }, [pointagesUrl, selectedDay, pointagesData, dailyData]);
+    console.log('API URL:', pointagesUrl);
+    console.log('Selected Day API URL:', selectedDay ? dailyAttendanceUrl(selectedDay) : null);
+    console.log('Pointages Data:', pointagesData);
+    console.log('Daily Data:', dailyData);
+  }, [pointagesUrl, selectedDay, pointagesData, dailyData]);
 
   const daysOfWeek = getDaysOfWeek(selectedWeek, date.year());
 
@@ -179,15 +183,9 @@ const MesPointagesP7 = () => {
                   Date: {selectedDay ? selectedDay.format('DD/MM/YYYY') : 'Date non sélectionnée'}
                 </Text>
                 <Text mt="20" textAlign="center">Aucun pointage trouvé pour la journée sélectionnée.</Text>
-
               </>
             )}
           </Suspense>
-          <Suspense>
-          {/* <MarquerAbsences/> */}
-
-          </Suspense>
-
         </CardBox>
 
         <CardBox maxW={{ base: '366px', md: '100%', lg: '90%' }}>
@@ -204,7 +202,6 @@ const MesPointagesP7 = () => {
             daysOfWeek={daysOfWeek}
             dailyData={dailyData}
           />
-
         </CardBox>
       </SimpleGrid>
     </VStack>
