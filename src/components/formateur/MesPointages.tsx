@@ -1,9 +1,9 @@
-import React, { Suspense } from 'react';
+import { Box, Center, Spinner, Text } from '@chakra-ui/react';
+import { Suspense } from 'react';
+import AttendanceSummary from './AttendanceSummary';
+import DaysOfWeek from './DaysOfWeek';
 import MonthPagination from './MonthPagination';
 import WeekSelector from './WeekSelector';
-import DaysOfWeek from './DaysOfWeek';
-import AttendanceSummary from './AttendanceSummary';
-import { Box, Center, Spinner, Text } from '@chakra-ui/react';
 
 const PointageBoxPromo = ({
   date,
@@ -17,11 +17,21 @@ const PointageBoxPromo = ({
   daysOfWeek,
   dailyData,
 }) => (
-  <Box as="section" display="flex" 
-  px={{ base: '12px', md: '12px', lg: '42px'}} 
-  
-  
-  flexDirection="column" w="full" maxW={{ base: '366px', md: '500px', lg: '100%' }} borderBottom="2px solid" borderTop="2px solid" borderColor="red.700" borderRadius="md" shadow="lg" bg="whiteAlpha.80" fontFamily="Nunito Sans">
+  <Box
+    as="section"
+    display="flex"
+    px={{ base: '12px', md: '12px', lg: '42px' }}
+    flexDirection="column"
+    w="full"
+    maxW={{ base: '366px', md: '500px', lg: '100%' }}
+    borderBottom="2px solid"
+    borderTop="2px solid"
+    borderColor="#CE0033"
+    borderRadius="md"
+    shadow="lg"
+    bg="whiteAlpha.80"
+    fontFamily="Nunito Sans"
+  >
     <Suspense fallback={<Spinner />}>
       <MonthPagination
         mois={date.format('MM')}
@@ -41,18 +51,26 @@ const PointageBoxPromo = ({
 
     {pointagesError ? (
       <Center mt={4}>
-        <Text fontSize="lg" color="gray.600">Erreur lors de la récupération des pointages.</Text>
+        <Text fontSize="lg" color="gray.600">
+          Erreur lors de la récupération des pointages.
+        </Text>
       </Center>
-    ) : (dailyData && dailyData.pointages.length === 0) ? (
+    ) : dailyData && dailyData.pointages.length === 0 ? (
       <Center mt={4}>
-        <Text fontSize="lg" color="gray.600">Aucun pointage trouvé pour ce jour.</Text>
+        <Text fontSize="lg" color="gray.600">
+          Aucun pointage trouvé pour ce jour.
+        </Text>
       </Center>
     ) : (
       <>
         <Suspense fallback={<Spinner />}>
-          <DaysOfWeek daysOfWeek={daysOfWeek} setSelectedDay={setSelectedDay} retard={undefined} absent={undefined} />
+          <DaysOfWeek
+            daysOfWeek={daysOfWeek}
+            setSelectedDay={setSelectedDay}
+            retard={undefined}
+            absent={undefined}
+          />
         </Suspense>
-
 
         <Suspense fallback={<Spinner />}>
           <AttendanceSummary summary={attendanceSummary} />

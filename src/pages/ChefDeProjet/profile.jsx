@@ -13,7 +13,7 @@ const Profile = () => {
         bg="whiteAlpha.80"
         borderRadius="md"
         shadow="md"
-        mx={10 }
+        ml={{ base: '10px', sm: '11px', lg: '22%' }} 
         w={{ base: '366px', md: '100%', lg: '100%' }}
         h="95%"
       >

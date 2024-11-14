@@ -1,24 +1,20 @@
 'use client';
 
-import React, { useState, Suspense } from 'react';
-import { VStack, Spinner, Center, Box, SimpleGrid } from '@chakra-ui/react';
+import { Box, Center, SimpleGrid, Spinner, VStack } from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import isoWeeksInYear from 'dayjs/plugin/isoWeeksInYear';
+import { Suspense, useState } from 'react';
 import useSWR from 'swr';
 import PointageBox from '../../components/common/PointageSection';
-import ProfileCardApprenant from '../../components/layout/apprenant/Navbar';
 import ProfileComponent from '../../components/common/profile';
+import ProfileCardApprenant from '../../components/layout/apprenant/Navbar';
 // import stylecss globals.css
-
-
 
 dayjs.extend(isoWeek);
 dayjs.extend(isoWeeksInYear);
 
 // Dynamic component imports
-
-
 
 // Fetch function
 const fetcher = (url) =>
@@ -41,9 +37,7 @@ const MesPointages = () => {
   }/pointages/moi/apprenant?mois=${date.format(
     'MM'
   )}&annee=${date.year()}&semaine=${selectedWeek}`;
-  const attendanceSummaryUrl = `${
-    process.env.NEXT_PUBLIC_API_URL
-  }/pointages/moi`;
+  const attendanceSummaryUrl = `${process.env.NEXT_PUBLIC_API_URL}/pointages/moi`;
 
   const { data: pointagesData, error: pointagesError } = useSWR(
     pointagesUrl,
@@ -79,12 +73,11 @@ const MesPointages = () => {
 
   return (
     <VStack spacing={4} maxW="100%">
-            <Suspense fallback={<Spinner />}>
+      <Suspense fallback={<Spinner />}>
+        <ProfileCardApprenant />
+      </Suspense>
 
-    <ProfileCardApprenant />
-    </Suspense>
-
-    <SimpleGrid
+      <SimpleGrid
         mx={{ base: '2px', md: '3px', lg: '12px' }}
         justifyContent="space-between"
         columns={[1, 2]}
@@ -100,24 +93,23 @@ const MesPointages = () => {
           maxW={{ base: '366px', md: '100%', lg: '100%' }}
           borderBottom="2px solid"
           borderTop="2px solid"
-          borderColor="red.700"
+          borderColor="#CE0033"
           borderRadius="md"
           shadow="lg"
           bg="whiteAlpha.80"
           fontFamily="Nunito Sans"
           flex="2"
           display={{ base: 'none', md: 'none', lg: 'block' }}
-
         >
           <Suspense fallback={<Spinner />}>
-              <ProfileComponent />
-            </Suspense>
-          </Box>
-          <Box
+            <ProfileComponent />
+          </Suspense>
+        </Box>
+        <Box
           as="section"
           px={{ base: '12px', md: '13px', lg: '40px' }}
-          mx={{ base: '2px', md: '3px', lg: '60px' }}
-          maxW={{ base: '366px', md: '100%', lg: '80%' }}
+          mx={{ base: '2px', md: '3px', lg: '100px' }}
+          maxW={{ base: '366px', md: '100%', lg: '90%' }}
           py={8}
           mt={7}
           w="full"
@@ -130,21 +122,18 @@ const MesPointages = () => {
           fontFamily="Nunito Sans"
           flex="2"
         >
-        <PointageBox
-          date={date}
-          handleMonthChange={handleMonthChange}
-          semainesDuMois={semainesDuMois}
-          selectedWeek={selectedWeek}
-          setSelectedWeek={setSelectedWeek}
-          pointagesData={pointagesData}
-          pointagesError={pointagesError}
-          attendanceSummary={attendanceSummary}
-        />
-
+          <PointageBox
+            date={date}
+            handleMonthChange={handleMonthChange}
+            semainesDuMois={semainesDuMois}
+            selectedWeek={selectedWeek}
+            setSelectedWeek={setSelectedWeek}
+            pointagesData={pointagesData}
+            pointagesError={pointagesError}
+            attendanceSummary={attendanceSummary}
+          />
         </Box>
-
       </SimpleGrid>
-
     </VStack>
   );
 };

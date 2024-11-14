@@ -1,12 +1,12 @@
-import { Box, Text, SimpleGrid ,   Collapse, Button} from '@chakra-ui/react';
-import ProfileCardFormateur from '../../../components/layout/formateur/Navbar';
-import useSWR from 'swr';
+import { Box, Button, Collapse, SimpleGrid, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
+import useSWR from 'swr';
+import CardBox from '../../../components/common/Card';
 import PromoCard from '../../../components/common/PromoCard';
 import PromoHeader from '../../../components/common/PromoHeader';
-import CardBox from '../../../components/common/Card';
 import CreatePromoForm from '../../../components/func/formateur/CreatePromoForm';
-import { useState } from 'react';
+import ProfileCardFormateur from '../../../components/layout/formateur/Navbar';
 
 // Fonction de récupération des données
 const fetcher = (url) =>
@@ -31,15 +31,13 @@ const Dashboard = () => {
   );
   const router = useRouter();
 
-
   // Rediriger vers la page de la promotion sélectionnée
   const handlePromoClick = (promoId) => {
     router.push(`/formateur/promos/${promoId}`);
   };
 
   // Récupérer les pointages du jour pour une promotion
-    const [isOpen, setIsOpen] = useState(false); // État pour contrôler l'ouverture de l'accordéon
-
+  const [isOpen, setIsOpen] = useState(false); // État pour contrôler l'ouverture de l'accordéon
 
   if (promosError && promosErrorTerminer) {
     return (
@@ -56,17 +54,18 @@ const Dashboard = () => {
           <CardBox>
             {/* Component */}
             <Button
-            onClick={() => setIsOpen(!isOpen)} // Toggle l'état de l'accordéon
-            width="100%"
-            mb={4} // Marge inférieure pour séparer le bouton et le formulaire
-          >
-            {isOpen ? 'Masquer le formulaire' : 'Afficher le formulaire'} {/* Texte dynamique */}
-          </Button>
-
-          {/* Accordéon pour le formulaire */}
-          <Collapse in={isOpen}>
-            <CreatePromoForm />
-          </Collapse>          </CardBox>
+              onClick={() => setIsOpen(!isOpen)} // Toggle l'état de l'accordéon
+              width="100%"
+              mb={4} // Marge inférieure pour séparer le bouton et le formulaire
+            >
+              {isOpen ? 'Masquer le formulaire' : 'Afficher le formulaire'}{' '}
+              {/* Texte dynamique */}
+            </Button>
+            {/* Accordéon pour le formulaire */}
+            <Collapse in={isOpen}>
+              <CreatePromoForm />
+            </Collapse>{' '}
+          </CardBox>
           <CardBox as="section">
             {' '}
             <PromoHeader />
@@ -101,7 +100,7 @@ const Dashboard = () => {
           maxW={{ base: '366px', md: '100%', lg: '90%' }}
           borderBottom="2px solid"
           borderTop="2px solid"
-          borderColor="red.700"
+          borderColor="#CE0033"
           borderRadius="md"
           shadow="lg"
           bg="whiteAlpha.80"
@@ -109,21 +108,20 @@ const Dashboard = () => {
           flex="2"
           display={{ base: 'block', md: 'block', lg: 'block' }}
         >
-      
-
           {/* Component */}
           <Button
             onClick={() => setIsOpen(!isOpen)} // Toggle l'état de l'accordéon
             width="100%"
             mb={4} // Marge inférieure pour séparer le bouton et le formulaire
           >
-            {isOpen ? ' Ajoute promo ' : 'Afficher le formulaire'} {/* Texte dynamique */}
+            {isOpen ? ' Ajoute promo ' : 'Afficher le formulaire'}{' '}
+            {/* Texte dynamique */}
           </Button>
-
           {/* Accordéon pour le formulaire */}
           <Collapse in={isOpen}>
             <CreatePromoForm />
-          </Collapse>        </CardBox>
+          </Collapse>{' '}
+        </CardBox>
         <CardBox as="section" flex="2">
           {' '}
           <PromoHeader />

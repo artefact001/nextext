@@ -2,7 +2,7 @@
 import { Box, ButtonGroup, Flex, Text } from '@chakra-ui/react';
 import { FaUsers } from 'react-icons/fa';
 
-const UserList = ({ users, userType , onSelectFormateur }) => {
+const UserList = ({ users, userType, onSelectFormateur }) => {
   return (
     <>
       {users.length > 0 ? (
@@ -32,7 +32,7 @@ const UserList = ({ users, userType , onSelectFormateur }) => {
                 alignItems="center"
                 w="12"
                 h="12"
-                bg="red.700"
+                bg="#CE0033"
                 borderRadius="full"
                 color="white"
               >
@@ -40,11 +40,7 @@ const UserList = ({ users, userType , onSelectFormateur }) => {
               </Flex>
 
               <Box ml="4">
-                <Text
-                  fontSize="lg"
-                  fontWeight="bold"
-                  fontFamily="Nunito Sans"
-                >
+                <Text fontSize="lg" fontWeight="bold" fontFamily="Nunito Sans">
                   {user.nom} {user.prenom}
                 </Text>
                 <Text fontSize="sm" fontFamily="Nunito Sans">

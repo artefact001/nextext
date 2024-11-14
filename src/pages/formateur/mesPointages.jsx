@@ -97,9 +97,8 @@ const MesPointages = () => {
        
         <CardBox
           as="section"
-          px={{ base: '12px', md: '13px', lg: '80px' }}
+          px={{ base: '12px', md: '13px', lg: '90px' }}
           maxW={{ base: '366px', md: '100%', lg: '100%' }}
-        
         
         >
           <PointageBox

@@ -1,20 +1,30 @@
-import React, { useMemo } from 'react';
-import { Box, Center, Link, Spinner, Text, useColorModeValue } from '@chakra-ui/react';
+import {
+  Box,
+  Center,
+  Link,
+  Spinner,
+  Text,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import { FaUserAlt, FaQrcode, FaHistory } from 'react-icons/fa'; // Import des icônes
+import { useMemo } from 'react';
+import { FaHistory, FaQrcode, FaUserAlt } from 'react-icons/fa'; // Import des icônes
 import Swal from 'sweetalert2'; // Import de SweetAlert
 
-import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 import { getUserWithRoles } from '../../../lib/utils/checkRole';
+import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 
 const NavbarVigile = () => {
   const router = useRouter();
   const activeColor = '#CE0033'; // Couleur pour l'état actif
   const inactiveColor = useColorModeValue('gray.600', 'gray.400'); // Couleur pour l'état inactif selon le mode
   useUserWithRoles(['Vigile']);
-  const {  user, loading } = useUserWithRoles(['Vigile']);
+  const { user, loading } = useUserWithRoles(['Vigile']);
 
-  const fullName = useMemo(() => (user ? `${user.prenom} ${user.nom}` : ''), [user]);
+  const fullName = useMemo(
+    () => (user ? `${user.prenom} ${user.nom}` : ''),
+    [user]
+  );
 
   if (loading) {
     return (
@@ -36,12 +46,11 @@ const NavbarVigile = () => {
   const handleOptionClick = () => {
     Swal.fire({
       title: 'Naviguer vers:',
-      text: "Choisissez heure de pointage",
+      text: 'Choisissez heure de pointage',
       icon: 'question',
       showCancelButton: true,
-      confirmButtonColor:'#CE0033',
-      cancelButtonColor:'#CE0033',
-      
+      confirmButtonColor: '#CE0033',
+      cancelButtonColor: '#CE0033',
 
       confirmButtonText: 'Arrivée',
       cancelButtonText: 'Départ',
@@ -63,13 +72,14 @@ const NavbarVigile = () => {
       borderRadius="xl"
       px={{ base: '4%', lg: '5%' }}
       w={{ base: '96%', lg: '50%' }}
-
       mx="auto"
       left="50%"
       shadow="2xl"
       transform="translateX(-50%)"
     >
-                <Text fontSize={{ base: '20px', lg: '35px' }} fontWeight="bold">{fullName}</Text>
+      <Text fontSize={{ base: '20px', lg: '35px' }} fontWeight="bold">
+        {fullName}
+      </Text>
 
       <Box
         display="flex"
@@ -79,7 +89,7 @@ const NavbarVigile = () => {
         borderRadius="md"
         borderBottom="2px solid"
         fontFamily="Nunito Sans"
-        borderColor="red.700"
+        borderColor="#CE0033"
         color="white"
         shadow="lg"
         px={{ base: '10%', md: '40px', lg: '80px' }}
@@ -97,8 +107,9 @@ const NavbarVigile = () => {
           _focus={{ outline: 'none' }}
           color={router.pathname === '/option' ? activeColor : inactiveColor}
           onClick={handleOptionClick} // Appelle la fonction quand l'utilisateur clique
-        > <Box mt={4}>
-      </Box>
+        >
+          {' '}
+          <Box mt={4}></Box>
           <Center flexDirection="column">
             <FaUserAlt size={30} />
             <Text mt={2}>Option</Text>
@@ -114,18 +125,26 @@ const NavbarVigile = () => {
             _focus={{ outline: 'none' }}
           >
             <Center
-              bg={router.pathname === '/vigile/scanner' ? activeColor : 'transparent'}
+              bg={
+                router.pathname === '/vigile/scanner'
+                  ? activeColor
+                  : 'transparent'
+              }
               p="3"
               borderRadius="full"
               shadow="md"
               flexDirection="column"
             >
-              <FaQrcode 
-                size={30} 
-                color={router.pathname === '/vigile/scanner' ? 'white' : 'black'} 
+              <FaQrcode
+                size={30}
+                color={
+                  router.pathname === '/vigile/scanner' ? 'white' : 'black'
+                }
               />
-              <Text 
-                color={router.pathname === '/vigile/scanner' ? 'white' : 'black'} 
+              <Text
+                color={
+                  router.pathname === '/vigile/scanner' ? 'white' : 'black'
+                }
                 mt={2}
               >
                 Scanner
@@ -140,7 +159,11 @@ const NavbarVigile = () => {
           size="sm"
           variant="ghost"
           _focus={{ outline: 'none' }}
-          color={router.pathname === '/vigile/pointages' ? activeColor : inactiveColor}
+          color={
+            router.pathname === '/vigile/pointages'
+              ? activeColor
+              : inactiveColor
+          }
         >
           <Center flexDirection="column">
             <FaHistory size={30} />
@@ -151,7 +174,6 @@ const NavbarVigile = () => {
     </Box>
   );
 };
-
 
 export async function getServerSideProps(context) {
   const result = await getUserWithRoles(context, ['Administrateur']);

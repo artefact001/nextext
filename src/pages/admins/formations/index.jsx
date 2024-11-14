@@ -3,28 +3,26 @@ import {
   Button,
   Center,
   Flex,
-  useToast,
-
   Heading,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
   SimpleGrid,
   Spinner,
   Text,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  
+  useToast,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
-import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import FormInput from '../../../components/common/FormInput';
-import ProfileCardAdministrateur from '../../../components/layout/admin/Navbar';
 import FormationCard from '../../../components/func/admin/FormationCard';
 import PromoCard from '../../../components/func/admin/PromoCard';
+import ProfileCardAdministrateur from '../../../components/layout/admin/Navbar';
+import { useUserWithRoles } from '../../../lib/utils/hooks/useUserWithRoles';
 
 // Fetcher function for SWR
 const fetcher = (url) =>
@@ -45,72 +43,75 @@ const AdminPage = () => {
   const [formData, setFormData] = useState({ nom: '', localisation: '' });
   const [errors, setErrors] = useState({ nom: '', localisation: '' });
   const [formDataFormation, setFormDataFormation] = useState({ nom: '' });
-const [errorsFormation, setErrorsFormation] = useState({ nom: '' });
-const [isLoading, setIsLoading]= useState( false);
-const toast = useToast();
+  const [errorsFormation, setErrorsFormation] = useState({ nom: '' });
+  const [isLoading, setIsLoading] = useState(false);
+  const toast = useToast();
 
-const handleChangeFormation = (e) => {
-  const { name, value } = e.target;
-  setFormDataFormation({ ...formDataFormation, [name]: value });
-};
+  const handleChangeFormation = (e) => {
+    const { name, value } = e.target;
+    setFormDataFormation({ ...formDataFormation, [name]: value });
+  };
 
-const handleSubmitFormation = async (e) => {
-  e.preventDefault();
-  let newErrors = {};
-  setIsLoading(true);
+  const handleSubmitFormation = async (e) => {
+    e.preventDefault();
+    let newErrors = {};
+    setIsLoading(true);
 
-  if (!formDataFormation.nom) newErrors.nom = "Le nom est requis";
+    if (!formDataFormation.nom) newErrors.nom = 'Le nom est requis';
 
-  if (Object.keys(newErrors).length > 0) {
-    setErrorsFormation(newErrors);
-    return;
-  }
+    if (Object.keys(newErrors).length > 0) {
+      setErrorsFormation(newErrors);
+      return;
+    }
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/formations`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-    body: JSON.stringify(formDataFormation),
-  });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/formations`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify(formDataFormation),
+      }
+    );
 
-  if (response.ok) {
-    setMessage(``);
+    if (response.ok) {
+      setMessage(``);
 
-    toast({
-      title: 'Succès !',
-      description: ' ajoute avec succès.',
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    });
-    console.log("Formation ajoutée :", formDataFormation);
-    setFormDataFormation({ nom: '' });
-    setErrorsFormation({ nom: '' });
-    // Optionally refresh the list of formations here
-  } else {
-    console.error('Erreur lors de l’ajout de la formation');
-    toast({
-      title: 'error !',
-      description: ' Erreur lors de l’ajout de la formation .',
-      status: 'error',
-      duration: 3000,
-      isClosable: true,
-    });
-  }
-};
+      toast({
+        title: 'Succès !',
+        description: ' ajoute avec succès.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      console.log('Formation ajoutée :', formDataFormation);
+      setFormDataFormation({ nom: '' });
+      setErrorsFormation({ nom: '' });
+      // Optionally refresh the list of formations here
+    } else {
+      console.error('Erreur lors de l’ajout de la formation');
+      toast({
+        title: 'error !',
+        description: ' Erreur lors de l’ajout de la formation .',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-      
   };
   const handleSubmitFabrique = async (e) => {
     e.preventDefault();
     let newErrors = {};
-    if (!formData.nom) newErrors.nom = "Le nom est requis";
-    if (!formData.localisation) newErrors.localisation = "La localisation est requise";
+    if (!formData.nom) newErrors.nom = 'Le nom est requis';
+    if (!formData.localisation)
+      newErrors.localisation = 'La localisation est requise';
 
     // error messages
 
@@ -119,14 +120,17 @@ const handleSubmitFormation = async (e) => {
       return;
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/fabriques`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-      body: JSON.stringify(formData),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/fabriques`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify(formData),
+      }
+    );
 
     if (response.ok) {
       setMessage(``);
@@ -141,7 +145,8 @@ const handleSubmitFormation = async (e) => {
       setFormData({ nom: '', localisation: '' });
       setErrors({ nom: '', localisation: '' });
       // Optionally refresh the list of fabriques here
-    } else {false
+    } else {
+      false;
       console.error('Erreur lors de l’ajout de la fabrique');
       toast({
         title: 'error !',
@@ -160,7 +165,7 @@ const handleSubmitFormation = async (e) => {
   const openModal = () => {
     setIsOpen(true);
   };
-  
+
   // Fetch formations using SWR
   const { data: FormationsData, error: FormationsError } = useSWR(
     user ? `${process.env.NEXT_PUBLIC_API_URL}/formations` : null,
@@ -171,9 +176,8 @@ const handleSubmitFormation = async (e) => {
   const handleSelectFormation = (formation) => {
     setSelectedFormation(formation);
     openModal();
-
   };
-  
+
   useEffect(() => {
     console.log(selectedFormation);
   }, [selectedFormation]);
@@ -182,27 +186,32 @@ const handleSubmitFormation = async (e) => {
     return <p>Erreur lors de la récupération des formateurs.</p>;
   }
   const handleDeleteFormation = async (formationId) => {
-    const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer cette formation ?");
+    const confirmed = window.confirm(
+      'Êtes-vous sûr de vouloir supprimer cette formation ?'
+    );
     if (!confirmed) return;
-  
+
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/formations/${formationId}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-  
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/formations/${formationId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+
       if (response.ok) {
         // Remove the deleted formation from the state
-        } else {
+      } else {
         console.error('Erreur lors de la suppression de la formation');
       }
     } catch (error) {
       console.error('Erreur lors de la suppression de la formation:', error);
     }
   };
- 
+
   if (loading) {
     return (
       <Center>
@@ -243,56 +252,59 @@ const handleSubmitFormation = async (e) => {
           maxW={{ base: '100%', lg: '90%' }}
           borderBottom="2px solid"
           borderTop="2px solid"
-          borderColor="red.700"
+          borderColor="#CE0033"
           borderRadius="md"
           shadow="lg"
           bg="whiteAlpha.80"
           fontFamily="Nunito Sans"
         >
-
           <SimpleGrid columns={[1, 2]} spacing={4}>
             {/* Add Fabrique Form */}
             <Box
-  mt={5}
-  p={5}
-  borderRadius="lg"
-  borderColor="#CE0033"
-  borderTop="2px"
-  borderBottom="2px"
-  shadow="lg"
->
-  <Heading size="md" as="h3">
-    Ajouter un Fabrique
-  </Heading>
-  <form onSubmit={handleSubmitFabrique}>
-    <FormInput 
-      placeholder="Nom" 
-      id="nom"
-      label="Nom"
-      name="nom"
-      type="text"
-      value={formData.nom}
-      onChange={handleChange}
-      error={errors.nom} 
-    />
-    <FormInput 
-      placeholder="Localisation"
-      id="Localisation"
-      label="Localisation"
-      name="localisation"
-      type="text"
-      value={formData.localisation}
-      onChange={handleChange}
-      error={errors.localisation} 
-    />
-    <Button type="submit" color="white" _hover={{  bg:"gray.600" }}  isLoading={isLoading}
- bg="#CE0033" width="full">
-      Ajouter
-    </Button>
-  </form>
-  
-</Box>
-    
+              mt={5}
+              p={5}
+              borderRadius="lg"
+              borderColor="#CE0033"
+              borderTop="2px"
+              borderBottom="2px"
+              shadow="lg"
+            >
+              <Heading size="md" as="h3">
+                Ajouter un Fabrique
+              </Heading>
+              <form onSubmit={handleSubmitFabrique}>
+                <FormInput
+                  placeholder="Nom"
+                  id="nom"
+                  label="Nom"
+                  name="nom"
+                  type="text"
+                  value={formData.nom}
+                  onChange={handleChange}
+                  error={errors.nom}
+                />
+                <FormInput
+                  placeholder="Localisation"
+                  id="Localisation"
+                  label="Localisation"
+                  name="localisation"
+                  type="text"
+                  value={formData.localisation}
+                  onChange={handleChange}
+                  error={errors.localisation}
+                />
+                <Button
+                  type="submit"
+                  color="white"
+                  _hover={{ bg: 'gray.600' }}
+                  isLoading={isLoading}
+                  bg="#CE0033"
+                  width="full"
+                >
+                  Ajouter
+                </Button>
+              </form>
+            </Box>
 
             {/* Add Formation Form */}
             <Box
@@ -308,7 +320,7 @@ const handleSubmitFormation = async (e) => {
                 Ajouter une Formation
               </Heading>
               <form onSubmit={handleSubmitFormation}>
-                <FormInput 
+                <FormInput
                   placeholder="Nom de la formation"
                   id="nomFormation"
                   label="Nom"
@@ -316,23 +328,29 @@ const handleSubmitFormation = async (e) => {
                   type="text"
                   value={formDataFormation.nom}
                   onChange={handleChangeFormation}
-                  error={errorsFormation.nom} 
+                  error={errorsFormation.nom}
                 />
-                <Button type="submit" _hover={{  bg:"gray.600" }} color="white" bg="#CE0033" width="full">
+                <Button
+                  type="submit"
+                  _hover={{ bg: 'gray.600' }}
+                  color="white"
+                  bg="#CE0033"
+                  width="full"
+                >
                   Ajouter
                 </Button>
               </form>
             </Box>
             {message && (
-            <Text mt={4} color="green.500">
-              {message}
-            </Text>
-          )}
-          {errors.general && (
-            <Text mt={4} color="red.500">
-              {errors.general}
-            </Text>
-          )}
+              <Text mt={4} color="green.500">
+                {message}
+              </Text>
+            )}
+            {errors.general && (
+              <Text mt={4} color="red.500">
+                {errors.general}
+              </Text>
+            )}
           </SimpleGrid>
         </Box>
 
@@ -347,7 +365,7 @@ const handleSubmitFormation = async (e) => {
           maxW={{ base: '100%', lg: '60%' }}
           borderBottom="2px solid"
           borderTop="2px solid"
-          borderColor="red.700"
+          borderColor="#CE0033"
           borderRadius="md"
           shadow="lg"
           bg="whiteAlpha.80"
@@ -370,60 +388,60 @@ const handleSubmitFormation = async (e) => {
           </Flex>
 
           <SimpleGrid columns={1} spacing={4}>
-      {formations?.length > 0 ? (
-        formations.map((formation) => (
-          <FormationCard
-            key={formation.id}
-            formation={formation}
-             onClick={openModal} colorScheme="blue"
-            onSelect={() => handleSelectFormation(formation)}
-            onDelete={() => handleDeleteFormation(formation.id)}  // Pass the delete handler
-
-          />
-        ))
-      ) : (
-        <Text>Aucune formation disponible.</Text>
-      )}
-    </SimpleGrid>
+            {formations?.length > 0 ? (
+              formations.map((formation) => (
+                <FormationCard
+                  key={formation.id}
+                  formation={formation}
+                  onClick={openModal}
+                  colorScheme="blue"
+                  onSelect={() => handleSelectFormation(formation)}
+                  onDelete={() => handleDeleteFormation(formation.id)} // Pass the delete handler
+                />
+              ))
+            ) : (
+              <Text>Aucune formation disponible.</Text>
+            )}
+          </SimpleGrid>
         </Box>
       </SimpleGrid>
       {selectedFormation && (
-    <Box>
-        {/* Modal Popup */}
-        <Modal mx isOpen={isOpen} onClose={closeModal}>
-        <ModalOverlay />
-        <ModalContent mx={2}> 
-          <ModalCloseButton />
-          <ModalBody>
-            {selectedFormation && (
-              <>
-                <Text fontWeight="bold">
-                  Formation : {selectedFormation.nom}
-                </Text>
+        <Box>
+          {/* Modal Popup */}
+          <Modal mx isOpen={isOpen} onClose={closeModal}>
+            <ModalOverlay />
+            <ModalContent mx={2}>
+              <ModalCloseButton />
+              <ModalBody>
+                {selectedFormation && (
+                  <>
+                    <Text fontWeight="bold">
+                      Formation : {selectedFormation.nom}
+                    </Text>
 
-                <SimpleGrid columns={1} spacing={4} mt={4}>
-  {selectedFormation.promos?.length > 0 ? (
-    selectedFormation.promos.map((promo) => (
-      <Link href={`/admins/promos/${promo.id}`} key={promo.id}>
-        <PromoCard promo={promo} />
-      </Link>
-    ))
-  ) : (
-    <Text>Aucune promotion pour cette formation.</Text>
-  )}
-</SimpleGrid>
+                    <SimpleGrid columns={1} spacing={4} mt={4}>
+                      {selectedFormation.promos?.length > 0 ? (
+                        selectedFormation.promos.map((promo) => (
+                          <Link
+                            href={`/admins/promos/${promo.id}`}
+                            key={promo.id}
+                          >
+                            <PromoCard promo={promo} />
+                          </Link>
+                        ))
+                      ) : (
+                        <Text>Aucune promotion pour cette formation.</Text>
+                      )}
+                    </SimpleGrid>
+                  </>
+                )}
+              </ModalBody>
 
-              </>
-            )}
-          </ModalBody>
-
-          <ModalFooter>
-            
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </Box>
-)}
+              <ModalFooter></ModalFooter>
+            </ModalContent>
+          </Modal>
+        </Box>
+      )}
     </Center>
   );
 };

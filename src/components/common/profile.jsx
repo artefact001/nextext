@@ -116,6 +116,8 @@ export default function ProfileComponent() {
               color="white"
               borderRadius="full"
               _hover={{ bg: 'gray.500' }}
+              transition="all 0.3s ease-in-out"
+              
             />
           </Box>
 

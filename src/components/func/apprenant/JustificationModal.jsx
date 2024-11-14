@@ -127,7 +127,7 @@ function JustificationModal({ isOpen, onClose, pointageId }) {
                   <Link
                     href={`${process.env.NEXT_PUBLIC_API_IMAGE}/${existingJustification.document}`}
                     isExternal
-                    color="blue.500"
+                    color="#CE0033"
                   >
                     Voir le justificatif PDF
                   </Link>
@@ -135,7 +135,7 @@ function JustificationModal({ isOpen, onClose, pointageId }) {
                   <Link
                     href={`${process.env.NEXT_PUBLIC_API_IMAGE}/${existingJustification.document}`}
                     isExternal
-                    color="blue.500"
+                    color="#CE0033"
                   >
                   <Image
                     src={`${process.env.NEXT_PUBLIC_API_IMAGE}/${existingJustification.document}`}
@@ -149,7 +149,7 @@ function JustificationModal({ isOpen, onClose, pointageId }) {
           ) : (
             <>
               <FormControl id="description" mt={4}>
-                <FormLabel>Description (optionnelle)</FormLabel>
+                <FormLabel>Description </FormLabel>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -164,7 +164,11 @@ function JustificationModal({ isOpen, onClose, pointageId }) {
                   onChange={(e) => setDocument(e.target.files[0])}
                 />
               </FormControl>
-              <Button mt={4} colorScheme="blue" onClick={handleSubmit}>
+              <Button mt={4} 
+                            _hover={{ bg: '#110033' }}
+                            color="white"
+                            bg="#CE0033"
+              onClick={handleSubmit}>
                 Soumettre
               </Button>
             </>

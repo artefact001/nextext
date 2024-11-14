@@ -259,7 +259,7 @@ const CreatePromoForm = () => {
                 type="submit"
                 mx="auto"
                 color="white"
-                bg="red.700"
+                bg="#CE0033"
                 width="full"
               >
                 Créer Promotion
@@ -302,7 +302,12 @@ const CreatePromoForm = () => {
                 href="/admins/apprenants/inscriptions/formulaire"
                 isExternal
               >
-                <Button  bg='#CE0033' color="white">Ajouter par Formulaire</Button>
+              <Button  
+              _hover={{ bg: '#110033' }}
+              color="white"
+              bg="#CE0033"
+              width="50%"
+              >Ajouter par Formulaire</Button>
               </Link>
             </SimpleGrid>
           </VStack>

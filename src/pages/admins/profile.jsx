@@ -16,6 +16,7 @@ const Profile = () => {
         shadow="md"
         mx={{ base: '12px', md: '13px', lg: '2180px' }}
         px={{ base: '12px', md: '13px', lg: '10px' }}
+        // ml={{ base: '10px', sm: '11px', lg: '22%' }} 
 
         w={{ base: '366px', md: '100%', lg: '100%' }}
         h="95%"

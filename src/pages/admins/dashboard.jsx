@@ -51,7 +51,7 @@ const AdminPage = () => {
   const [promoId, setPromoId] = useState(null);
   const [promotions, setPromotions] = useState([]);
   const [dateDebut, setDateDebut] = useState('2024-01-10');
-  const [dateFin, setDateFin] = useState('2024-11-10');
+  const [dateFin, setDateFin] = useState('2024-12-10');
   const [weeklyData, setWeeklyData] = useState([]);
   const [monthlyData, setMonthlyData] = useState([]);
   const [loading, setLoading] = useState(true);

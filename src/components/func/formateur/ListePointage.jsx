@@ -1,8 +1,7 @@
-import React from 'react';
 import { Box, Heading, List } from '@chakra-ui/react';
-import AttendanceItem from '../../common/AttendanceItem';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
+import AttendanceItem from '../../common/AttendanceItem';
 
 // Configure daylayoutjs pour utiliser le français
 dayjs.locale('fr');
@@ -12,8 +11,6 @@ function ListePointage({ pointages }) {
       as="section"
       display="flex"
       flexDirection="column"
-      
-      
       bg="whiteAlpha.80"
       fontFamily="Nunito Sans"
     >
@@ -21,10 +18,9 @@ function ListePointage({ pointages }) {
         as="h2"
         size={{ base: 'md', md: 'lg' }} // Smaller heading size on mobile, larger on desktop
         textAlign="center"
-        color="red.700"
+        color="#CE0033"
         mb={8}
         fontFamily="Nunito Sans"
-
       >
         {/* {`Aujourd'hui `} */}
       </Heading>
@@ -36,11 +32,12 @@ function ListePointage({ pointages }) {
         borderColor="gray.300"
         borderRadius="xl"
         boxShadow="sm"
-        size="bold" fonntWidget="bold"
+        size="bold"
+        fonntWidget="bold"
         fontFamily="Nunito Sans "
       >
-         {pointages.map((pointage) => (
-          <AttendanceItem 
+        {pointages.map((pointage) => (
+          <AttendanceItem
             key={pointage.id}
             name={pointage.name}
             date={dayjs(pointage.date).format('dddd, DD/MM')}
@@ -50,7 +47,6 @@ function ListePointage({ pointages }) {
             pointageId={pointage.id} // Ajoutez l'ID du pointage
           />
         ))}
-        
       </List>
     </Box>
   );

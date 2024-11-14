@@ -1,15 +1,22 @@
-import React from 'react';
 import { Box, Center, Flex, Text } from '@chakra-ui/react';
 
 function AttendanceSummary({ summary }) {
   const summaryItems = [
-    { label: "Absent", value: summary.absent || "0" },
-    { label: "Retard", value: summary.retard || "0" }
+    { label: 'Absent', value: summary.absent || '0' },
+    { label: 'Retard', value: summary.retard || '0' },
   ];
 
   return (
     <Center fontFamily="Nunito Sans">
-      <Flex gap={10} justify="center" mt={9} maxW="full" textAlign="center" color="white" w="225px">
+      <Flex
+        gap={10}
+        justify="center"
+        mt={9}
+        maxW="full"
+        textAlign="center"
+        color="white"
+        w="225px"
+      >
         {summaryItems.map((item, index) => (
           <Box
             key={index}
@@ -17,7 +24,7 @@ function AttendanceSummary({ summary }) {
             px={4}
             pb={1}
             borderWidth="2px"
-            borderColor="red.700"
+            borderColor="#CE0033"
             bg="gray.900"
             borderRadius="lg"
             textAlign="center"

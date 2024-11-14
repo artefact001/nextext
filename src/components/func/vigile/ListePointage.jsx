@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Heading, List } from '@chakra-ui/react';
 import AttendanceItem from './AttendanceItem';
 
@@ -13,10 +12,10 @@ function ListePointage({ pointages }) {
       mt={16}
       mx="auto"
       w="full"
-      maxW={{ base: '366px', md: '700px', lg: '900px' }}  // Responsive width for mobile, tablet, and desktop
+      maxW={{ base: '366px', md: '700px', lg: '900px' }} // Responsive width for mobile, tablet, and desktop
       borderBottom="2px solid"
       borderTop="2px solid"
-      borderColor="red.700"
+      borderColor="#CE0033"
       borderRadius="md"
       shadow="lg"
       bg="whiteAlpha.80"
@@ -26,10 +25,9 @@ function ListePointage({ pointages }) {
         as="h2"
         size={{ base: 'md', md: 'lg' }} // Smaller heading size on mobile, larger on desktop
         textAlign="center"
-        color="red.700"
+        color="#CE0033"
         mb={8}
         fontFamily="Nunito Sans"
-
       >
         {`Aujourd'hui `}
       </Heading>
@@ -42,18 +40,28 @@ function ListePointage({ pointages }) {
         borderRadius="xl"
         boxShadow="sm"
       >
-        {pointages.map((pointage) => (
-          console.log(pointage),
-            <AttendanceItem
+        {pointages.map(
+          (pointage) => (
+            console.log(pointage),
+            (
+              <AttendanceItem
                 key={pointage.id}
                 name={`${pointage.user.prenom} ${pointage.user.nom}`} // Concatenate first and last names
                 role={pointage.user.role}
-                promos={pointage.user.promos && pointage.user.promos.length > 0 ? pointage.user.promos[0].nom : 'Formateur'} // Check if promos exist and not empty
+                promos={
+                  pointage.user.promos && pointage.user.promos.length > 0
+                    ? pointage.user.promos[0].nom
+                    : 'Formateur'
+                } // Check if promos exist and not empty
                 heur_arrive={pointage.heure_present}
-                heure_depard={pointage.heure_depart  ? pointage.heure_depart : null}
+                heure_depard={
+                  pointage.heure_depart ? pointage.heure_depart : null
+                }
                 status={pointage.type} // Assuming `type` is either 'present', 'retard', or 'absent'
-            />
-        ))}
+              />
+            )
+          )
+        )}
       </List>
     </Box>
   );

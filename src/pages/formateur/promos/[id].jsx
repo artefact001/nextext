@@ -16,16 +16,18 @@ import isoWeeksInYear from 'dayjs/plugin/isoWeeksInYear';
 import { useRouter } from 'next/router';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import useSWR from 'swr';
+// import ListePointage from '../../../components/func/formateur/ListePointage';
+// import PointageBoxPromo   from '../../../components/func/formateur/MesPointages';
+import CardBox from '../../../components/common/Card';
 import ListePointage from '../../../components/func/admin/ListePointage';
 import PointageBoxPromo from '../../../components/func/admin/MesPointages';
-import CardBox from '../../../components/common/Card';
 
 dayjs.extend(isoWeek);
 dayjs.extend(isoWeeksInYear);
 
 // Dynamic component imports
-const ProfileCardAdministrateur = lazy(() =>
-  import('../../../components/layout/admin/Navbar')
+const ProfileCardFormateur = lazy(() =>
+  import('../../../components/layout/formateur/Navbar')
 );
 
 // Fetch function
@@ -124,13 +126,13 @@ const MesPointagesP7 = () => {
   return (
     <VStack maxW="100%">
       <Suspense fallback={<Spinner />}>
-        <ProfileCardAdministrateur />
+        <ProfileCardFormateur />
       </Suspense>
 
-      <SimpleGrid spacingX={24} columns={[1, 2]}>
+      <SimpleGrid spacingX={24} mr={{ base: '0', md: '0', lg: '150px' }} columns={[1, 2]}>
         <CardBox
           px={{ base: '12px', md: '13px', lg: '10px' }}
-          mx={{ base: '2px', md: '3px', lg: '60px' }}
+          mx={{ base: '2px', md: '3px', lg: '10px' }}
           maxW={{ base: '366px', md: '100%', lg: '100%' }}
         >
           <Suspense fallback={<Spinner />}>
